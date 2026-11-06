@@ -1,0 +1,16 @@
+config_version=5
+
+[application]
+config/name="Kiếm Hành — Prototype"
+config/version="0.2.0"
+run/main_scene="res://scenes/main.tscn"
+
+[display]
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/handheld/orientation=0
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+textures/default_filters/use_nearest_mipmap_filter=false

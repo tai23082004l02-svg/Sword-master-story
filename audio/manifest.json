@@ -1,0 +1,46 @@
+{
+  "service_cost": 0,
+  "third_party_samples": false,
+  "files": [
+    {
+      "file": "hit.wav",
+      "duration_seconds": 0.09,
+      "sample_rate": 22050,
+      "channels": 1,
+      "status": "prototype_not_listening_approved",
+      "source": "tools/generate_audio.py"
+    },
+    {
+      "file": "lose.wav",
+      "duration_seconds": 0.4,
+      "sample_rate": 22050,
+      "channels": 1,
+      "status": "prototype_not_listening_approved",
+      "source": "tools/generate_audio.py"
+    },
+    {
+      "file": "skill.wav",
+      "duration_seconds": 0.3,
+      "sample_rate": 22050,
+      "channels": 1,
+      "status": "prototype_not_listening_approved",
+      "source": "tools/generate_audio.py"
+    },
+    {
+      "file": "wave.wav",
+      "duration_seconds": 0.15,
+      "sample_rate": 22050,
+      "channels": 1,
+      "status": "prototype_not_listening_approved",
+      "source": "tools/generate_audio.py"
+    },
+    {
+      "file": "win.wav",
+      "duration_seconds": 0.4,
+      "sample_rate": 22050,
+      "channels": 1,
+      "status": "prototype_not_listening_approved",
+      "source": "tools/generate_audio.py"
+    }
+  ]
+}
