@@ -100,3 +100,8 @@ func stop_all() -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT: stop_all()
+
+func _exit_tree() -> void:
+	stop_all()
+	for voice in voices: voice.stream = null
+	streams.clear()

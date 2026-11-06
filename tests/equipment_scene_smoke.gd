@@ -53,4 +53,5 @@ func run() -> void:
 	scene.queue_free()
 	await process_frame
 	print("PASS: equipment menu, buy/equip/unequip, hero selection, prepare return and battle stats")
+	await create_timer(0.15).timeout
 	quit()

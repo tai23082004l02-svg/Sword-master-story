@@ -62,7 +62,7 @@ func _initialize() -> void:
 	for stage in range(3, 11):
 		id = failing.begin_run(stage)
 		assert(failing.finish_run(id, true, 20 + stage, 3).ok)
-	assert(failing.data.cleared.size() == 10 and failing.unlocked() == 10)
+	assert(failing.data.cleared.size() == 10 and failing.unlocked() == 11)
 	assert(failing.data.gold == 2710 and failing.data.xp == 1174, "Full chapter plus two repeat stage1 rewards")
 	# Corrupt primary: recover the last validated backup and preserve damaged bytes.
 	assert(failing.set_auto(false))

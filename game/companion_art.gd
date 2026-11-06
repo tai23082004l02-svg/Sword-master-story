@@ -1,5 +1,6 @@
 extends "res://game/hero_art.gd"
 ## Presentation only. All damage, shields and healing remain owned by Battle.
+var actor_id := ""
 var actor: Dictionary = {}
 var last_hp := -1.0
 var last_x := 0.0
@@ -8,7 +9,9 @@ var initialized := false
 
 func configure(id: String) -> void:
 	sword_overlays = false
-	character_id = id
+	actor_id = id
+	character_id = {"iris":"nyx","rune":"brann","vera":"sol"}.get(id,id)
+	modulate = Color("b5e2ff") if id == "iris" else (Color("ffc5da") if id == "rune" else (Color("bcf8bc") if id == "vera" else Color.WHITE))
 	frame_override = -1
 	initialized = false
 	hurt_left = 0
@@ -21,7 +24,7 @@ func _process(dt: float) -> void:
 		queue_redraw()
 
 func sync(data: Dictionary, dt: float, paused: bool, finished: bool = false) -> void:
-	if character_id != data.id or actor != data:
+	if actor_id != data.id or actor != data:
 		configure(data.id)
 	frame_override = -1
 	actor = data

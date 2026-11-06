@@ -33,19 +33,23 @@ var wave_limit: int:
 func boss_wave() -> bool:
 	return stage_config.waves[wave - 1].has("boss_hp") if not stage_config.is_empty() else wave == 4
 
-func start(party_size: int = 1, roster: Array = [], stage: Dictionary = {}, levels: Array = [], equipment: Array = []) -> void:
+func start(party_size: int = 1, roster: Array = [], stage: Dictionary = {}, levels: Array = [], equipment: Array = [], snapshots: Array = []) -> void:
 	stage_config = stage.duplicate(true)
 	heroes.clear()
 	var selected: Array = roster.duplicate() if not roster.is_empty() else range(clampi(party_size, 1, 5))
 	assert(selected.size() >= 1 and selected.size() <= 5 and selected[0] == 0)
 	var used: Array = []
 	for i in range(selected.size()):
-		assert(selected[i] >= 0 and selected[i] < 5 and not selected[i] in used)
+		assert(selected[i] >= 0 and selected[i] < Party.HEROES.size() and not selected[i] in used)
 		used.append(selected[i])
-		var level: int = int(levels[selected[i]]) if levels.size() == 5 else 1
+		var level: int = int(levels[selected[i]]) if selected[i] < levels.size() else 1
 		var actor := Party.create(selected[i], level)
-		if equipment.size() == 5:
+		if selected[i] < equipment.size():
 			preload("res://game/equipment_data.gd").apply(actor, equipment[selected[i]])
+			actor.max_hp = actor.hp
+		if selected[i] < snapshots.size():
+			for key in ["hp","damage","power","cooldown","set_bonus"]:
+				actor[key] = snapshots[selected[i]].get(key,actor.get(key,""))
 			actor.max_hp = actor.hp
 		actor.x = 240.0 - i * 42.0
 		heroes.append(actor)
@@ -71,6 +75,7 @@ func spawn_wave() -> void:
 		if not stage_config.is_empty():
 			boss.hp = stage_config.waves[wave - 1].boss_hp
 			boss.max_hp = boss.hp
+		boss.variant = int((int(stage_config.get("id",1))-1)/10)
 		boss.damage_scale = stage_config.get("damage_scale", 1.0)
 		enemies.append(boss)
 	else:
@@ -79,8 +84,9 @@ func spawn_wave() -> void:
 		for i in range(count):
 			serial += 1
 			var hp: float = config.get("hp", 55.0 + wave * 12.0)
-			var ranged: bool = config.enemies[i] == "ranged" if not config.is_empty() else i % 2 == 1
-			enemies.append({"id": serial, "x": 820.0 + i * 105.0, "hp": hp, "max_hp": hp, "ranged": ranged, "timer": 0.8 + i * 0.25, "windup": 0.0, "target": "", "damage_scale": stage_config.get("damage_scale", 1.0)})
+			var kind: String = config.enemies[i] if not config.is_empty() else ("ranged" if i%2 == 1 else "melee")
+			var ranged: bool = kind in ["ranged","healer"]
+			enemies.append({"kind":kind,"heal_timer":4.0,"burn":0.0,"burn_tick":0.5,"broken":0.0,"id": serial, "x": 820.0 + i * 105.0, "hp": hp, "max_hp": hp, "ranged": ranged, "timer": 0.8 + i * 0.25, "windup": 0.0, "target": "", "damage_scale": stage_config.get("damage_scale", 1.0)})
 	cue.emit("wave")
 
 func target_index(origin: float = -1.0) -> int:
@@ -96,6 +102,7 @@ func target_index(origin: float = -1.0) -> int:
 func hit(index: int, amount: float) -> void:
 	if index < 0 or index >= enemies.size() or enemies[index].hp <= 0:
 		return
+	if enemies[index].get("kind","") == "armored" and enemies[index].get("broken",0.0) <= 0: amount *= 0.65
 	enemies[index].hp -= amount
 	effects.append({"x": enemies[index].x, "text": str(int(amount)), "ttl": 0.65, "skill": amount > 30})
 	cue.emit("hit")
@@ -110,10 +117,15 @@ func skill(slot: int = 0) -> bool:
 		return false
 	actor.cooldown_left = actor.cooldown
 	actor.visual = 0.48
+	if stage_config.get("tactics",false):
+		if actor.id == "iris": enemies[target_index(actor.x)].broken = 6.0
+		if actor.id == "nyx":
+			for enemy in enemies: enemy.burn = 3.0
+
 	match actor.kind:
 		"area":
 			for i in range(enemies.size()):
-				hit(i, actor.power)
+				hit(i, actor.power * (1.2 if actor.id == "aether" and enemies[i].get("broken",0.0) > 0 else 1.0))
 		"single": hit(target_index(actor.x), actor.power)
 		"heal", "shield":
 			for ally in heroes:
@@ -123,6 +135,8 @@ func skill(slot: int = 0) -> bool:
 					ally.hp = minf(ally.max_hp, ally.hp + actor.power)
 				else:
 					ally.shield = maxf(ally.shield, actor.power)
+				if stage_config.get("tactics",false) and actor.id == "rune": ally.hp = minf(ally.max_hp,ally.hp+20)
+				if stage_config.get("tactics",false) and actor.id == "sol": ally.cooldown_left *= 0.8
 	cue.emit("skill")
 	return true
 
@@ -137,6 +151,7 @@ func living_target(x: float) -> Dictionary:
 	return chosen
 
 func damage_hero(actor: Dictionary, amount: float) -> void:
+	if stage_config.get("tactics",false) and actor.id == "brann" and actor.hp < actor.max_hp*0.5: amount *= 0.8
 	var absorbed := minf(actor.shield, amount)
 	actor.shield -= absorbed
 	actor.hp = maxf(0, actor.hp - amount + absorbed)
@@ -154,7 +169,14 @@ func tick_actor(actor: Dictionary, dt: float) -> void:
 		if actor.windup <= 0:
 			for i in range(enemies.size()):
 				if enemies[i].id == actor.target and absf(enemies[i].x - actor.x) < actor.range + 25:
-					hit(i, actor.damage)
+					var damage: float = actor.damage
+					if stage_config.get("tactics",false) and actor.id == "lyra" and enemies[i].get("burn",0.0)>0: damage *= 1.15
+					hit(i, damage)
+					if stage_config.get("tactics",false) and actor.id == "vera":
+						var weakest: Dictionary = {}
+						for ally in heroes:
+							if ally.hp > 0 and (weakest.is_empty() or ally.hp/ally.max_hp < weakest.hp/weakest.max_hp): weakest = ally
+						if not weakest.is_empty(): weakest.hp = minf(weakest.max_hp,weakest.hp+4)
 					break
 			actor.target = -1
 			actor.timer = actor.recovery
@@ -194,15 +216,36 @@ func tick(dt: float) -> void:
 			intermission = 0
 			spawn_wave()
 		return
+	for i in range(enemies.size()):
+		var enemy: Dictionary = enemies[i]
+		enemy.broken = maxf(0,float(enemy.get("broken",0.0))-dt)
+		if enemy.get("burn",0.0)>0 and enemy.hp>0:
+			enemy.burn = maxf(0,float(enemy.burn)-dt)
+			enemy.burn_tick = float(enemy.get("burn_tick",0.5))-dt
+			if enemy.burn_tick <= 0:
+				enemy.burn_tick = 0.5
+				hit(i,4.0)
 	for actor in heroes:
 		tick_actor(actor, dt)
 	for enemy in enemies:
 		if enemy.hp <= 0:
 			continue
 		var victim := living_target(enemy.x)
+		if enemy.get("kind","") == "assassin" and enemy.windup <= 0:
+			for ally in heroes:
+				if ally.hp > 0 and ally.x < victim.x: victim = ally
+		if enemy.get("kind","") == "healer":
+			enemy.heal_timer -= dt
+			if enemy.heal_timer <= 0:
+				enemy.heal_timer = 4.0
+				for friend in enemies:
+					if friend.hp>0: friend.hp = minf(friend.max_hp,friend.hp+friend.max_hp*0.08)
 		if victim.is_empty():
 			break
 		if enemy.get("boss", false):
+			if enemy.get("variant",0)==2 and enemy.move_index%3==1 and enemy.windup<=0:
+				for ally in heroes:
+					if ally.hp>0 and ally.x<victim.x: victim=ally
 			var was_winding: bool = enemy.windup > 0
 			if was_winding and enemy.has("target"):
 				for ally in heroes:
@@ -215,7 +258,10 @@ func tick(dt: float) -> void:
 			if event.phase_changed:
 				cue.emit("skill")
 			if event.damage > 0 and victim.hp > 0:
-				damage_hero(victim, event.damage * enemy.get("damage_scale", 1.0))
+				if event.get("all",false):
+					for ally in heroes:
+						if ally.hp>0: damage_hero(ally,event.damage*enemy.get("damage_scale",1.0))
+				else: damage_hero(victim, event.damage * enemy.get("damage_scale", 1.0))
 			continue
 		var attack_range := 330.0 if enemy.ranged else 75.0
 		if enemy.windup > 0:

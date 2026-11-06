@@ -1,3 +1,35 @@
+# Kiểm tra 0.8.0 — vòng chơi RPG
+
+Godot 4.6.3 stable, Linux. Chạy 22/22 tests/*smoke.gd: PASS, không có ERROR trong
+log lượt kiểm cuối. Save riêng XDG_DATA_HOME=/tmp/sword-rpg-complete/data;
+config/cache cùng thư mục thử, không dùng save người chơi.
+
+- Ba test mới kiểm migration1/2/3 và backup nguyên vẹn, 30 ải/thưởng chống trùng,
+  mục tiêu/tuần/quét, UID/mặc/cường hóa/phân giải, pity/mở tướng/cấp/kỹ năng/bậc,
+  hầm/tháp, validation/lỗi ghi/reload. Hai chương mới vượt được ở cấp20 trong
+  mô phỏng, không coi đó là chứng minh cân bằng mọi đội hình.
+- Luồng scene thật: sảnh→túi→mặc/cường hóa/tháo→thử tướng chưa có→triệu hồi bảo
+  đảm mở Iris→nâng/đổi đội→đánh hầm vàng→lưu thưởng→mục tiêu/thống kê.
+- Tactics: giáp/phá giáp, burn và phối hợp Aether, Rune/Vera, healer/sát thủ,
+  bonus bộ và snapshot theo ID. Bốn chế độ thắng được với đội cấp20, gồm tầng30.
+- 19 hồi quy cũ vẫn PASS: chapter1, save/backup, growth, equipment, drag chuột/
+  touch mô phỏng, battle/boss, audio và art/frames. Điều chỉnh kỳ vọng sauải10
+  nay mởải11, schema theo hằng số, drag hai hàng và teardown âm chờ flush.
+- Import editor PASS. tests/capture_rpg.gd render10ảnh thực bằng OpenGL
+  Compatibility/Mesa llvmpipe, audio Dummy, display Xvfb. Đã xem sảnh/tướng/túi/
+  triệu hồi/chuẩn bị/hầm/mục tiêu/boss chươngII. Ảnh dùng fixture thử riêng.
+
+Lỗi phát hiện và sửa trong lượt này: UID JSON dạngfloat khiến mặc đồ thất bại;
+đã normalize toàn bộ số RPG và validation theo int. Kiểm hồi quy bắt lỗi định
+ dạng thời gian HUD, đã sửa. Test teardown đợi backend âm giải phóng để tránh
+báo resource còn dùng khi thoát sớm.
+
+Chưa thử S23/cảm ứng thật, nghe âm, đo FPS/nhiệt hoặc kiểm chứng giữ chân thực.
+Ba tướng mới/nền/quái/boss mới tái sử dụng hình riêng cũ với màu và cơ chế khác;
+chưa có tranh độc lập. Chưa đóng APK hoặc thêm dịch vụ online.
+
+---
+
 # Bổ sung 0.7.0
 Godot4.6.3 headless/Dummy trên Linux, save riêng /tmp/sword-070/data.
 19/19 scripts *smoke.gd PASS, gồm audio_smoke/audio_scene_smoke mới. Kiểm mức

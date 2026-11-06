@@ -66,7 +66,7 @@ func run() -> void:
 	await drag_mouse(scene, 1, 4)
 	assert(storage.formation() == [0, 2, 3, 4, 1])
 	var driver = scene.campaign_panel.get_node("PartyDrag")
-	assert(driver.cards[1].position.x > driver.cards[4].position.x)
+	assert(driver.cards[1].position.y > driver.cards[4].position.y or (driver.cards[1].position.y == driver.cards[4].position.y and driver.cards[1].position.x > driver.cards[4].position.x))
 	assert(storage.data.gold == before.gold and storage.data.xp == before.xp and storage.data.hero_levels == before.hero_levels)
 	# Actual native touch with synthetic mouse events must not remove the hero.
 	var from := center(scene, 1)

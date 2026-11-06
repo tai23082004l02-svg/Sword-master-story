@@ -6,7 +6,15 @@ const EnemyArt = preload("res://game/enemy_art.gd")
 const BattleModel = preload("res://game/battle.gd")
 const Campaign = preload("res://game/campaign_data.gd")
 const Progress = preload("res://game/campaign_progress.gd")
-const CampaignUI = preload("res://game/campaign_ui.gd")
+const CampaignUI = preload("res://game/rpg_ui.gd")
+const RPG = preload("res://game/rpg_data.gd")
+var chapter_page := 0
+var rpg_index := 0
+var rpg_page := 0
+var rpg_section := ""
+var activity_mode := ""
+var trial_index := -1
+var battle_snapshots: Array = []
 var progress = Progress.new()
 var campaign_panel: Control
 var wallet: Label
@@ -184,6 +192,12 @@ func show_menu(title: String, subtitle: String, action: String, callback: Callab
 				progress.load_game()
 				to_title())
 			menu.add_child(retry)
+	if screen == "title":
+		menu.visible = false
+		clear_campaign_panel()
+		campaign_panel = CampaignUI.new(self)
+		ui.add_child(campaign_panel)
+		campaign_panel.lobby()
 	if screen == "paused":
 		var home := Button.new()
 		home.text = "Về sảnh"
@@ -198,9 +212,13 @@ func begin() -> void:
 		menu = null
 	screen = "battle"
 	if campaign_active:
-		battle.start(battle_roster.size(), battle_roster, battle_stage, battle_levels, battle_equipment)
+		battle.start(battle_roster.size(), battle_roster, battle_stage, battle_levels, battle_equipment, battle_snapshots)
 	else:
-		battle.start(party_size)
+		if trial_index >= 0:
+			var trial_stage := Campaign.stage(1)
+			trial_stage.tactics = true
+			battle.start(party_size,[0,trial_index] if trial_index>0 else [0],trial_stage)
+		else: battle.start(party_size)
 	result_delay = 0
 	skill_visual = 0
 	hurt_visual = 0
@@ -214,6 +232,7 @@ func begin() -> void:
 			companion_views[i].configure(battle.heroes[i + 1].id)
 
 func to_title() -> void:
+	trial_index = -1
 	if campaign_active and not progress.data.pending.is_empty():
 		progress.abandon_run(run_id)
 	campaign_active = false
@@ -282,10 +301,10 @@ func _process(delta: float) -> void:
 		if campaign_active:
 			show_campaign_result()
 		else:
-			show_menu("CHIẾN THẮNG" if battle.state == "won" else "THẤT BẠI", "Hạ %d địch · Chặng %d/4 · %.1f giây\nTrận kiểm tra cơ chế · Không tính thưởng" % [battle.kills, battle.wave, battle.elapsed], "Chơi lại", begin)
+			show_menu("CHIẾN THẮNG" if battle.state == "won" else "THẤT BẠI", "Hạ %d địch · %.1f giây\nTrận luyện · Không tính thưởng" % [battle.kills, battle.elapsed], "Chơi lại", begin)
 	audio_settings_button.visible = screen in ["title", "paused"]
-	wallet.visible = screen in ["title", "stages", "prepare", "result", "growth", "equipment"]
-	wallet.text = "Tiến trình đang khóa · " + progress.last_error if progress.read_only else "Vàng: %d     XP hành trình: %d     Đã vượt: %d/10" % [progress.data.gold, progress.data.xp, progress.data.cleared.size()]
+	wallet.visible = screen in ["title", "stages", "prepare", "result", "growth", "equipment", "rpg"]
+	wallet.text = "Tiến trình đang khóa · " + progress.last_error if progress.read_only else "Vàng: %d     XP hành trình: %d     Đã vượt: %d/30" % [progress.data.gold, progress.data.xp, progress.data.cleared.size()]
 	if progress.recovered and not progress.read_only:
 		wallet.text += " · Đã mở bản dự phòng"
 	feedback.visible = screen == "battle"
@@ -305,7 +324,7 @@ func _process(delta: float) -> void:
 			timing = "Đã gục"
 		button.text = "%d · %s · Cấp %d\n%d/%d HP · %s\n%s" % [i + 1, actor.name, actor.level, ceili(actor.hp), int(actor.max_hp), actor.skill, timing]
 	pause_button.visible = screen == "battle"
-	status.text = (("1-%02d · " % battle_stage_id) if campaign_active else "") + ("BOSS" if battle.wave > 0 and battle.boss_wave() else "ĐỢT %d / %d" % [battle.wave, battle.wave_limit]) + "      ĐỘI %d/%d · %.1fs" % [battle.heroes.filter(func(a): return a.hp > 0).size(), battle.heroes.size(), battle.elapsed]
+	status.text = ((battle_stage.title + " · ") if activity_mode != "" and campaign_active else ((Campaign.label(battle_stage_id) + " · ") if campaign_active else "")) + ("BOSS" if battle.wave > 0 and battle.boss_wave() else "ĐỢT %d / %d" % [battle.wave, battle.wave_limit]) + "      ĐỘI %d/%d · %.1fs" % [battle.heroes.filter(func(a): return a.hp > 0).size(), battle.heroes.size(), battle.elapsed]
 	queue_redraw()
 
 func draw_ellipse_shadow(pos: Vector2) -> void:
@@ -314,7 +333,10 @@ func draw_ellipse_shadow(pos: Vector2) -> void:
 	draw_set_transform(Vector2.ZERO)
 
 func _draw() -> void:
-	draw_texture_rect(BACKGROUND, Rect2(0, 0, 1280, 720), false)
+	var chapter_tint := Color.WHITE
+	if campaign_active:
+		chapter_tint = [Color.WHITE,Color("ffc393"),Color("cbddff")][RPG.chapter(int(battle_stage.get("id",1)))-1]
+	draw_texture_rect(BACKGROUND, Rect2(0, 0, 1280, 720), false,chapter_tint)
 	# Subtle vignette strips preserve HUD readability over painted scenery.
 	draw_rect(Rect2(0, 0, 1280, 90), Color(0.02, 0.04, 0.08, 0.6))
 	if screen in ["battle", "paused", "result"]:
@@ -326,6 +348,8 @@ func _draw() -> void:
 			if enemy.get("boss", false):
 				draw_boss_hud(enemy)
 				continue
+			var role: String = {"armored":"GIÁP","healer":"HỒI MÁU","assassin":"SÁT THỦ"}.get(enemy.get("kind",""),"")
+			if role != "": draw_string(ThemeDB.fallback_font,Vector2(enemy.x-45,330),role,HORIZONTAL_ALIGNMENT_LEFT,-1,16,Color("edce92"))
 			draw_rect(Rect2(enemy.x - 29, 342, 58, 6), Color("492e3b"))
 			draw_rect(Rect2(enemy.x - 29, 342, 58 * maxf(0, enemy.hp / enemy.max_hp), 6), Color("df8680"))
 	if screen == "character":
@@ -465,7 +489,7 @@ func update_enemies(delta: float) -> void:
 func draw_boss_hud(enemy: Dictionary) -> void:
 	draw_rect(Rect2(310, 90, 660, 100), Color(0.04, 0.02, 0.08, 0.85))
 	var font := ThemeDB.fallback_font
-	draw_string(font, Vector2(330, 117), "KỴ SĨ NGUYỆT THỰC · GIAI ĐOẠN %d" % enemy.phase, HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color("e2b9ed"))
+	draw_string(font, Vector2(330, 117), "%s · GIAI ĐOẠN %d" % [["KỴ SĨ NGUYỆT THỰC","HỘ VỆ TRO HỒNG","TƯỚNG THÀNH BÌNH MINH"][int(enemy.get("variant",0))],enemy.phase], HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color("e2b9ed"))
 	draw_rect(Rect2(330, 128, 620, 15), Color("36263e"))
 	draw_rect(Rect2(330, 128, 620 * maxf(0, enemy.hp / enemy.max_hp), 15), Color("a75ec2"))
 	var label := "%d / %d HP" % [ceili(enemy.hp), int(enemy.max_hp)]
@@ -481,7 +505,7 @@ func update_companions() -> void:
 		if i + 1 < battle.heroes.size():
 			view.sync(battle.heroes[i + 1], minf(get_process_delta_time(), 0.05), screen != "battle", battle.state in ["won", "lost"])
 			var offsets := {"brann": Vector2(30, 455), "lyra": Vector2(-30, 480), "nyx": Vector2(0, 500), "sol": Vector2(40, 520)}
-			var offset: Vector2 = offsets[view.actor.id]
+			var offset: Vector2 = offsets.get(view.actor.id, Vector2(0,480))
 			view.position = Vector2(view.actor.x + offset.x, offset.y)
 			view.scale = Vector2(0.72, 0.72)
 
@@ -538,7 +562,10 @@ func prepare_stage(id: int) -> void:
 	campaign_panel.prepare(id)
 
 func select_companion(id: int) -> void:
-	if id < 1 or id > 4 or screen != "prepare": return
+	if id < 1 or id >= RPG.HERO_COUNT or screen != "prepare" or not progress.data.rpg.recruited[id]: return
+	if not id in progress.formation() and progress.formation().size() >= 5:
+		campaign_panel.message("Đội đã đủ 5 tướng. Bỏ một đồng đội trước khi thêm.")
+		return
 	var roster: Array[int] = progress.formation()
 	if id in roster: roster.erase(id)
 	else: roster.append(id)
@@ -575,9 +602,14 @@ func start_campaign(id: int) -> void:
 		return
 	selected_stage = id
 	battle_stage_id = id
+	activity_mode = ""
+	trial_index = -1
 	battle_stage = Campaign.stage(id)
+	battle_stage.tactics = true
 	battle_roster = progress.formation()
-	battle_levels = progress.levels()
+	battle_levels = progress.levels(true)
+	battle_snapshots = []
+	for i in range(RPG.HERO_COUNT): battle_snapshots.append(progress.hero_stats(i).duplicate(true))
 	battle_equipment = progress.data.equipment.duplicate(true)
 	party_size = battle_roster.size()
 	campaign_active = true
@@ -592,7 +624,8 @@ func show_campaign_result() -> void:
 		settle_campaign()
 	screen = "result"
 	new_campaign_panel()
-	campaign_panel.result(receipt)
+	if activity_mode != "": campaign_panel.activity_result(receipt)
+	else: campaign_panel.result(receipt)
 
 func settle_campaign() -> void:
 	settlement_attempted = true
@@ -635,7 +668,7 @@ func change_equipment(id: String, slot: String = "") -> void:
 	campaign_panel.message("Đã lưu trang bị." if ok else error, ok)
 
 func title_subtitle() -> String:
-	return "CHƯƠNG I · %s\nPhế tích Ngân Nguyệt · 10 ải\nChiến đấu, nhận thưởng và mở đường đi tiếp" % ProjectSettings.get_setting("application/config/version", "")
+	return "CHƯƠNG I · %s\nBa chương · 30 ải\nChiến đấu, nhận thưởng và mở đường đi tiếp" % ProjectSettings.get_setting("application/config/version", "")
 
 func open_audio_settings() -> void:
 	if screen not in ["title", "paused"] or is_instance_valid(audio_dialog): return
@@ -644,3 +677,129 @@ func open_audio_settings() -> void:
 	audio_dialog.visibility_changed.connect(func():
 		if not audio_dialog.visible: refresh_mute())
 	audio_dialog.popup_centered()
+
+func open_rpg(section: String, index: int = -1) -> void:
+	if screen == "battle": return
+	if section == "stages": open_stages(); return
+	if section == "team": prepare_stage(progress.unlocked()); return
+	if campaign_active and not progress.data.pending.is_empty():
+		if not progress.abandon_run(run_id): return
+	campaign_active = false
+	battle.state = "idle"
+	clear_enemies()
+	screen = "rpg"
+	rpg_section = section
+	if index >= 0 and index < RPG.HERO_COUNT: rpg_index = index
+	new_campaign_panel()
+	match section:
+		"heroes": campaign_panel.heroes(rpg_index)
+		"inventory":
+			rpg_page = mini(rpg_page,maxi(0,int((progress.data.rpg.inventory.size()-1)/6)))
+			campaign_panel.inventory(rpg_index,rpg_page)
+		"summon": campaign_panel.summon_page()
+		"dungeons": campaign_panel.dungeons()
+		"goals": campaign_panel.goals()
+		"stats": campaign_panel.stats_page()
+
+func rpg_action(action: String, index: int = 0, value: int = 0) -> void:
+	if screen != "rpg": return
+	var ok := false
+	match action:
+		"level":
+			var outcome: Dictionary = progress.upgrade_hero(index,value)
+			ok = outcome.get("ok",false)
+			if not ok: progress.last_error = outcome.get("error","Chưa thể nâng tướng.")
+		"skill": ok = progress.train_skill(index,value)
+		"recruit": ok = progress.recruit(index)
+		"ascend": ok = progress.ascend(index)
+		"wishlist": ok = progress.set_wishlist(index)
+		"equip": ok = progress.equip_loot(index,value)
+		"unequip":
+			var item: Dictionary = RPG.find_item(progress.data.rpg,value)
+			if not item.is_empty(): ok = progress.unequip_loot(index,RPG.ITEMS[item.base].slot)
+		"enhance": ok = progress.enhance_loot(index,value)
+		"dismantle": ok = progress.dismantle_loot(index)
+		"weekly": ok = progress.claim_weekly()
+	var error: String = progress.last_error
+	open_rpg(rpg_section)
+	campaign_panel.message("Đã lưu thay đổi." if ok else error,ok)
+
+func confirm_dismantle(uid: int) -> void:
+	if screen != "rpg": return
+	var item: Dictionary = RPG.find_item(progress.data.rpg,uid)
+	if item.is_empty(): return
+	var dialog := ConfirmationDialog.new()
+	dialog.title = "Phân giải trang bị"
+	dialog.dialog_text = "Phân giải%s +%d thành %d bụi? Không thể hoàn tác." % [RPG.ITEMS[item.base].name,item.rank,5+item.rank*3]
+	dialog.ok_button_text = "Phân giải"
+	dialog.cancel_button_text = "Hủy"
+	dialog.confirmed.connect(func(): rpg_action("dismantle",uid))
+	dialog.visibility_changed.connect(func():
+		if not dialog.visible: dialog.queue_free())
+	ui.add_child(dialog)
+	dialog.popup_centered(Vector2i(650,200))
+
+func rpg_summon(count: int) -> void:
+	if screen != "rpg" or rpg_section != "summon": return
+	var outcome: Dictionary = progress.summon(count)
+	open_rpg("summon")
+	if not outcome.ok: campaign_panel.message(outcome.error); return
+	var lines: PackedStringArray = []
+	for result in outcome.results:
+		lines.append("%s +%d mảnh%s" % [PartyData.HEROES[int(result.hero)].name,result.shards," · MỞ TƯỚNG" if result.new else ""])
+	var dialog := AcceptDialog.new()
+	dialog.title = "Kết quả triệu hồi · Đã lưu"
+	dialog.dialog_text = "\n".join(lines)
+	dialog.visibility_changed.connect(func():
+		if not dialog.visible: dialog.queue_free())
+	ui.add_child(dialog)
+	dialog.popup_centered(Vector2i(650,450))
+
+func rpg_goal(id: String) -> void:
+	for goal in RPG.GOALS:
+		if goal.id != id: continue
+		if progress.goal_value(goal) >= goal.target:
+			var ok: bool = progress.claim_goal(id)
+			var error: String = progress.last_error
+			open_rpg("goals")
+			campaign_panel.message("Đã nhận thưởng." if ok else error,ok)
+		elif goal.kind == "enhance": open_rpg("inventory")
+		elif goal.kind == "summons": open_rpg("summon")
+		else: prepare_stage(progress.unlocked())
+		return
+
+func rpg_sweep(id: int) -> void:
+	if screen != "prepare": return
+	var result: Dictionary = progress.sweep(id,1)
+	prepare_stage(id)
+	campaign_panel.message("Đã quét: +%d vàng +%d XP +%d món +%d bụi." % [result.gold,result.xp,result.items,result.dust] if result.ok else result.error,result.ok)
+
+func start_activity(mode: String) -> void:
+	var token: int = progress.begin_activity(mode)
+	if token < 0:
+		if is_instance_valid(campaign_panel): campaign_panel.message("Vượtải 1-05 để mở hầm hoặc kiểm tra tiến trình lưu.")
+		return
+	activity_mode = mode
+	trial_index = -1
+	selected_stage = 1
+	battle_stage_id = 1
+	battle_stage = progress.activity_stage(mode,int(progress.data.pending.floor))
+	battle_roster = progress.formation()
+	battle_levels = progress.levels(true)
+	battle_equipment = progress.data.equipment.duplicate(true)
+	battle_snapshots = []
+	for i in range(RPG.HERO_COUNT): battle_snapshots.append(progress.hero_stats(i).duplicate(true))
+	party_size = battle_roster.size()
+	campaign_active = true
+	run_id = token
+	receipt = {}
+	settlement_attempted = false
+	begin()
+
+func start_trial(index: int) -> void:
+	if index<0 or index>=RPG.HERO_COUNT or screen!="rpg": return
+	campaign_active=false
+	activity_mode=""
+	trial_index=index
+	party_size=2 if index>0 else 1
+	begin()

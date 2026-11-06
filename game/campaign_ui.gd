@@ -56,7 +56,7 @@ func stages() -> void:
 		var state := "Đã vượt" if cleared else ("Sẵn sàng" if unlocked else "Chưa mở")
 		var card := button("1-%02d\n%s\n%s\n%s" % [id, stage.title, kind, state], Vector2(50 + i % 5 * 238, 192 + i / 5 * 156), Vector2(224, 138), func(): host.prepare_stage(id), not unlocked or host.progress.read_only)
 		card.add_theme_font_size_override("font_size", 19)
-	var complete: bool = host.progress.data.cleared.size() == 10
+	var complete: bool = host.progress.data.cleared.size() == Campaign.MAX_STAGE
 	text("Đã hoàn thành chương! Có thể chơi lại các ải để nhận thưởng trận." if complete else "Ải 5 và 10 có Kỵ sĩ Nguyệt Thực. Thưởng lần đầu chỉ nhận một lần mỗi ải.", Vector2(50, 520), Vector2(1180, 50), 21, Color("94cfbd"))
 	notice = text(host.progress.last_error, Vector2(290, 585), Vector2(610, 65), 18, Color("ffb6a5"))
 	button("Về sảnh", Vector2(50, 590), Vector2(215, 58), host.to_title)
@@ -118,7 +118,7 @@ func prepare(id: int) -> void:
 func result(receipt: Dictionary) -> void:
 	var stage := Campaign.stage(host.selected_stage)
 	var won: bool = host.battle.state == "won"
-	text(("CHIẾN THẮNG" if won else "THẤT BẠI") + " · 1-%02d" % host.selected_stage, Vector2(70, 100), Vector2(1140, 48), 38, Color("edce92") if won else Color("e9a8a1"))
+	text(("CHIẾN THẮNG" if won else "THẤT BẠI") + " · " + Campaign.label(host.selected_stage), Vector2(70, 100), Vector2(1140, 48), 38, Color("edce92") if won else Color("e9a8a1"))
 	text(stage.title, Vector2(70, 154), Vector2(1140, 36), 25)
 	var living: int = host.battle.heroes.filter(func(a): return a.hp > 0).size()
 	text("%.1f giây · Hạ %d địch · Còn sống %d/%d tướng" % [host.battle.elapsed, host.battle.kills, living, host.battle.heroes.size()], Vector2(70, 204), Vector2(1140, 36), 23)
@@ -133,14 +133,17 @@ func result(receipt: Dictionary) -> void:
 		text("VƯỢT LẦN ĐẦU\n+%d vàng\n+%d XP hành trình" % [stage.first_gold if first else 0, stage.first_xp if first else 0], Vector2(470, 285), Vector2(350, 140), 25, Color("edce92") if first else Color("8296a6"))
 		text("TỔNG NHẬN\n+%d vàng\n+%d XP hành trình" % [receipt.gold, receipt.xp], Vector2(860, 285), Vector2(350, 140), 25, Color("94cfbd"))
 		var note := "Đã nhận thưởng vượt lần đầu." if first else "Thưởng vượt lần đầu đã nhận ở lần trước."
-		if host.progress.data.cleared.size() == 10: note = "Đã hoàn thành Chương I! Có thể chơi lại các ải."
-		text(note, Vector2(70, 457), Vector2(1140, 36), 23, Color("94cfbd"))
+		if host.progress.data.cleared.size() == Campaign.MAX_STAGE: note = "Đã hoàn thành ba chương! Có thể chơi lại các ải."
+		if not receipt.get("loot",{}).is_empty(): note += " · " + receipt.loot.name
+		if receipt.has("gems"):
+			note += "\n+%d tinh thạch · +%d vé triệu hồi · +2 bụi · +2 mảnh %s · +1 vé quét" % [receipt.gems,receipt.tickets,Party.HEROES[int(receipt.shard_hero)].name]
+		text(note, Vector2(70, 450), Vector2(1140, 62), 19, Color("94cfbd"))
 	else:
-		text("Chưa vượt ải · Không mất vàng hoặc XP.\nThử đổi đội hình hoặc bật tự dùng kỹ năng.", Vector2(70, 292), Vector2(1140, 95), 25)
+		text("Chưa vượtải · Không mất tài nguyên.\nThiếu sát thương: nâng kiếm/kỹ năng, phối hợp Nyx+Lyra.\nGục sớm: nâng giáp, dùng Brann+Sol hoặc Rune+Vera.", Vector2(70, 292), Vector2(1140, 95), 25)
 	text("Đã lưu tiến trình", Vector2(70, 514), Vector2(1140, 34), 20, Color("94cfbd"))
 	button("Chọn ải", Vector2(70, 580), Vector2(250, 66), host.open_stages)
 	button("Chơi lại", Vector2(345, 580), Vector2(250, 66), func(): host.start_campaign(host.selected_stage))
-	if won and host.selected_stage < 10:
+	if won and host.selected_stage < Campaign.MAX_STAGE:
 		button("Ải tiếp theo", Vector2(860, 580), Vector2(350, 66), func(): host.prepare_stage(host.selected_stage + 1))
 	else:
 		button("Chuẩn bị đội", Vector2(860, 580), Vector2(350, 66), func(): host.prepare_stage(host.selected_stage))

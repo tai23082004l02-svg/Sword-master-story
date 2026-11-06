@@ -1,3 +1,48 @@
+# Bàn giao 0.8.0 — Mở rộng vòng chơi RPG
+
+Người dùng yêu cầu triển khai toàn bộ kế hoạch từ ảnh tham khảo, tập trung giữ
+chân qua vòng chơi, không ưu tiên âm thanh. Đã đặt automation kiểm tra sau hai
+ tiếng từ yêu cầu: rà lỗi/tiến độ và tiếp tục phần thiếu trong phạm vi này.
+Đọc README và RPG_SYSTEMS.md trước khi sửa; TEST_RESULTS.md ghi kiểm tra thật.
+
+## Đã nối vào game
+- Sảnh mới với nhân vật, mục tiêu và bảy cửa hệ thống. Tướng quản lý cấp, nội tại,
+  kỹ năng, bậc; có trận thử không thưởng. Đội tối đa năm, chọn trong tám tướng.
+- Loot UID riêng, sáu món/ba bộ theo chương, nhận đồ xác định luân phiên; túi
+  phân trang, mặc/tháo/cường hóa/phân giải có xác nhận. Tương thích đồ cũ.
+- Nyx+Lyra và Iris+Aether phối hợp, Brann/Sol/Rune/Vera có nội tại hỗ trợ.
+  Địch giáp/hồi máu/sát thủ, hai chương mới; boss biến thể AoE/truy kích sau.
+- 30 ải, hầm vàng/nguyên liệu, tháp 30 tầng, thử thách xoay tuần. Quét ải đã
+  thắng ba lần bằng vé quét riêng; vé kiếm qua thắng đánh tay.
+- Triệu hồi offline 1/10 lượt, 5% gói30 mảnh/95% gói5 mảnh, đều tám tướng;
+  lượt20 bảo đảm tướng mong muốn, không mất pity khi đổi. Mảnh mở và nâng bậc.
+- Sáu mục tiêu đầu, thưởng thắng tuần, thống kê local theo ải và hoạt động.
+  Thống kê chưa phải bằng chứng giữ chân hoặc telemetry cộng đồng.
+
+## Kiến trúc và save
+rpg_data.gd giữ catalogue/default/validation/normalize; campaign_progress.gd giữ
+mọi transaction. Schema4 đọc1/2/3 không ghi ngay, giữ backup migration theo schema
+nguồn, UID/số chuẩn hóa int, giữ giao dịch atomic và token chống cộng lại.
+Giữ hero_levels5 cũ, extra_levels3 trongrpg; levels() mặc định trả5 để giữ legacy,
+levels(true) trả8. Battle.start nhận snapshots tùy chọn sau equipment; main chụp
+stats theoID, không theo slot. tactics chỉ bật ởgameplay mới/trial, APIlegacy giữ
+hồi quy. rpg_ui.gd kế thừa campaign_ui.gd; menu cũ giữ ẩn để tương thích APItest,
+người chơi thấy lobby mới. inventory mới và gear cũ loại trừ nhau trong cùngô.
+
+## Giới hạn và việc cần kiểm chứng
+Đây là bản chơi thử đầy đủ luồng, chưa phải cân bằng cuối hay cam kết giữ chân.
+Ba tướng mới là biến thể hình Nyx/Brann/Sol; nền/quái/boss tái sử dụng bộ riêng cũ
+với tint/nhãn/cơ chế mới, chưa có tranh độc lập. Không sao chép asset tham khảo.
+Đã render Godot OpenGL và xem ảnh; chưa thử S23/cảm ứng thật/nghe âm/đo FPS/nhiệt.
+Tuần dựa đồng hồ UTC máy, không chống chỉnh giờ. Không APK, online, PvP, bang hội,
+shop tiền thật, API trả phí hoặc dịch vụ mới. Không tự thêm các mục đó khi rà sau.
+
+Khi kiểm tra tự động: fetch/đọc status trước, không đè thay đổi. Chạy test liên
+quan với XDG_DATA_HOME riêng. Nếu toàn bộ phạm vi đã hoàn tất và test sạch, rà
+lỗi/mâu thuẫn tài liệu rồi báo kết quả; không tạo thêm tính năng ngoài kế hoạch.
+
+---
+
 # Bổ sung 0.7.0 — Thiết lập và ưu tiên âm
 Đọc AUDIO.md. Sảnh/paused có Âm lượng mở ConfirmationDialog: master/sfx0–100%,
 mute; Lưu ghi.tmp/rename trước cập nhật bus, Hủy không đổi. Legacy audio.cfg

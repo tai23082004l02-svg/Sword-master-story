@@ -7,7 +7,7 @@ func run() -> void:
 	root.add_child(scene)
 	await process_frame
 	scene.audio.config_path = "user://audio-scene-settings-%d.cfg" % Time.get_ticks_usec()
-	assert("0.7.0" in scene.title_subtitle())
+	assert(str(ProjectSettings.get_setting("application/config/version")) in scene.title_subtitle())
 	scene.open_audio_settings()
 	await process_frame
 	var dialog: ConfirmationDialog = scene.audio_dialog
@@ -42,9 +42,10 @@ func run() -> void:
 	await process_frame
 	scene.resume()
 	scene.to_title()
-	assert("0.7.0" in scene.title_subtitle())
+	assert(str(ProjectSettings.get_setting("application/config/version")) in scene.title_subtitle())
 	scene.audio.stop_all()
 	scene.queue_free()
 	await process_frame
 	print("PASS: audio dialog save/cancel/error, paused state, button visibility, version consistency")
+	await create_timer(0.15).timeout
 	quit()

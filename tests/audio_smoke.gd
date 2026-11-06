@@ -53,4 +53,5 @@ func run() -> void:
 	mixer.queue_free()
 	await process_frame
 	print("PASS: legacy audio config, volume buses/reload, priority pool, result isolation, hit throttle, mute/zero and save failure")
+	await create_timer(0.15).timeout
 	quit()

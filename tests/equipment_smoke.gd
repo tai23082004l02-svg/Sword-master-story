@@ -25,7 +25,7 @@ func _initialize() -> void:
 		file.store_string(original)
 		file.close()
 		var p := FailingProgress.new(path)
-		assert(p.load_game() and p.data.version == 3)
+		assert(p.load_game() and p.data.version == Progress.SCHEMA_VERSION)
 		assert(FileAccess.get_file_as_string(path) == original)
 		assert(p.buy_equipment("iron_blade"))
 		assert(FileAccess.get_file_as_string(path + ".v%d.bak" % version) == original)
