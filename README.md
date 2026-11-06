@@ -1,9 +1,16 @@
-# Kiếm Hành — prototype 0.3.2
+# Kiếm Hành — prototype 0.3.3
 
 Game nhập vai đội hình nhìn ngang, tham khảo nhịp chơi Sword Master Story.
 Đang ở mốc nền tảng + trận đánh một kiếm sĩ, **chưa phải game đội năm tướng**.
 Kiếm sĩ Aether đã có sprite anime fantasy riêng và sáu trạng thái hoạt ảnh.
 Hai loại quái và bối cảnh đã có hình fantasy riêng.
+
+## Boss đầu tiên 0.3.3
+Sau ba đợt quái, đối đầu **Kỵ sĩ Nguyệt Thực**: ba đòn, hai giai đoạn,
+thanh máu và hình riêng. Kỹ năng luôn gây sát thương bình thường, không cần canh sơ hở.
+[Xem cơ chế và cách thử](docs/BOSS.md).
+
+![Boss trong trận Godot](docs/screenshots/eclipse_boss.png)
 
 ## Sửa nền mờ 0.3.2
 Lọc pixel nền bán trong suốt còn sót trong sprite Aether và quái khi render,
@@ -27,10 +34,10 @@ Godot 4.6.3, renderer Compatibility. Import `project.godot`, đợi import, Run.
 Màn hình ngang 1280×720 logical, canvas co theo màn hình.
 - Bấm Bắt đầu; kiếm sĩ tự chạy tới địch và đánh.
 - Chạm Kiếm khí (hoặc Space): 48 sát thương toàn bộ địch, hồi 6 giây.
-- Ba đợt gồm 2/3/4 quái cận chiến và đánh xa; kỹ năng giúp vượt trận.
+- Ba đợt gồm2/3/4quái cận chiến và đánh xa, sau đó boss600HP.
 - Tạm dừng hoặc Esc; chuyển ứng dụng tự pause, quay lại bấm Tiếp tục.
 - Có thắng/thua, chơi lại, về sảnh khi pause và bật/tắt âm lưu riêng.
-- Chưa có thưởng, save tiến trình, trang bị, boss, nhạc hoặc APK.
+- Chưa có thưởng, save tiến trình, trang bị, nhạc hoặc APK.
 
 ## Cập nhật trên S23 Ultra
 Giữ SSH hiện có. Repo này có thư mục riêng, không ghi đè Game-2.5D.

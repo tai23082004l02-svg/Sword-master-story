@@ -1,6 +1,7 @@
 extends Node2D
 
 const BACKGROUND = preload("res://assets/world/moon_ruins.png")
+const BossArt = preload("res://game/boss_art.gd")
 const EnemyArt = preload("res://game/enemy_art.gd")
 const BattleModel = preload("res://game/battle.gd")
 var battle = BattleModel.new()
@@ -12,6 +13,7 @@ var pause_button: Button
 var menu: VBoxContainer
 var audio: Node
 var hero_art: Node2D
+var feedback: Node2D
 var art_layer: Node2D
 var skill_visual := 0.0
 var hurt_visual := 0.0
@@ -32,6 +34,10 @@ func _ready() -> void:
 	add_child(art_layer)
 	hero_art = preload("res://game/hero_art.gd").new()
 	art_layer.add_child(hero_art)
+	feedback = preload("res://game/combat_feedback.gd").new()
+	feedback.model = battle
+	feedback.z_index = 3
+	add_child(feedback)
 	ui = Control.new()
 	ui.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var layer := CanvasLayer.new()
@@ -48,7 +54,7 @@ func _ready() -> void:
 	ui.add_child(status)
 	skill_button = make_button("KIẾM KHÍ · Space", Vector2(920, 600), Vector2(310, 76), use_skill)
 	pause_button = make_button("Tạm dừng", Vector2(1060, 25), Vector2(170, 52), toggle_pause)
-	show_menu("KIẾM HÀNH", "PHẾ TÍCH NGÂN NGUYỆT · 0.3.1\nMột kiếm sĩ · Ba đợt quái\nTự đánh — chạm Kiếm khí để dùng kỹ năng", "Bắt đầu", begin)
+	show_menu("KIẾM HÀNH", "KỴ SĨ NGUYỆT THỰC · 0.3.3\nBa đợt quái · Một boss\nTự đánh — chạm Kiếm khí để dùng kỹ năng", "Bắt đầu", begin)
 	get_viewport().size_changed.connect(resize_ui)
 	resize_ui()
 
@@ -157,11 +163,13 @@ func _process(delta: float) -> void:
 		result_delay += delta
 	if screen == "battle" and battle.state in ["won", "lost"] and result_delay >= 0.85:
 		screen = "result"
-		show_menu("CHIẾN THẮNG" if battle.state == "won" else "THẤT BẠI", "Hạ %d quái · Đợt %d/3 · %.1f giây\nBản thử chưa có phần thưởng hoặc lưu tiến trình" % [battle.kills, battle.wave, battle.elapsed], "Chơi lại", begin)
+		show_menu("CHIẾN THẮNG" if battle.state == "won" else "THẤT BẠI", "Hạ %d địch · Chặng %d/4 · %.1f giây\nBản thử chưa có phần thưởng hoặc lưu tiến trình" % [battle.kills, battle.wave, battle.elapsed], "Chơi lại", begin)
+	feedback.visible = screen == "battle"
+	feedback.queue_redraw()
 	status.visible = screen in ["battle", "paused"]
 	skill_button.visible = screen == "battle"
 	pause_button.visible = screen == "battle"
-	status.text = "ĐỢT %d / 3      KIẾM SĨ  %d / 220 HP" % [battle.wave, ceili(battle.hero_hp)]
+	status.text = ("BOSS" if battle.wave == 4 else "ĐỢT %d / 3" % battle.wave) + "      AETHER  %d / 220 HP" % ceili(battle.hero_hp)
 	skill_button.disabled = battle.cooldown > 0 or battle.intermission > 0
 	skill_button.text = "KIẾM KHÍ · %.1fs" % battle.cooldown if battle.cooldown > 0 else "KIẾM KHÍ · Space"
 	queue_redraw()
@@ -181,10 +189,11 @@ func _draw() -> void:
 			if enemy.hp <= 0:
 				continue
 			draw_ellipse_shadow(Vector2(enemy.x, 517))
+			if enemy.get("boss", false):
+				draw_boss_hud(enemy)
+				continue
 			draw_rect(Rect2(enemy.x - 29, 342, 58, 6), Color("492e3b"))
 			draw_rect(Rect2(enemy.x - 29, 342, 58 * maxf(0, enemy.hp / enemy.max_hp), 6), Color("df8680"))
-		for effect in battle.effects:
-			draw_string(ThemeDB.fallback_font, Vector2(effect.x - 15, 370 - (0.65 - effect.ttl) * 50), effect.text, HORIZONTAL_ALIGNMENT_LEFT, -1, 30, Color("ffe49b") if effect.skill else Color.WHITE)
 	if screen == "character":
 		draw_character_backdrop()
 	if screen not in ["battle", "character"]:
@@ -277,7 +286,7 @@ func update_enemies(delta: float) -> void:
 	for enemy in battle.enemies:
 		active[enemy.id] = true
 		if not enemy_views.has(enemy.id):
-			var view := EnemyArt.new()
+			var view: Node2D = BossArt.new() if enemy.get("boss", false) else EnemyArt.new()
 			art_layer.add_child(view)
 			enemy_views[enemy.id] = view
 		var view: Node2D = enemy_views[enemy.id]
@@ -292,3 +301,14 @@ func update_enemies(delta: float) -> void:
 		if screen == "battle" and view.fade_death(delta):
 			view.queue_free()
 			enemy_views.erase(id)
+
+func draw_boss_hud(enemy: Dictionary) -> void:
+	draw_rect(Rect2(310, 90, 660, 100), Color(0.04, 0.02, 0.08, 0.85))
+	var font := ThemeDB.fallback_font
+	draw_string(font, Vector2(330, 117), "KỴ SĨ NGUYỆT THỰC · GIAI ĐOẠN %d" % enemy.phase, HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color("e2b9ed"))
+	draw_rect(Rect2(330, 128, 620, 15), Color("36263e"))
+	draw_rect(Rect2(330, 128, 620 * maxf(0, enemy.hp / enemy.max_hp), 15), Color("a75ec2"))
+	var label := "%d / %d HP" % [ceili(enemy.hp), int(enemy.max_hp)]
+	if enemy.windup > 0:
+		label += "  ·  " + enemy.attack_name
+	draw_string(font, Vector2(330, 172), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color("ead7f0"))

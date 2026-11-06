@@ -4,7 +4,7 @@ func _initialize() -> void:
 	call_deferred("run")
 func run() -> void:
 	RenderingServer.set_default_clear_color(Color(0.12, 0.16, 0.2, 1))
-	for path in ["res://game/hero_art.gd", "res://game/enemy_art.gd"]:
+	for path in ["res://game/hero_art.gd", "res://game/enemy_art.gd", "res://game/boss_art.gd"]:
 		var sprite = load(path).new()
 		sprite.position = Vector2(128, 224)
 		root.add_child(sprite)
@@ -28,5 +28,5 @@ func run() -> void:
 		assert(checked > 50)
 		sprite.queue_free()
 		await process_frame
-	print("PASS: low-alpha residue renders fully transparent on hero and enemy sheets")
+	print("PASS: low-alpha residue renders fully transparent on hero, enemy and boss sheets")
 	quit()

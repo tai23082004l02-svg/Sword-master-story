@@ -1,3 +1,10 @@
+# Bổ sung 0.3.3 — Boss đầu tiên
+Người dùng chốt bỏ canh sơ hở; BossBrain không có vulnerability/multiplier.
+Boss600HP sau ba đợt,3đòn,phase2ở50%, chỉ thắng khi hạboss. BossArt riêng với
+shader alpha hiện có; HUD,windup và chết0.8s. Đọc BOSS.md trước khi sửa.
+Giữ chỉ số Aether/quái và audio/save. boss_smoke thêm kiểm skill48 mọi trạng thái.
+Mốc cảnh mẫu0.3 đã có hero/quái/boss/nền/skill; bước sau0.4 đội hình nhiều tướng.
+
 # Bổ sung 0.3.2 — Lọc nền alpha
 Người dùng thấy hình vuông mờ quanh sprite. Ảnh AI có nhiều pixel alpha1–20/255
 ngoài nhân vật. HeroArt/EnemyArt dùng shader sprite_alpha: texel.a nhân smoothstep

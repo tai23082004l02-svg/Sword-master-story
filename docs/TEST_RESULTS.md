@@ -26,3 +26,11 @@ không hỗ trợ đổi VSync; không có lỗi script. Không suy ra FPS/âm t
 alpha_render.gd chạy OpenGL Compatibility kiểm từng pixel alpha0.04–0.075 ở
 frame đầu hai sheet: output trùng màu nền (sai số<0.005), PASS. Import shader
 không lỗi; ảnh trận/viewer đã chụp và xem lại. Chưa xác minh trực tiếp thiết bị.
+
+##0.3.3 — Boss
+boss_smoke:3đòn,phase50%một lần,skill48mọi trạng thái,pause,victory PASS.
+battle_smoke: full3đợt+boss,10địch,skill ngay khi hồi thắng56HP ở60Hz.
+Chưa dùng kết quả mô phỏng thay cho duyệt cân bằng/chơi thật.
+scene_smoke,hero_art_smoke,enemy_art_smoke PASS. Shader alpha_render mở rộng
+sang boss PASS. Đã render full trận OpenGL/Mesa llvmpipe60Hz, chụp/xem phase2
+và chiến thắng; không skip3đợt. Audio Dummy, chưa nghe duyệt hoặc đo máy thật.

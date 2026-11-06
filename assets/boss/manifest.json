@@ -1,0 +1,11 @@
+{
+  "character": "Kỵ sĩ Nguyệt Thực",
+  "source": "Original OpenAI image generation in this session, 2026-11-06",
+  "file": "eclipse_knight.png",
+  "dimensions": [1536, 1024],
+  "grid": [6, 4],
+  "cell": [256, 256],
+  "clips": {"walk_idle": [0, 6], "slash": [6, 6], "magic_heavy": [12, 6], "transform": [18, 2], "hurt": [20, 1], "death": [21, 3]},
+  "third_party_game_assets": false,
+  "render": "same low alpha residue filter as Aether and normal enemies"
+}

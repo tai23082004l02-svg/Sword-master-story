@@ -18,7 +18,7 @@ func _initialize() -> void:
 		if b.state != "playing":
 			break
 	assert(b.state == "won", "Active skill run must win")
-	assert(b.kills == 9 and b.wave == 3)
+	assert(b.kills == 10 and b.wave == 4)
 	var hp: float = b.hero_hp
 	b.tick(5)
 	assert(b.hero_hp == hp)

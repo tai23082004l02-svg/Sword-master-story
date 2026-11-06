@@ -1,6 +1,8 @@
 class_name Battle
 extends RefCounted
 
+const Boss = preload("res://game/boss_brain.gd")
+
 signal cue(event: String)
 var state := "idle"
 var wave := 0
@@ -36,6 +38,11 @@ func start() -> void:
 func spawn_wave() -> void:
 	wave += 1
 	hero_x = 240.0
+	if wave == 4:
+		serial += 1
+		enemies.append(Boss.create(serial))
+		cue.emit("wave")
+		return
 	for i in range(wave + 1):
 		serial += 1
 		var ranged := i % 2 == 1
@@ -82,7 +89,7 @@ func tick(dt: float) -> void:
 	if enemies.is_empty():
 		windup = 0
 		pending_target = -1
-		if wave == 3:
+		if wave == 4:
 			state = "won"
 			cue.emit("win")
 			return
@@ -112,6 +119,14 @@ func tick(dt: float) -> void:
 			pending_target = enemies[target].id
 	for enemy in enemies:
 		if enemy.hp <= 0:
+			continue
+		if enemy.get("boss", false):
+			var event := Boss.tick(enemy, dt, hero_x)
+			if event.phase_changed:
+				cue.emit("skill")
+			if event.damage > 0:
+				hero_hp = maxf(0, hero_hp - event.damage)
+				effects.append({"x": hero_x, "text": "-%d" % int(event.damage), "ttl": 0.6, "skill": false})
 			continue
 		var attack_range := 330.0 if enemy.ranged else 75.0
 		if enemy.windup > 0:

@@ -12,3 +12,7 @@ Chưa có đạn bay: địch xa gây sát thương trực tiếp sau báo đòn
 
 Battle RefCounted giữ trạng thái thuần, main.gd trình bày/input, audio.gd phát local.
 Trước mở rộng đội hình sẽ tách actor/skill/content data khỏi model nhỏ hiện tại.
+
+##0.3.3
+Trận hiện gồm ba đợt cũ+boss; thắng ởchặng4, tổng10địch. Không canh sơ hở,
+không buff damage theo thời điểm. Skill cố định48; xem BOSS.md cho thông số.
