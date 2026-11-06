@@ -1,3 +1,10 @@
+# Bổ sung 0.7.0
+Godot4.6.3 headless/Dummy trên Linux, save riêng /tmp/sword-070/data.
+19/19 scripts *smoke.gd PASS, gồm audio_smoke/audio_scene_smoke mới. Kiểm mức
+âm lượng/bus, legacy/reload, ưu tiên voice, result/throttle/mute/zero, lỗi ghi,
+Lưu/Hủy/lỗi qua UI, pause và version sảnh. Hồi quy17test trước vẫn PASS.
+Chưa render duyệt hộp thoại, nghe âm, thử điện thoại hoặc benchmark.
+
 # Bổ sung 0.6.2
 Godot4.6.3 headless trên Linux, XDG_DATA_HOME=/tmp/sword-equipment/data.
 17/17 scripts *smoke.gd PASS, gồm equipment_smoke/equipment_scene_smoke mới.

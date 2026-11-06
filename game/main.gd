@@ -34,6 +34,8 @@ var companion_views: Array[Node2D] = []
 var auto_button: Button
 var pause_button: Button
 var menu: VBoxContainer
+var audio_settings_button: Button
+var audio_dialog: ConfirmationDialog
 var audio: Node
 var hero_art: Node2D
 var companion_preview: Node2D
@@ -84,6 +86,7 @@ func _ready() -> void:
 		refresh_mute())
 	mute_button.name = "Mute"
 	refresh_mute()
+	audio_settings_button = make_button("Âm lượng", Vector2(230, 650), Vector2(170, 50), open_audio_settings)
 	status = Label.new()
 	status.position = Vector2(40, 28)
 	status.add_theme_font_size_override("font_size", 25)
@@ -115,7 +118,7 @@ func _ready() -> void:
 	wallet.add_theme_font_size_override("font_size", 22)
 	ui.add_child(wallet)
 	pause_button = make_button("Tạm dừng", Vector2(1060, 25), Vector2(170, 52), toggle_pause)
-	show_menu("KIẾM HÀNH", "CHƯƠNG I · 0.6.1\nPhế tích Ngân Nguyệt · 10 ải\nChiến đấu, nhận thưởng và mở đường đi tiếp", "Chọn ải", open_stages)
+	show_menu("KIẾM HÀNH", title_subtitle(), "Chọn ải", open_stages)
 	get_viewport().size_changed.connect(resize_ui)
 	resize_ui()
 
@@ -219,7 +222,7 @@ func to_title() -> void:
 	clear_preview()
 	screen = "title"
 	battle.state = "idle"
-	show_menu("KIẾM HÀNH", "CHƯƠNG I · PHẾ TÍCH NGÂN NGUYỆT\n10 ải · Thưởng và lưu tiến trình", "Chọn ải", open_stages)
+	show_menu("KIẾM HÀNH", title_subtitle(), "Chọn ải", open_stages)
 
 func use_skill() -> void:
 	use_party_skill(0)
@@ -231,6 +234,7 @@ func use_party_skill(slot: int) -> void:
 
 func toggle_pause() -> void:
 	if screen == "battle" and battle.state == "playing":
+		audio.stop_all()
 		battle.state = "paused"
 		screen = "paused"
 		show_menu("TẠM DỪNG", "Trận đấu đang dừng", "Tiếp tục", resume)
@@ -279,6 +283,7 @@ func _process(delta: float) -> void:
 			show_campaign_result()
 		else:
 			show_menu("CHIẾN THẮNG" if battle.state == "won" else "THẤT BẠI", "Hạ %d địch · Chặng %d/4 · %.1f giây\nTrận kiểm tra cơ chế · Không tính thưởng" % [battle.kills, battle.wave, battle.elapsed], "Chơi lại", begin)
+	audio_settings_button.visible = screen in ["title", "paused"]
 	wallet.visible = screen in ["title", "stages", "prepare", "result", "growth", "equipment"]
 	wallet.text = "Tiến trình đang khóa · " + progress.last_error if progress.read_only else "Vàng: %d     XP hành trình: %d     Đã vượt: %d/10" % [progress.data.gold, progress.data.xp, progress.data.cleared.size()]
 	if progress.recovered and not progress.read_only:
@@ -628,3 +633,14 @@ func change_equipment(id: String, slot: String = "") -> void:
 	var error: String = progress.last_error
 	open_equipment(growth_return, growth_index)
 	campaign_panel.message("Đã lưu trang bị." if ok else error, ok)
+
+func title_subtitle() -> String:
+	return "CHƯƠNG I · %s\nPhế tích Ngân Nguyệt · 10 ải\nChiến đấu, nhận thưởng và mở đường đi tiếp" % ProjectSettings.get_setting("application/config/version", "")
+
+func open_audio_settings() -> void:
+	if screen not in ["title", "paused"] or is_instance_valid(audio_dialog): return
+	audio_dialog = preload("res://game/audio_settings.gd").new(audio)
+	ui.add_child(audio_dialog)
+	audio_dialog.visibility_changed.connect(func():
+		if not audio_dialog.visible: refresh_mute())
+	audio_dialog.popup_centered()

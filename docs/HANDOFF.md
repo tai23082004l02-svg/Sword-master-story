@@ -1,3 +1,12 @@
+# Bổ sung 0.7.0 — Thiết lập và ưu tiên âm
+Đọc AUDIO.md. Sảnh/paused có Âm lượng mở ConfirmationDialog: master/sfx0–100%,
+mute; Lưu ghi.tmp/rename trước cập nhật bus, Hủy không đổi. Legacy audio.cfg
+chỉ muted vẫn đọc; không đổi tên project/save campaign.4voice ưu tiên hit<skill
+<wave<win/lose, cướpvoice thấp hơn/cũ nhất; kết quả dừngvoice cũ. Pause/focus
+out dừng âm. Giữ WAV/gain gốc. Version0.7.0trong project.godot và sảnh đọc cùng
+nguồn.19smoke PASS headless/save riêng, cóaudio model/scene mới; chưa duyệt
+render/nghe/S23/FPS. Phần UI/safe area/hiệu năng của0.7còn chờ.
+
 # Bổ sung 0.6.2 — Trang bị
 Đọc EQUIPMENT.md. Catalogue6món tự thiết kế, mỗi món một bản,5tướng×2ô.
 Mua vàng và mặc/tháo dùng transaction hiện có; không tự mặc khi mua, thay món

@@ -1,10 +1,16 @@
-# Kiếm Hành — prototype 0.6.2
+# Kiếm Hành — prototype 0.7.0
 
 Game nhập vai đội hình nhìn ngang, tham khảo nhịp chơi Sword Master Story.
 Đã có chương10ải, chuẩn bị đội1–5tướng, kỹ năng riêng/tự động, thưởng và lưu tiến trình local.
 Bốn đồng đội Brann/Lyra/Nyx/Sol đã có sprite fantasy riêng và sáu trạng thái.
 Kiếm sĩ Aether đã có sprite anime fantasy riêng và sáu trạng thái hoạt ảnh.
 Hai loại quái và bối cảnh đã có hình fantasy riêng.
+
+## Âm thanh · 0.7.0
+Sảnh hoặc tạm dừng → **Âm lượng**: chỉnh tổng/hiệu ứng0–100%, bật/tắt,
+bấm **Lưu** để áp dụng; **Hủy** giữ thiết lập cũ. Kỹ năng/đợt/kết quả được
+ưu tiên khi nhiều âm phát cùng lúc; pause dừng âm đang phát. Phiên bản ởsảnh
+đọc từ project.godot. [Chi tiết và giới hạn](docs/AUDIO.md).
 
 ## Trang bị · 0.6.2
 Sảnh hoặc chuẩn bị → **Trang bị**. Mua6món bằng vàng, mặc/tháo vũ khí và giáp
@@ -113,6 +119,8 @@ Import project.godot ở thư mục mới. Không cần ZIP hoặc APK.
 
 ```sh
 godot --headless --path . --editor --import --quit
+XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/audio_smoke.gd
+XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/audio_scene_smoke.gd
 XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/equipment_smoke.gd
 XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/equipment_scene_smoke.gd
 XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/growth_smoke.gd
