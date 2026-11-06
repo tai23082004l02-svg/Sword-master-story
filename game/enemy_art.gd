@@ -20,6 +20,8 @@ func _ready() -> void:
 
 func sync(enemy: Dictionary, delta: float, hero_x: float) -> void:
 	ranged = enemy.ranged
+	var kind: String = enemy.get("kind","")
+	modulate = Color("8df5aa") if kind == "healer" else (Color("e6c17b") if kind == "armored" else (Color("dc94ef") if kind == "assassin" else Color.WHITE))
 	target_x = hero_x
 	if previous_hp >= 0 and enemy.hp < previous_hp:
 		hurt_time = 0.16

@@ -1,17 +1,17 @@
-# Lộ trình
-- 0.1 Nền Godot, tài liệu, menu: đã triển khai.
-- 0.2 Một kiếm sĩ, ba đợt, kỹ năng, thắng/thua: đã triển khai; chờ thử máy thật.
-- 0.3 Đã tích hợp một kiếm sĩ Aether và6trạng thái; đã được người dùng chấp nhận.0.3.1 thêm2quái và nền; 0.3.3 thêm boss3đòn/2phase, hoàn tất cảnh mẫu; chờ phản hồi thiết bị.
-- 0.4 Nền đội năm tướng/kỹ năng riêng, hộ thuẫn, trị liệu và tự động: đã triển khai; 0.4.1 đã thay bốn hình tạm bằng atlas riêng và mở màn xem5tướng; đội dựng sẵn1–5, chờ duyệt thiết bị/cân bằng. Xem PARTY.md.
-- 0.5.0 Đã triển khai chương10ải, chọn/đổi đội, boss5/10, thưởng và lưu tiến trình local. Dùng2loại quái/hình cũ; mở rộng lên4loại còn chờ. Xem CAMPAIGN.md.
-- 0.6.0 Đã triển khai nâng5tướng cấp1–20 bằng vàng/XP, UI xem trước-sau, save2migrate1 và stat vào trận kế tiếp. Trang bị còn chờ. Xem HERO_GROWTH.md.
-- 0.7.0 Đã thêm chỉnh âm lượng tổng/SFX, ưu tiên4voice, dừng âm khi pause và phiên bản thống nhất. UI/safe area/hiệu năng còn chờ; xem AUDIO.md.
-- 0.8 Chỉnh theo phản hồi, APK thử.
-Các mốc sau chưa triển khai, phạm vi có thể chỉnh theo chơi thử.
+# Lộ trình hiện tại
 
+## 0.8.0 — Vòng chơi RPG: đã triển khai bản thử
+Sảnh và quản lý tám tướng; săn đồ UID/bộ/cường hóa/phân giải; nội tại phối hợp;
+ba chương30ải, quái/boss biến thể; hầm/tháp/quét; triệu hồi có bảo đảm/mảnh;
+mục tiêu/tuần/thống kê local. Xem RPG_SYSTEMS.md và giới hạn art/cân bằng.
 
-- 0.4.3 Đã gỡ rig theo phản hồi;168frame PNG rời cho5tướng/2quái/boss, viewer có bước frame. Xem SPRITE_FRAMES.md.
+## Tiếp theo sau phản hồi chơi thật
+1. Thử toàn bộ luồng trên S23, chỉnh nút/chữ/cảm ứng và nhịp mở tính năng.
+2. Cân bằng bằng kết quả chơi; xem điểm bỏ cuộc và giá trị của từng cách xây đội.
+3. Bổ sung hình độc lập cho tướng/chương mới, tiếp tục tối ưu theo phép đo thiết bị.
+4. APK thử chỉ sau khi người dùng chốt đến mốc đóng gói.
 
-- 0.6.1 Đã thay nút đổi vị trí bằng kéo thả cảm ứng/chuột, lưu ngay đội hình. Xem PARTY_DRAG.md.
-
-- 0.6.2 Đã triển khai6trang bị, mua bằng vàng, mặc/tháo2ô cho5tướng, bonus chỉ số và save3migrate1/2. Xem EQUIPMENT.md.
+## Các mốc đã có
+0.1 nền Godot/menu;0.2 trận mẫu;0.3 Aether/quái/nền/boss;0.4 đội năm tướng,
+0.4.3 frame PNG rời;0.5 chương10ải/save;0.6 nâng tướng/kéo thả/trang bị;
+0.7 thiết lập/ưu tiên âm. Chưa coi việc thêm hệ thống là chứng minh giữ chân.

@@ -1,98 +1,41 @@
-# Kiếm Hành — prototype 0.7.0
+# Kiếm Hành — prototype 0.8.0
 
-Game nhập vai đội hình nhìn ngang, tham khảo nhịp chơi Sword Master Story.
-Đã có chương10ải, chuẩn bị đội1–5tướng, kỹ năng riêng/tự động, thưởng và lưu tiến trình local.
-Bốn đồng đội Brann/Lyra/Nyx/Sol đã có sprite fantasy riêng và sáu trạng thái.
-Kiếm sĩ Aether đã có sprite anime fantasy riêng và sáu trạng thái hoạt ảnh.
-Hai loại quái và bối cảnh đã có hình fantasy riêng.
+RPG đội hình fantasy nhìn ngang, Godot 4.6.3 Compatibility, tiếng Việt, offline.
+Vòng chơi: **vượt ải → nhận trang bị → xây đội → vượt thử thách mới**.
+Tài nguyên/hình/nhân vật riêng, không dùng asset Sword Master Story.
 
-## Âm thanh · 0.7.0
-Sảnh hoặc tạm dừng → **Âm lượng**: chỉnh tổng/hiệu ứng0–100%, bật/tắt,
-bấm **Lưu** để áp dụng; **Hủy** giữ thiết lập cũ. Kỹ năng/đợt/kết quả được
-ưu tiên khi nhiều âm phát cùng lúc; pause dừng âm đang phát. Phiên bản ởsảnh
-đọc từ project.godot. [Chi tiết và giới hạn](docs/AUDIO.md).
+## Chơi bản mới
+- **Sảnh:** nhân vật đại diện, mục tiêu tiếp theo và lối vào các hệ thống.
+- **Phiêu lưu:** ba chương, 30 ải, boss mỗi năm ải; chương mới có địch giáp,
+  hồi máu và sát thủ, boss đánh toàn đội/truy kích tuyến sau.
+- **Tướng:** năm tướng cũ và Iris/Rune/Vera mở bằng mảnh. Xem nội tại, nâng
+  cấp/kỹ năng/bậc; thử tướng chưa có trong trận không thưởng.
+- **Đội hình:** Aether cùng tối đa bốn đồng đội; kéo thả để đổi thứ tự.
+- **Túi đồ:** từng món riêng, mặc/tháo, cường hóa +10, phân giải có xác nhận.
+  Mỗi chương một bộ hai món; thắng luôn có đồ, luân phiên để kiếm đủ bộ.
+- **Hầm ngục:** mở sau 1-05, gồm vàng, nguyên liệu, tháp 30 tầng và thử thách tuần.
+- **Triệu hồi:** vé/tinh thạch kiếm trong game, hiển thị tỉ lệ, mảnh và bảo đảm
+  ở lượt 20. Không nạp tiền. Vé quét là tài nguyên riêng, kiếm qua thắng đánh tay.
+- **Mục tiêu:** thưởng hành trình, thưởng tuần và thống kê hoạt động chỉ trên máy.
+- **Âm lượng:** chỉnh tổng/SFX ở sảnh hoặc pause; không có API lúc chơi.
 
-## Trang bị · 0.6.2
-Sảnh hoặc chuẩn bị → **Trang bị**. Mua6món bằng vàng, mặc/tháo vũ khí và giáp
-cho5tướng; mỗi món một bản, tháo để đổi người dùng. Cộng HP/đòn thường sau cấp,
-lưu ngay và áp dụng ở trận mới. Tự đọc save0.5/0.6, giữ bản sao trước chuyển đổi.
-[Giá, cách thử, dữ liệu và giới hạn](docs/EQUIPMENT.md).
+![Sảnh](docs/screenshots/rpg_lobby.png)
+![Túi đồ](docs/screenshots/rpg_inventory.png)
 
-## Kéo thả đội hình · 0.6.1
-Trong màn chuẩn bị, kéo thẻ đồng đội sang thẻ khác để đổi vị trí rồi thả để lưu.
-Chạm nhanh để thêm/bỏ; Aether giữ vị trí đầu. Hỗ trợ cảm ứng và chuột.
-[Hướng dẫn và ảnh kiểm tra](docs/PARTY_DRAG.md).
+Mở project.godot, chờ import rồi Run. Tướng tự chạy/đánh; chạm thẻ kỹ năng
+hoặc phím 1–5; Space dùng kỹ năng Aether. Có tự dùng kỹ năng, tạm dừng/Esc,
+mất focus tự pause. Trận ngắt phải chơi lại, không mất ví vì thua.
 
-## Nâng tướng · 0.6.0
-Sảnh hoặc màn chuẩn bị → **Nâng tướng**. Năm tướng cấp1–20, nâng bằng vàng+XP,
-xem HP/đòn thường trước–sau và chi phí. Cấp lưu cùng tiến trình, áp dụng ở trận
-kế tiếp. Tự đọc save0.5, giữ ải/ví/đội và bản sao dữ liệu cũ.
-[Xem cách dùng, chi phí và chuyển save](docs/HERO_GROWTH.md).
+[Luật, giá, tỉ lệ, cách thử và giới hạn](docs/RPG_SYSTEMS.md).
+Ba tướng mới dùng hình biến thể từ bộ riêng cũ, chưa có tranh độc lập.
+Nền/quái/boss tái sử dụng hình cũ với màu và cơ chế mới. Chưa thử S23/cảm ứng
+thật hoặc chứng minh giữ chân. Chưa APK, server, PvP hay bang hội.
 
-![Màn nâng tướng](docs/screenshots/growth_after.png)
-
-## Chương I · 0.5.0
-Sảnh → **Chọn ải** → chuẩn bị đội → chiến đấu → nhận thưởng → mở ải tiếp.
-Boss ở1-05/1-10. Thưởng lần đầu tách thưởng chơi lại; đóng/mở game giữ tiến trình,
-đội hình, vàng và XP hành trình. Vàng/XP dùng nâng tướng từ0.6.0; chưa có trang bị.
-[Xem thông số, cách thử và lưu dữ liệu](docs/CAMPAIGN.md).
-
-![Chọn ải](docs/screenshots/campaign_stages.png)
-![Chuẩn bị đội](docs/screenshots/party_drag_ready.png)
-
-## Frame rời 0.4.3
-Đã gỡ bản thử bộ xương. Năm tướng, hai loại quái và boss dùng168PNG độc lập,
-không lấy ô256×256 khi render. Vào **Xem nhân vật · 5 tướng**, chọn trạng thái,
-bấm **Frame trước / Frame sau** để dừng xem từng hình, **Phát lại** để chạy tiếp.
-[Chi tiết và ảnh kiểm tra](docs/SPRITE_FRAMES.md).
-
-## Bốn đồng đội 0.4.1
-Đã thay hình tạm bằng sprite Brann, Lyra, Nyx và Sol. Sảnh → **Xem nhân vật · 5 tướng**
-để đổi tướng và thử sáu trạng thái. [Chi tiết, nguồn và ảnh thật](docs/PARTY_ART.md).
-
-![Đội năm tướng trong Godot](docs/screenshots/party_battle.png)
-
-## Đội hình 0.4.0
-Mặc định năm tướng: Aether, Brann, Lyra, Nyx và Sol. Chọn số tướng 1–5 ở sảnh;
-chạm thẻ kỹ năng hoặc phím 1–5 trong trận. Có bật/tắt tự động dùng kỹ năng,
-hộ thuẫn toàn đội và hồi máu. Chỉ thua khi cả đội gục.
-[Thông số, cách thử và giới hạn](docs/PARTY.md).
-
-## Boss đầu tiên 0.3.3
-Sau ba đợt quái, đối đầu **Kỵ sĩ Nguyệt Thực**: ba đòn, hai giai đoạn,
-thanh máu và hình riêng. Kỹ năng luôn gây sát thương bình thường, không cần canh sơ hở.
-[Xem cơ chế và cách thử](docs/BOSS.md).
-
-![Boss trong trận Godot](docs/screenshots/eclipse_boss.png)
-
-## Sửa nền mờ 0.3.2
-Lọc pixel nền bán trong suốt còn sót trong sprite Aether và quái khi render,
-giảm khung chữ nhật mờ quanh nhân vật. Giữ ảnh gốc và cách chơi.
-
-## Cảnh chiến đấu mới 0.3.1
-Kỵ sĩ Hắc giáp và Pháp sư U ảnh có hoạt ảnh di chuyển/đánh, phản hồi trúng đòn
-và tan biến. Nền Phế tích Ngân Nguyệt thay nền hình học cũ; cách chơi giữ nguyên.
-
-![Cảnh trận thật từ Godot](docs/screenshots/moon_ruins_battle.png)
-
-[Chi tiết nguồn và giới hạn](docs/ENVIRONMENT_AND_ENEMIES.md).
-
-## Nhân vật mới 0.3.0
-Vào **Xem nhân vật · Aether** ở sảnh để xem lớn và thử sáu trạng thái.
-Nhân vật tóc bạc/giáp bạc viền vàng/áo choàng xanh đêm đã thay hình tạm trong trận.
-[Xem nguồn, cách tích hợp và giới hạn](docs/CHARACTER_AETHER.md).
-
-## Chơi thử
-Godot4.6.3, renderer Compatibility. Import project.godot, đợi import, Run.
-Màn hình ngang1280×720logical, canvas co theo màn hình.
-- Chọn ải đã mở, thêm/bớt/đổi thứ tự đồng đội ở màn chuẩn bị; Aether giữ đầu.
-- Tướng tự chạy/đánh; chạm thẻ kỹ năng hoặc phím1–5, Space dùng Kiếm khí.
-- Có bật/tắt tự động dùng skill; lựa chọn lưu cùng profile.
-- Tạm dừng/Esc; chuyển ứng dụng tự pause, quay lại bấm Tiếp tục.
-- Thắng mở ải tiếp và cộng thưởng, chơi lại nhận thưởng trận; thua/bỏ không mất ví.
-- Đóng/mở lại giữ các ải đã vượt và tài nguyên; trận đang đánh phải chơi lại.
-- Sảnh hoặc chuẩn bị → Nâng tướng; chi phí và chỉ số mới hiện rõ, lưu ngay khi nâng.
-- Âm bật/tắt lưu riêng; không APK hoặc đồng bộ cloud.
+## Giữ tiến trình cũ
+Save schema 4 tự đọc 1/2/3, giữ ví/ải/đội/cấp/trang bị cũ. Không ghi khi chỉ load;
+lần ghi mới giữ backup migration theo schema nguồn. Đồ cũ nằm ở **Trang bị cũ**
+trong Túi đồ; một ô không cộng đồng thời món mới và món cũ. Không đổi project name
+hoặc vị trí audio.cfg. Bản game cũ không đọc được save mới.
 
 ## Cập nhật trên S23 Ultra
 Giữ SSH hiện có. Repo này có thư mục riêng, không ghi đè Game-2.5D.
@@ -119,21 +62,12 @@ Import project.godot ở thư mục mới. Không cần ZIP hoặc APK.
 
 ```sh
 godot --headless --path . --editor --import --quit
-XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/audio_smoke.gd
-XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/audio_scene_smoke.gd
-XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/equipment_smoke.gd
-XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/equipment_scene_smoke.gd
-XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/growth_smoke.gd
-XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/growth_scene_smoke.gd
-XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/campaign_smoke.gd
-XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/campaign_save_smoke.gd
-XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/campaign_scene_smoke.gd
-XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/battle_smoke.gd
-XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/scene_smoke.gd
-XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/party_smoke.gd
-XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/party_scene_smoke.gd
-XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/companion_art_smoke.gd
+XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/rpg_progress_smoke.gd
+XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/rpg_scene_smoke.gd
+XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/rpg_tactics_smoke.gd
 ```
 
-Xem [thiết kế](docs/GAME_DESIGN.md), [lộ trình](docs/ROADMAP.md),
-[âm thanh](docs/AUDIO.md), [bàn giao](docs/HANDOFF.md), [kiểm tra](docs/TEST_RESULTS.md).
+Chạy toàn bộ tests/*smoke.gd với save thử riêng cho hồi quy. Capture UI bằng
+ tests/capture_rpg.gd cần display/OpenGL, không chạy headless để lấy ảnh.
+Xem [bàn giao](docs/HANDOFF.md), [kiểm tra](docs/TEST_RESULTS.md),
+[lộ trình](docs/ROADMAP.md), [âm thanh](docs/AUDIO.md).
