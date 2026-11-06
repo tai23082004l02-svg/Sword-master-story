@@ -1,5 +1,7 @@
 extends Node2D
 
+const BACKGROUND = preload("res://assets/world/moon_ruins.png")
+const EnemyArt = preload("res://game/enemy_art.gd")
 const BattleModel = preload("res://game/battle.gd")
 var battle = BattleModel.new()
 var screen := "title"
@@ -17,6 +19,7 @@ var prior_hp := 220.0
 var prior_x := 240.0
 var preview_clip := "idle"
 var result_delay := 0.0
+var enemy_views: Dictionary = {}
 var preview_buttons: Array[Button] = []
 
 func _ready() -> void:
@@ -45,7 +48,7 @@ func _ready() -> void:
 	ui.add_child(status)
 	skill_button = make_button("KIẾM KHÍ · Space", Vector2(920, 600), Vector2(310, 76), use_skill)
 	pause_button = make_button("Tạm dừng", Vector2(1060, 25), Vector2(170, 52), toggle_pause)
-	show_menu("KIẾM HÀNH", "AETHER · Kiếm sĩ Ngân Nguyệt 0.3\nMột kiếm sĩ · Ba đợt quái\nTự đánh — chạm Kiếm khí để dùng kỹ năng", "Bắt đầu", begin)
+	show_menu("KIẾM HÀNH", "PHẾ TÍCH NGÂN NGUYỆT · 0.3.1\nMột kiếm sĩ · Ba đợt quái\nTự đánh — chạm Kiếm khí để dùng kỹ năng", "Bắt đầu", begin)
 	get_viewport().size_changed.connect(resize_ui)
 	resize_ui()
 
@@ -108,8 +111,10 @@ func begin() -> void:
 	prior_x = battle.hero_x
 	hero_art.set_clip("idle", true)
 	clear_preview()
+	clear_enemies()
 
 func to_title() -> void:
+	clear_enemies()
 	clear_preview()
 	screen = "title"
 	battle.state = "idle"
@@ -121,7 +126,7 @@ func use_skill() -> void:
 		hero_art.set_clip("skill", true)
 
 func toggle_pause() -> void:
-	if screen == "battle":
+	if screen == "battle" and battle.state == "playing":
 		battle.state = "paused"
 		screen = "paused"
 		show_menu("TẠM DỪNG", "Trận đấu đang dừng", "Tiếp tục", resume)
@@ -147,6 +152,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	battle.tick(minf(delta, 0.05))
 	update_hero(delta)
+	update_enemies(minf(delta, 0.05))
 	if screen == "battle" and battle.state in ["won", "lost"]:
 		result_delay += delta
 	if screen == "battle" and battle.state in ["won", "lost"] and result_delay >= 0.85:
@@ -160,42 +166,23 @@ func _process(delta: float) -> void:
 	skill_button.text = "KIẾM KHÍ · %.1fs" % battle.cooldown if battle.cooldown > 0 else "KIẾM KHÍ · Space"
 	queue_redraw()
 
-func fighter(x: float, color: Color, is_hero: bool, warning: bool) -> void:
-	var y := 455.0
-	draw_ellipse_shadow(Vector2(x, y + 62))
-	draw_rect(Rect2(x - 19, y + 5, 38, 42), color)
-	draw_circle(Vector2(x, y - 11), 19, Color("efd1ac") if is_hero else Color("99a8b5"))
-	draw_rect(Rect2(x - 22, y - 29, 43, 14), color.darkened(0.4))
-	draw_line(Vector2(x - 10, y + 45), Vector2(x - 14, y + 62), color.darkened(0.4), 11)
-	draw_line(Vector2(x + 10, y + 45), Vector2(x + 14, y + 62), color.darkened(0.4), 11)
-	var sword_end := Vector2(x + 66, y - 42) if warning else Vector2(x + 48, y + 17)
-	draw_line(Vector2(x + 17, y + 19), sword_end, Color("ffe7a0") if is_hero else Color("cf7184"), 7)
-	if warning:
-		draw_arc(Vector2(x, y), 65, -1.5, 0.7, 18, Color("ffd488"), 4)
-
 func draw_ellipse_shadow(pos: Vector2) -> void:
 	draw_set_transform(pos, 0, Vector2(1, 0.25))
 	draw_circle(Vector2.ZERO, 34, Color(0, 0, 0, 0.3))
 	draw_set_transform(Vector2.ZERO)
 
 func _draw() -> void:
-	draw_rect(Rect2(0, 0, 1280, 720), Color("101b2d"))
-	draw_circle(Vector2(1010, 135), 63, Color("e1d7b4"))
-	for i in range(9):
-		var x := float(i * 180 - 80)
-		draw_colored_polygon(PackedVector2Array([Vector2(x, 440), Vector2(x + 130, 160 + (i % 3) * 40), Vector2(x + 270, 440)]), Color("23344a"))
-	draw_rect(Rect2(0, 440, 1280, 280), Color("253b3d"))
-	draw_rect(Rect2(0, 525, 1280, 70), Color("685c50"))
-	for i in range(25):
-		draw_line(Vector2(i * 58, 550), Vector2(i * 58 + 25, 550), Color("8c7960"), 3)
+	draw_texture_rect(BACKGROUND, Rect2(0, 0, 1280, 720), false)
+	# Subtle vignette strips preserve HUD readability over painted scenery.
+	draw_rect(Rect2(0, 0, 1280, 90), Color(0.02, 0.04, 0.08, 0.6))
 	if screen in ["battle", "paused", "result"]:
 		draw_ellipse_shadow(Vector2(battle.hero_x, 517))
 		for enemy in battle.enemies:
 			if enemy.hp <= 0:
 				continue
-			fighter(enemy.x, Color("a778ab") if enemy.ranged else Color("bc6d67"), false, enemy.windup > 0)
-			draw_rect(Rect2(enemy.x - 29, 395, 58, 6), Color("492e3b"))
-			draw_rect(Rect2(enemy.x - 29, 395, 58 * maxf(0, enemy.hp / enemy.max_hp), 6), Color("df8680"))
+			draw_ellipse_shadow(Vector2(enemy.x, 517))
+			draw_rect(Rect2(enemy.x - 29, 342, 58, 6), Color("492e3b"))
+			draw_rect(Rect2(enemy.x - 29, 342, 58 * maxf(0, enemy.hp / enemy.max_hp), 6), Color("df8680"))
 		for effect in battle.effects:
 			draw_string(ThemeDB.fallback_font, Vector2(effect.x - 15, 370 - (0.65 - effect.ttl) * 50), effect.text, HORIZONTAL_ALIGNMENT_LEFT, -1, 30, Color("ffe49b") if effect.skill else Color.WHITE)
 	if screen == "character":
@@ -264,6 +251,7 @@ func show_character() -> void:
 	preview_buttons.append(make_button("Về sảnh", Vector2(735, 590), Vector2(440, 60), to_title))
 
 func draw_character_backdrop() -> void:
+	draw_rect(Rect2(690, 100, 540, 555), Color(0.025, 0.06, 0.09, 0.90))
 	draw_rect(Rect2(60, 100, 560, 525), Color("142b3a"))
 	draw_rect(Rect2(60, 100, 560, 525), Color("8caa9d"), false, 2)
 	draw_circle(Vector2(380, 340), 170, Color("1b3c4d"))
@@ -274,3 +262,33 @@ func draw_character_backdrop() -> void:
 	draw_string(font, Vector2(735, 202), "KIẾM SĨ NGÂN NGUYỆT", HORIZONTAL_ALIGNMENT_LEFT, -1, 24, Color("8ed9dc"))
 	draw_string(font, Vector2(735, 250), "Lưỡi kiếm gìn giữ ánh trăng cuối cùng.", HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color("d2dfe2"))
 	draw_string(font, Vector2(735, 285), "Xem sáu trạng thái của nhân vật", HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color("93aab6"))
+
+func clear_enemies() -> void:
+	for view in enemy_views.values():
+		view.queue_free()
+	enemy_views.clear()
+
+func update_enemies(delta: float) -> void:
+	if screen not in ["battle", "paused"]:
+		if not enemy_views.is_empty():
+			clear_enemies()
+		return
+	var active: Dictionary = {}
+	for enemy in battle.enemies:
+		active[enemy.id] = true
+		if not enemy_views.has(enemy.id):
+			var view := EnemyArt.new()
+			art_layer.add_child(view)
+			enemy_views[enemy.id] = view
+		var view: Node2D = enemy_views[enemy.id]
+		view.visible = screen == "battle"
+		if screen == "battle":
+			view.sync(enemy, delta if battle.state == "playing" else 0.0, battle.hero_x)
+	for id in enemy_views.keys():
+		if active.has(id):
+			continue
+		var view: Node2D = enemy_views[id]
+		view.visible = screen == "battle"
+		if screen == "battle" and view.fade_death(delta):
+			view.queue_free()
+			enemy_views.erase(id)

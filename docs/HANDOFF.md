@@ -1,3 +1,10 @@
+# Bổ sung 0.3.1 — Quái và nền
+Người dùng đã chấp nhận Aether/hướng đồ họa0.3.0. Đã thêm2quái sprite và nền
+Phế tích Ngân Nguyệt; EnemyArt theo ID, animation/windup/hurt/death và cleanup.
+Đọc ENVIRONMENT_AND_ENEMIES.md. Có ảnh render Godot thật đã xem trong screenshots.
+Thêm enemy_art_smoke và capture_scene (cần display). Giữ chỉ số/audio/save.
+Đã chặn pause/resume mở lại trạng thái thắng/thua. Chưa có boss/multihero/parallax.
+
 # Bổ sung 0.3.0 — Aether
 Đã thay kiếm sĩ hình học bằng sheet RGBA24ô,6clip; main dùng HeroArt Node2D.
 Có màn xem riêng, nút6trạng thái, đồng bộ đòn theo Battle, hurt/death/skill, pause.

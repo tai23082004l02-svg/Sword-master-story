@@ -1,0 +1,9 @@
+{
+  "name": "Phế tích Ngân Nguyệt",
+  "source": "Original OpenAI image generation in this session, 2026-11-06",
+  "file": "moon_ruins.png",
+  "dimensions": [1536, 1024],
+  "third_party_game_assets": false,
+  "runtime": "one static painted background scaled to the logical viewport; no parallax layers",
+  "status": "integrated, Godot frames inspected; pending device approval"
+}
