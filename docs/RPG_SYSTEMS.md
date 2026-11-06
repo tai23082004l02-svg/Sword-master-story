@@ -1,4 +1,4 @@
-# Kiếm Hành 0.8.0 — vòng chơi và tiến trình offline
+# Kiếm Hành 0.8.1 — vòng chơi và tiến trình offline
 
 Sảnh → Phiêu lưu → chuẩn bị đội → chiến đấu → nhận đồ → nâng đội → thử thách mới.
 Mọi tài nguyên kiếm qua chơi. Ảnh tham khảo dùng định hướng chức năng;
@@ -81,6 +81,10 @@ Vượt 1-05 mở bốn chế độ, dùng đội đang lưu:
 | Hầm nguyên liệu | 35 vàng, 40 XP, một đồ, 15 bụi | Có địch hồi máu |
 | Tháp | 35 vàng, 40 XP, một đồ, 3 bụi, 50 tinh thạch | 30 tầng mở tuần tự, nhận thưởng tầng một lần |
 | Thử thách tuần | 35 vàng, 40 XP, một đồ, 3 bụi, 5 mảnh tướng | Ba nhóm địch và tướng thưởng xoay theo tuần |
+
+Thưởng hầm hiện đủ vàng/XP/đồ/bụi/tinh thạch/mảnh/vé quét trên kết quả.
+Thử thách giữ nhóm địch và tướng thưởng theo tuần lúc bắt đầu, kể cả trận qua
+ranh giới tuần; tầng30 kết thúc tháp, không có nút bắt đầu tầng31.
 
 Đánh tay không giới hạn. Mỗi trận thắng cho một vé quét; khởi đầu có năm vé.
 Quét cần thắng ải ba lần và một vé/lượt, nhận thưởng chơi lại, đồ, 2 bụi.

@@ -1,3 +1,20 @@
+# Rà soát 0.8.1
+
+Godot4.6.3, Linux, 23/23 tests/*smoke.gd PASS, không ERROR trong log lượt rà cuối.
+Save riêng: /tmp/sword-review-final/data (config/cache riêng cùng thư mục).
+22 test hiện có chạy lại PASS; rpg_review_smoke mới kiểm vòng tuần được chụp
+lúc bắt đầu (nhóm địch và đúng mảnh), pending cũ không có rotation_week, từ chối
+metadata sai, lỗi lưu không rời màn/trận hoặc đổi auto, hiển thị đủ thưởng và
+khóa đánh tiếp ởtầng30. Giữ các UID local không liên quan.
+
+Capture tests/capture_rpg_review.gd tạo2ảnh reward tower/challenge bằng Godot
+OpenGL Compatibility/Mesa llvmpipe + Xvfb, audio Dummy; đã xem ảnh. Fixture giả
+lập trạng thái thắng để duyệt UI, không phải chơi thật hoặc bằng chứng cân bằng.
+Đã bỏ HP/nhãn địch còn vẽ mờ sau màn kết quả. Import editor và diff check PASS.
+Chưa thử S23/cảm ứng thật, nghe âm, đo FPS/nhiệt hoặc kiểm chứng giữ chân.
+
+---
+
 # Kiểm tra 0.8.0 — vòng chơi RPG
 
 Godot 4.6.3 stable, Linux. Chạy 22/22 tests/*smoke.gd: PASS, không có ERROR trong

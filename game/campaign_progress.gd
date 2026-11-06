@@ -71,6 +71,7 @@ func valid(candidate: Variant) -> bool:
 		if not whole(candidate.pending.stage, 1, mini(Campaign.MAX_STAGE, candidate.cleared.size() + 1)): return false
 		if candidate.pending.get("mode", "campaign") not in ["campaign","gold","material","tower","challenge"]: return false
 		if candidate.pending.get("mode", "campaign") != "campaign" and not whole(candidate.pending.get("floor", 1),1,30): return false
+		if candidate.pending.has("rotation_week") and not whole(candidate.pending.rotation_week,0,9007199254740991): return false
 	return true
 func normalize(candidate: Dictionary) -> Dictionary:
 	var result := candidate.duplicate(true)
@@ -99,6 +100,8 @@ func normalize(candidate: Dictionary) -> Dictionary:
 	if not result.pending.is_empty():
 		result.pending.id = int(result.pending.id)
 		result.pending.stage = int(result.pending.stage)
+		if result.pending.has("floor"): result.pending.floor = int(result.pending.floor)
+		if result.pending.has("rotation_week"): result.pending.rotation_week = int(result.pending.rotation_week)
 	return result
 func parse_file(file_path: String) -> Variant:
 	var file := FileAccess.open(file_path, FileAccess.READ)
@@ -469,6 +472,7 @@ func begin_activity(mode: String) -> int:
 	var c := data.duplicate(true)
 	c.serial += 1
 	c.pending = {"id":c.serial,"stage":1,"mode":mode,"floor":int(c.rpg.tower)+1 if mode == "tower" else 1}
+	if mode == "challenge": c.pending.rotation_week = RPG.week_now()
 	return int(c.serial) if commit(c) else -1
 
 func activity_stage(mode: String, floor_value: int = 1) -> Dictionary:
@@ -479,13 +483,19 @@ func activity_stage(mode: String, floor_value: int = 1) -> Dictionary:
 	if mode == "material": stage.waves = [{"enemies":["healer","ranged","armored"],"hp":120.0+stage_id*6}]
 	if mode == "challenge":
 		var kinds := [["healer","armored","ranged"],["assassin","assassin","melee"],["armored","healer","healer"]]
-		stage.waves = [{"enemies":kinds[RPG.week_now()%3],"hp":200.0+stage_id*6}]
+		var rotation: int = int(data.pending.get("rotation_week",RPG.week_now())) if data.pending.get("mode","")=="challenge" else RPG.week_now()
+		stage.waves = [{"enemies":kinds[rotation%3],"hp":200.0+stage_id*6}]
 	stage.tactics = true
 	return stage
 
 func finish_activity(c: Dictionary, won: bool, elapsed: float, survivors: int) -> Dictionary:
 	var mode: String = c.pending.mode
 	var floor_value := int(c.pending.floor)
+	var rotation := int(c.pending.get("rotation_week",RPG.week_now()))
+	var shard_hero := rotation%RPG.HERO_COUNT
+	var dust := 0
+	var gems := 0
+	var shards := 0
 	var gold := 0
 	var xp := 0
 	var loot: Dictionary = {}
@@ -498,27 +508,30 @@ func finish_activity(c: Dictionary, won: bool, elapsed: float, survivors: int) -
 		c.rpg.mode_records[mode] = int(c.rpg.mode_records.get(mode,0))+1
 		gold = 120 if mode == "gold" else 35
 		xp = 40
-		c.rpg.dust += 15 if mode == "material" else 3
+		dust = 15 if mode == "material" else 3
+		c.rpg.dust += dust
 		if mode == "tower":
 			c.rpg.tower = floor_value
-			c.rpg.gems += 50
+			gems = 50
+			c.rpg.gems += gems
 		if mode == "challenge":
-			var hero := RPG.week_now()%RPG.HERO_COUNT
-			c.rpg.shards[hero] += 5
+			shards = 5
+			c.rpg.shards[shard_hero] += shards
 		loot = RPG.grant_item(c.rpg,RPG.drop_base(maxi(1,c.cleared.size()),int(c.rpg.mode_records[mode])))
+		if loot.uid == 0: dust += 5
 		c.gold += gold
 		c.xp += xp
 	c.last_claimed = c.pending.id
 	c.pending = {}
 	if not commit(c): return {"ok":false,"error":last_error}
-	return {"ok":true,"mode":mode,"won":won,"gold":gold,"xp":xp,"loot":loot,"elapsed":elapsed,"survivors":survivors,"floor":floor_value}
+	return {"ok":true,"mode":mode,"won":won,"gold":gold,"xp":xp,"loot":loot,"elapsed":elapsed,"survivors":survivors,"floor":floor_value,"dust":dust,"gems":gems,"shards":shards,"shard_hero":shard_hero,"sweep_tokens":1 if won else 0}
 
 func sweep(id: int, count: int) -> Dictionary:
 	if not id in data.cleared or count < 1 or count > 10: return {"ok":false,"error":"Chỉ quét ải đã vượt,1–10 lượt."}
 	var record: Dictionary = data.records[str(id)]
-	if record.wins < 3: return {"ok":false,"error":"Thắngải 3 lần để mở quét."}
+	if record.wins < 3: return {"ok":false,"error":"Thắng ải 3 lần để mở quét."}
 	var c := data.duplicate(true)
-	# Sweep tickets are earned on first clears; manual replays remain unlimited.
+	# Sweep tickets are earned on manual wins; manual replays remain unlimited.
 	if c.rpg.sweep_tokens < count: return {"ok":false,"error":"Cần %d vé quét. Mỗi trận thắng đánh tay nhận 1 vé quét." % count}
 	c.rpg.sweep_tokens -= count
 	var reward := Campaign.reward(id,false)
