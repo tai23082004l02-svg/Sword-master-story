@@ -5,8 +5,7 @@ Sảnh → **Chọn ải** → chọn ải đã mở → chuẩn bị đội →
 Chỉ 1-01 mở từ đầu; thắng mở ải tiếp theo. Hoàn thành1-10 kết thúc chương,
 vẫn chơi lại được tất cả ải. Không có phí vào ải hoặc năng lượng ở bản này.
 
-Màn chuẩn bị cho bỏ/thêm bốn đồng đội bằng thẻ và đổi thứ tự bằng Lên trước/
-Ra sau. Aether luôn ở vị trí đầu; đội1–5tướng. Tên, vai trò, HP, đánh thường và
+Màn chuẩn bị cho bỏ/thêm bốn đồng đội bằng thẻ và kéo thả thẻ để đổi thứ tự. Aether luôn ở vị trí đầu; đội1–5tướng. Tên, vai trò, HP, đánh thường và
 kỹ năng hiện trên thẻ. Thứ tự thẻ kỹ năng trong trận khớp đội đã chọn, art và
 auto skill chọn theo ID tướng, không theo vị trí cứng. Lựa chọn đội và tự dùng
 kỹ năng lưu ngay khi đổi. Âm thanh/mute tiếp tục dùng audio.cfg cũ.
@@ -24,7 +23,7 @@ khi commit thành công; nếu lỗi lưu, có nút thử lại và chưa cộng
 chọn **Về sảnh · bỏ kết quả** để thoát màn lỗi mà không nhận thưởng trận đó.
 
 ![Chọn ải](screenshots/campaign_stages.png)
-![Chuẩn bị đội](screenshots/campaign_prepare.png)
+![Chuẩn bị đội](screenshots/party_drag_ready.png)
 ![Thưởng lần đầu](screenshots/campaign_first_reward.png)
 ![Thưởng chơi lại](screenshots/campaign_repeat_reward.png)
 ![Hoàn thành chương](screenshots/campaign_complete.png)

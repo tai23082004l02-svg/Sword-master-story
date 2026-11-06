@@ -1,3 +1,12 @@
+# Bổ sung 0.6.1 — Kéo thả đội hình
+Đọc PARTY_DRAG.md. Prep hiển thị thẻ theo roster rồi các tướng dự bị; bỏ nút
+Lên trước/Ra sau. PartyDrag nhận native touch/mouse, bỏ mouse tổng hợp từ touch,
+đổi tọa độ qua inverse canvas transform; ngưỡng kéo16 đơn vị. Một pointer sở hữu
+thao tác, chặn pointer khác; Escape/mất focus/touch canceled hủy. Chạm thêm/bỏ,
+kéo chỉ đồng đội đã chọn; Aether cố định. Thả vào đồng đội khác chèn vào vị trí đó,
+lưu bằng transaction hiện có; lỗi ghi giữ đội cũ. Không đổi schema2, ví/cấp/art.
+15 smoke và capture OpenGL trên Linux; chưa thử cảm ứng thật trên S23.
+
 # Bổ sung 0.6.0 — Nâng cấp5tướng
 Đọc HERO_GROWTH.md. PartyData.stats/create cấp1–20, +10%HP/ATKgốc mỗi cấp,
 ceil bằng số nguyên; skill/tầm/tốc độ giữ. Giá L→L+1:30+20(L−1)vàng,10LXP.

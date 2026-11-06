@@ -114,7 +114,7 @@ func _ready() -> void:
 	wallet.add_theme_font_size_override("font_size", 22)
 	ui.add_child(wallet)
 	pause_button = make_button("Tạm dừng", Vector2(1060, 25), Vector2(170, 52), toggle_pause)
-	show_menu("KIẾM HÀNH", "CHƯƠNG I · 0.6.0\nPhế tích Ngân Nguyệt · 10 ải\nChiến đấu, nhận thưởng và mở đường đi tiếp", "Chọn ải", open_stages)
+	show_menu("KIẾM HÀNH", "CHƯƠNG I · 0.6.1\nPhế tích Ngân Nguyệt · 10 ải\nChiến đấu, nhận thưởng và mở đường đi tiếp", "Chọn ải", open_stages)
 	get_viewport().size_changed.connect(resize_ui)
 	resize_ui()
 
@@ -536,16 +536,19 @@ func select_companion(id: int) -> void:
 	else:
 		campaign_panel.message(progress.last_error)
 
-func move_companion(id: int, direction: int) -> void:
-	if screen != "prepare": return
+func reorder_companion(id: int, target_id: int) -> bool:
+	if screen != "prepare": return false
 	var roster: Array[int] = progress.formation()
 	var old := roster.find(id)
-	var target := old + direction
-	if old < 1 or target < 1 or target >= roster.size(): return
-	roster[old] = roster[target]
-	roster[target] = id
-	if progress.set_formation(roster): prepare_stage(selected_stage)
-	else: campaign_panel.message(progress.last_error)
+	var target := roster.find(target_id)
+	if old < 1 or target < 1 or old == target: return false
+	roster.remove_at(old)
+	roster.insert(target, id)
+	if progress.set_formation(roster):
+		prepare_stage(selected_stage)
+		return true
+	campaign_panel.message(progress.last_error)
+	return false
 
 func set_auto_mode(value: bool) -> void:
 	auto_skills = value

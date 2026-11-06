@@ -1,10 +1,15 @@
-# Kiếm Hành — prototype 0.6.0
+# Kiếm Hành — prototype 0.6.1
 
 Game nhập vai đội hình nhìn ngang, tham khảo nhịp chơi Sword Master Story.
 Đã có chương10ải, chuẩn bị đội1–5tướng, kỹ năng riêng/tự động, thưởng và lưu tiến trình local.
 Bốn đồng đội Brann/Lyra/Nyx/Sol đã có sprite fantasy riêng và sáu trạng thái.
 Kiếm sĩ Aether đã có sprite anime fantasy riêng và sáu trạng thái hoạt ảnh.
 Hai loại quái và bối cảnh đã có hình fantasy riêng.
+
+## Kéo thả đội hình · 0.6.1
+Trong màn chuẩn bị, kéo thẻ đồng đội sang thẻ khác để đổi vị trí rồi thả để lưu.
+Chạm nhanh để thêm/bỏ; Aether giữ vị trí đầu. Hỗ trợ cảm ứng và chuột.
+[Hướng dẫn và ảnh kiểm tra](docs/PARTY_DRAG.md).
 
 ## Nâng tướng · 0.6.0
 Sảnh hoặc màn chuẩn bị → **Nâng tướng**. Năm tướng cấp1–20, nâng bằng vàng+XP,
@@ -21,7 +26,7 @@ Boss ở1-05/1-10. Thưởng lần đầu tách thưởng chơi lại; đóng/m�
 [Xem thông số, cách thử và lưu dữ liệu](docs/CAMPAIGN.md).
 
 ![Chọn ải](docs/screenshots/campaign_stages.png)
-![Chuẩn bị đội](docs/screenshots/campaign_prepare.png)
+![Chuẩn bị đội](docs/screenshots/party_drag_ready.png)
 
 ## Frame rời 0.4.3
 Đã gỡ bản thử bộ xương. Năm tướng, hai loại quái và boss dùng168PNG độc lập,

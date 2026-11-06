@@ -33,3 +33,7 @@ Progress hero_levels lưu5cấp độc lập, migrate1→2; ví+level cùng tran
 PartyData tính HP/đòn thường từ base+10%base×(level−1), làm tròn lên, tối đa20.
 UI/prepare/battle cùng dùng công thức, battle giữ snapshot theoID lúc bắt đầu.
 Kỹ năng/tầm/tốc độ không đổi. Xem HERO_GROWTH.md cho giá, save và giới hạn.
+
+## 0.6.1 — Kéo thả đội hình
+Màn chuẩn bị hiển thị đúng thứ tự đội. Kéo đồng đội sang vị trí khác để chèn,
+chạm thêm/bỏ, Aether cố định. Lưu nguyên tử; hủy thao tác không đổi đội.

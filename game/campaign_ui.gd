@@ -75,21 +75,30 @@ func prepare(id: int) -> void:
 	var rewards := Campaign.reward(id, first)
 	text("Thắng: +%d vàng · +%d XP%s" % [rewards.gold, rewards.xp, " (gồm thưởng vượt lần đầu)" if first else " (thưởng chơi lại)"], Vector2(50, 178), Vector2(1180, 32), 21, Color("94cfbd"))
 	var roster: Array[int] = host.progress.formation()
-	for i in range(5):
+	var display_order: Array[int] = roster.duplicate()
+	for id_value in range(1, 5):
+		if not id_value in display_order: display_order.append(id_value)
+	var cards: Dictionary = {}
+	for column in range(5):
+		var i: int = display_order[column]
 		var hero: Dictionary = host.progress.hero_stats(i)
 		var selected: bool = i in roster
 		var order := "Vị trí %d" % (roster.find(i) + 1) if selected else "Dự bị"
 		var slot := i
-		var x := 50 + i * 238
+		var x := 50 + column * 238
 		var card := button("%s · %s\nCấp %d · %s\n%d HP · Đánh %d\n%s\n%s" % [hero.name, hero.role, hero.level, order, int(hero.hp), int(hero.damage), hero.skill, "Giữ vị trí đầu" if i == 0 else ("Chạm để bỏ" if selected else "Chạm để thêm")], Vector2(x, 235), Vector2(224, 192), func(): host.select_companion(slot), i == 0)
+		card.button_mask = 0
+		cards[i] = card
 		var style: StyleBoxFlat = card.get_theme_stylebox("disabled" if i == 0 else "normal").duplicate()
 		style.border_color = Color(hero.color) if selected else Color("3b5362")
 		style.bg_color = Color("183344") if selected else Color("101f2c")
 		card.add_theme_stylebox_override("disabled" if i == 0 else "normal", style)
 		if i == 0: card.add_theme_color_override("font_disabled_color", Color(hero.color))
-		if i > 0 and selected:
-			button("Lên trước", Vector2(x, 437), Vector2(107, 48), func(): host.move_companion(slot, -1), roster.find(i) <= 1)
-			button("Ra sau", Vector2(x + 117, 437), Vector2(107, 48), func(): host.move_companion(slot, 1), roster.find(i) == roster.size() - 1)
+	var drag := preload("res://game/party_drag.gd").new()
+	drag.name = "PartyDrag"
+	drag.configure(self, host, cards, roster)
+	add_child(drag)
+	text("Kéo thẻ đồng đội sang vị trí mới · Chạm thẻ để thêm/bỏ · Aether giữ đầu", Vector2(50, 447), Vector2(1180, 38), 20, Color("94cfbd"))
 	var names: PackedStringArray = []
 	for index in roster: names.append(Party.HEROES[index].name)
 	text("Đội %d/5: %s" % [roster.size(), " → ".join(names)], Vector2(50, 506), Vector2(1180, 36), 23)

@@ -1,7 +1,7 @@
-# Đội hình — prototype 0.6.0
+# Đội hình — prototype 0.6.1
 
 ## Cách thử
-Chọn ải → màn chuẩn bị: thêm/bớt bốn đồng đội và đổi thứ tự bằng nút;
+Chọn ải → màn chuẩn bị: thêm/bớt bốn đồng đội và kéo thả thẻ để đổi thứ tự;
 Aether giữ đầu. Đội mặc định5, có thể1–5; lựa chọn lưu trong campaign profile.
 Bắt đầu, tướng tự di chuyển/đánh. Năm thẻ dưới trận hiển thị HP, hồi chiêu
 và trạng thái gục. Chạm thẻ hoặc phím 1–5 để dùng kỹ năng; Space vẫn là Aether.

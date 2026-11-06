@@ -10,7 +10,7 @@ hoặc màn chuẩn bị tương ứng. Cấp mới cũng hiện trên thẻ tư
 
 ![Trước nâng](screenshots/growth_before.png)
 ![Sau nâng](screenshots/growth_after.png)
-![Đội đã nâng](screenshots/growth_prepare.png)
+![Đội đã nâng](screenshots/party_drag_ready.png)
 ![Chỉ số trong trận](screenshots/growth_battle.png)
 
 ## Thông số thử

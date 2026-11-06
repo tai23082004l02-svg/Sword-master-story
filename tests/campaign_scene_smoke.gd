@@ -38,7 +38,7 @@ func run() -> void:
 	await process_frame
 	scene.select_companion(1)
 	await process_frame
-	scene.move_companion(4, -1)
+	scene.reorder_companion(4, 3)
 	await process_frame
 	assert(scene.progress.formation() == [0, 2, 4, 3, 1])
 	scene.set_auto_mode(true)

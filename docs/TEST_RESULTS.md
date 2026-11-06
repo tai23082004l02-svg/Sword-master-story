@@ -140,3 +140,16 @@ Godot4.6.3 Linux; XDG_DATA_HOME riêng cho từng test, không dùng dữ liệu
 Driver cảnh báo không hỗ trợ đổi VSync; không có lỗi script. Chưa thử0.6trên
 S23/Windows thật, FPS/nhiệt/cảm ứng/safe area hoặc nghe âm. Không thêm tài
 nguyên game khác/API runtime/âm thanh; chưa có trang bị hoặc phó bản mới.
+
+## 0.6.1 — Kéo thả đội hình
+Godot4.6.3 Linux, XDG_DATA_HOME riêng từng bộ; cả15smoke PASS:
+growth_smoke, growth_scene_smoke, campaign_smoke, campaign_save_smoke,
+campaign_scene_smoke, battle_smoke, boss_smoke, scene_smoke, hero_art_smoke,
+enemy_art_smoke, party_smoke, party_scene_smoke, companion_art_smoke,
+frame_assets_smoke và party_drag_smoke. Không có lỗi script.
+Bộ mới gửi sự kiện viewport chuột/native touch, mouse tổng hợp, chèn thứ tự,
+Aether cố định, thả ngoài, chạm thêm/bỏ, dự bị, mất focus/hủy touch, nhiều ngón,
+canvas thu phóng, lỗi ghi giữ nguyên dữ liệu, reload và đội vào trận.
+capture_party_drag PASS: ảnh prep/đang kéo/đã lưu qua OpenGL Compatibility,
+Mesa llvmpipe, âm Dummy. Đã xem ảnh; driver cảnh báo VSync không hỗ trợ.
+Chưa thử thao tác trên S23 Ultra/Windows thật, FPS/nhiệt hoặc nghe âm.

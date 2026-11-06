@@ -11,3 +11,5 @@ Các mốc sau chưa triển khai, phạm vi có thể chỉnh theo chơi thử.
 
 
 - 0.4.3 Đã gỡ rig theo phản hồi;168frame PNG rời cho5tướng/2quái/boss, viewer có bước frame. Xem SPRITE_FRAMES.md.
+
+- 0.6.1 Đã thay nút đổi vị trí bằng kéo thả cảm ứng/chuột, lưu ngay đội hình. Xem PARTY_DRAG.md.
