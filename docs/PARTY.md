@@ -1,13 +1,13 @@
-# Đội hình — prototype 0.4.3
+# Đội hình — prototype 0.5.0
 
 ## Cách thử
-Ở sảnh, mặc định đủ năm tướng. Chạm **Đội hình** để đổi số lượng 1–5;
-đây là các đội dựng sẵn theo thứ tự dưới đây, chưa có kéo thả/đổi vị trí.
+Chọn ải → màn chuẩn bị: thêm/bớt bốn đồng đội và đổi thứ tự bằng nút;
+Aether giữ đầu. Đội mặc định5, có thể1–5; lựa chọn lưu trong campaign profile.
 Bắt đầu, tướng tự di chuyển/đánh. Năm thẻ dưới trận hiển thị HP, hồi chiêu
 và trạng thái gục. Chạm thẻ hoặc phím 1–5 để dùng kỹ năng; Space vẫn là Aether.
 Chạm **Kỹ năng: tay** để bật tự động. Bật lại để dùng tay. Tự động ưu tiên
 lá chắn, hồi máu nếu có tướng còn sống thiếu ít nhất 30 HP, rồi sát thương.
-Có thể bấm tay cả khi tự động đang bật. Tùy chọn đội/tự động chỉ giữ trong phiên.
+Có thể bấm tay cả khi tự động đang bật. Tùy chọn đội/tự động lưu cùng tiến trình.
 
 | Tướng | Vai trò | HP | Đánh thường | Kỹ năng | Hồi |
 | --- | --- | ---: | ---: | --- | ---: |
@@ -37,8 +37,8 @@ renderer với Aether và đồng bộ qua `companion_art.gd`; xem PARTY_ART.md 
 và giới hạn. Không thêm âm thanh, dịch vụ hoặc API runtime. Không đổi save âm thanh.
 
 ## Giới hạn và kiểm tra
-Đây là nền cơ chế đội năm tướng: chưa xếp đội tùy ý, chọn tướng từ kho, trang bị,
-chương ải, lưu tiến trình hoặc APK. Chưa coi chỉ số là cân bằng cuối; đội năm
+Đã có chọn/đổi thứ tự đồng đội, chương10ải và lưu local; chưa kho tướng mở rộng,
+trang bị, nâng tướng hoặc APK. Xem CAMPAIGN.md. Chưa coi chỉ số là cân bằng cuối; đội năm
 hiện mạnh hơn nhiều so với trận thiết kế cho một tướng. Không có thưởng mới.
 
 Godot 4.6.3 headless: kiểm tra một tướng cũ và đội 1–5, chiêu độc lập,

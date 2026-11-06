@@ -4,6 +4,20 @@ const BACKGROUND = preload("res://assets/world/moon_ruins.png")
 const BossArt = preload("res://game/boss_art.gd")
 const EnemyArt = preload("res://game/enemy_art.gd")
 const BattleModel = preload("res://game/battle.gd")
+const Campaign = preload("res://game/campaign_data.gd")
+const Progress = preload("res://game/campaign_progress.gd")
+const CampaignUI = preload("res://game/campaign_ui.gd")
+var progress = Progress.new()
+var campaign_panel: Control
+var wallet: Label
+var campaign_active := false
+var selected_stage := 1
+var run_id := -1
+var receipt: Dictionary = {}
+var settlement_attempted := false
+var battle_roster: Array[int] = []
+var battle_stage: Dictionary = {}
+var battle_stage_id := 0
 var battle = BattleModel.new()
 var screen := "title"
 var ui: Control
@@ -36,6 +50,9 @@ var preview_buttons: Array[Button] = []
 
 func _ready() -> void:
 	RenderingServer.set_default_clear_color(Color("101b2d"))
+	progress.load_game()
+	auto_skills = progress.data.auto_skills
+	party_size = progress.formation().size()
 	audio = preload("res://game/audio.gd").new()
 	add_child(audio)
 	battle.cue.connect(audio.play_cue)
@@ -73,14 +90,17 @@ func _ready() -> void:
 		button.add_theme_font_size_override("font_size", 18)
 		skill_buttons.append(button)
 	skill_button = skill_buttons[0]
-	auto_button = make_button("Kỹ năng: tay", Vector2(940, 650), Vector2(290, 50), func():
-		auto_skills = not auto_skills)
+	auto_button = make_button("Kỹ năng: tay", Vector2(940, 650), Vector2(290, 50), func(): set_auto_mode(not auto_skills))
 	for i in range(1, 5):
 		var view := preload("res://game/companion_art.gd").new()
 		art_layer.add_child(view)
 		companion_views.append(view)
+	wallet = Label.new()
+	wallet.position = Vector2(40, 28)
+	wallet.add_theme_font_size_override("font_size", 22)
+	ui.add_child(wallet)
 	pause_button = make_button("Tạm dừng", Vector2(1060, 25), Vector2(170, 52), toggle_pause)
-	show_menu("KIẾM HÀNH", "ĐỘI HÌNH · 0.4.3\nNăm vai trò · Ba đợt quái và boss\nChạm kỹ năng hoặc bật tự động", "Bắt đầu", begin)
+	show_menu("KIẾM HÀNH", "CHƯƠNG I · 0.5.0\nPhế tích Ngân Nguyệt · 10 ải\nChiến đấu, nhận thưởng và mở đường đi tiếp", "Chọn ải", open_stages)
 	get_viewport().size_changed.connect(resize_ui)
 	resize_ui()
 
@@ -119,19 +139,20 @@ func show_menu(title: String, subtitle: String, action: String, callback: Callab
 	button.pressed.connect(callback)
 	menu.add_child(button)
 	if screen == "title":
-		var formation := Button.new()
-		formation.text = "Đội hình: %d/5 · chạm để đổi số tướng" % party_size
-		formation.custom_minimum_size.y = 52
-		formation.pressed.connect(func():
-			party_size = party_size % 5 + 1
-			formation.text = "Đội hình: %d/5 · chạm để đổi số tướng" % party_size)
-		menu.add_child(formation)
 		var character := Button.new()
 		character.text = "Xem nhân vật · 5 tướng"
 		character.custom_minimum_size.y = 60
 		character.add_theme_font_size_override("font_size", 23)
 		character.pressed.connect(show_character)
 		menu.add_child(character)
+		if progress.read_only:
+			var retry := Button.new()
+			retry.text = "Thử tải lại tiến trình"
+			retry.custom_minimum_size.y = 50
+			retry.pressed.connect(func():
+				progress.load_game()
+				to_title())
+			menu.add_child(retry)
 	if screen == "paused":
 		var home := Button.new()
 		home.text = "Về sảnh"
@@ -140,9 +161,15 @@ func show_menu(title: String, subtitle: String, action: String, callback: Callab
 		menu.add_child(home)
 
 func begin() -> void:
-	menu.queue_free()
+	clear_campaign_panel()
+	if is_instance_valid(menu):
+		menu.queue_free()
+		menu = null
 	screen = "battle"
-	battle.start(party_size)
+	if campaign_active:
+		battle.start(battle_roster.size(), battle_roster, battle_stage)
+	else:
+		battle.start(party_size)
 	result_delay = 0
 	skill_visual = 0
 	hurt_visual = 0
@@ -152,14 +179,19 @@ func begin() -> void:
 	clear_preview()
 	clear_enemies()
 	for i in range(companion_views.size()):
-		companion_views[i].configure(PartyData.HEROES[i + 1].id)
+		if i + 1 < battle.heroes.size():
+			companion_views[i].configure(battle.heroes[i + 1].id)
 
 func to_title() -> void:
+	if campaign_active and not progress.data.pending.is_empty():
+		progress.abandon_run(run_id)
+	campaign_active = false
+	clear_campaign_panel()
 	clear_enemies()
 	clear_preview()
 	screen = "title"
 	battle.state = "idle"
-	show_menu("KIẾM HÀNH", "Đánh thường tự động · Kỹ năng riêng từng tướng\n1 Aether · 2 Brann · 3 Lyra · 4 Nyx · 5 Sol", "Bắt đầu", begin)
+	show_menu("KIẾM HÀNH", "CHƯƠNG I · PHẾ TÍCH NGÂN NGUYỆT\n10 ải · Thưởng và lưu tiến trình", "Chọn ải", open_stages)
 
 func use_skill() -> void:
 	use_party_skill(0)
@@ -198,21 +230,31 @@ func _unhandled_key_input(event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	if auto_skills and screen == "battle" and battle.state == "playing":
 		# Shield before damage; heal only after an ally actually needs it.
-		for slot in [1, 4, 0, 2, 3]:
-			if slot >= battle.heroes.size():
-				continue
-			if slot == 4 and not battle.heroes.any(func(a): return a.hp > 0 and a.hp <= a.max_hp - 30):
-				continue
-			use_party_skill(slot)
+		for id in ["brann", "sol", "aether", "lyra", "nyx"]:
+			for slot in range(battle.heroes.size()):
+				if battle.heroes[slot].id != id:
+					continue
+				if id == "sol" and not battle.heroes.any(func(a): return a.hp > 0 and a.hp <= a.max_hp - 30):
+					continue
+				use_party_skill(slot)
 	battle.tick(minf(delta, 0.05))
 	update_companions()
 	update_hero(delta)
 	update_enemies(minf(delta, 0.05))
 	if screen == "battle" and battle.state in ["won", "lost"]:
+		if campaign_active and not settlement_attempted:
+			settle_campaign()
 		result_delay += delta
 	if screen == "battle" and battle.state in ["won", "lost"] and result_delay >= 0.85:
 		screen = "result"
-		show_menu("CHIẾN THẮNG" if battle.state == "won" else "THẤT BẠI", "Hạ %d địch · Chặng %d/4 · %.1f giây\nBản thử chưa có phần thưởng hoặc lưu tiến trình" % [battle.kills, battle.wave, battle.elapsed], "Chơi lại", begin)
+		if campaign_active:
+			show_campaign_result()
+		else:
+			show_menu("CHIẾN THẮNG" if battle.state == "won" else "THẤT BẠI", "Hạ %d địch · Chặng %d/4 · %.1f giây\nTrận kiểm tra cơ chế · Không tính thưởng" % [battle.kills, battle.wave, battle.elapsed], "Chơi lại", begin)
+	wallet.visible = screen in ["title", "stages", "prepare", "result"]
+	wallet.text = "Tiến trình đang khóa · " + progress.last_error if progress.read_only else "Vàng: %d     XP hành trình: %d     Đã vượt: %d/10" % [progress.data.gold, progress.data.xp, progress.data.cleared.size()]
+	if progress.recovered and not progress.read_only:
+		wallet.text += " · Đã mở bản dự phòng"
 	feedback.visible = screen == "battle"
 	feedback.queue_redraw()
 	status.visible = screen in ["battle", "paused"]
@@ -230,7 +272,7 @@ func _process(delta: float) -> void:
 			timing = "Đã gục"
 		button.text = "%d · %s  %d/%d HP\n%s · %s" % [i + 1, actor.name, ceili(actor.hp), int(actor.max_hp), actor.skill, timing]
 	pause_button.visible = screen == "battle"
-	status.text = ("BOSS" if battle.wave == 4 else "ĐỢT %d / 3" % battle.wave) + "      ĐỘI %d/%d · %.1fs" % [battle.heroes.filter(func(a): return a.hp > 0).size(), battle.heroes.size(), battle.elapsed]
+	status.text = (("1-%02d · " % battle_stage_id) if campaign_active else "") + ("BOSS" if battle.wave > 0 and battle.boss_wave() else "ĐỢT %d / %d" % [battle.wave, battle.wave_limit]) + "      ĐỘI %d/%d · %.1fs" % [battle.heroes.filter(func(a): return a.hp > 0).size(), battle.heroes.size(), battle.elapsed]
 	queue_redraw()
 
 func draw_ellipse_shadow(pos: Vector2) -> void:
@@ -405,8 +447,9 @@ func update_companions() -> void:
 		view.frozen = screen != "battle" or battle.state != "playing"
 		if i + 1 < battle.heroes.size():
 			view.sync(battle.heroes[i + 1], minf(get_process_delta_time(), 0.05), screen != "battle", battle.state in ["won", "lost"])
-			var offsets := [Vector2(30, 455), Vector2(-30, 480), Vector2(0, 500), Vector2(40, 520)]
-			view.position = Vector2(view.actor.x + offsets[i].x, offsets[i].y)
+			var offsets := {"brann": Vector2(30, 455), "lyra": Vector2(-30, 480), "nyx": Vector2(0, 500), "sol": Vector2(40, 520)}
+			var offset: Vector2 = offsets[view.actor.id]
+			view.position = Vector2(view.actor.x + offset.x, offset.y)
 			view.scale = Vector2(0.72, 0.72)
 
 func active_preview() -> Node2D:
@@ -425,3 +468,94 @@ func step_preview(direction: int) -> void:
 	var count: int = hero_art.CLIPS[preview_clip][1]
 	var current: int = active_preview().frame_index() - int(hero_art.CLIPS[preview_clip][0])
 	preview_step = posmod(current + direction, count)
+
+func clear_campaign_panel() -> void:
+	if is_instance_valid(campaign_panel):
+		campaign_panel.visible = false
+		campaign_panel.queue_free()
+		campaign_panel = null
+
+func new_campaign_panel() -> void:
+	clear_campaign_panel()
+	if is_instance_valid(menu):
+		menu.queue_free()
+		menu = null
+	clear_preview()
+	campaign_panel = CampaignUI.new(self)
+	ui.add_child(campaign_panel)
+
+func open_stages() -> void:
+	if campaign_active and not progress.data.pending.is_empty():
+		progress.abandon_run(run_id)
+	campaign_active = false
+	battle.state = "idle"
+	clear_enemies()
+	screen = "stages"
+	new_campaign_panel()
+	campaign_panel.stages()
+
+func prepare_stage(id: int) -> void:
+	if id < 1 or id > progress.unlocked(): return
+	selected_stage = id
+	campaign_active = false
+	battle.state = "idle"
+	clear_enemies()
+	screen = "prepare"
+	new_campaign_panel()
+	campaign_panel.prepare(id)
+
+func select_companion(id: int) -> void:
+	if id < 1 or id > 4 or screen != "prepare": return
+	var roster: Array[int] = progress.formation()
+	if id in roster: roster.erase(id)
+	else: roster.append(id)
+	if progress.set_formation(roster):
+		party_size = roster.size()
+		prepare_stage(selected_stage)
+	else:
+		campaign_panel.message(progress.last_error)
+
+func move_companion(id: int, direction: int) -> void:
+	if screen != "prepare": return
+	var roster: Array[int] = progress.formation()
+	var old := roster.find(id)
+	var target := old + direction
+	if old < 1 or target < 1 or target >= roster.size(): return
+	roster[old] = roster[target]
+	roster[target] = id
+	if progress.set_formation(roster): prepare_stage(selected_stage)
+	else: campaign_panel.message(progress.last_error)
+
+func set_auto_mode(value: bool) -> void:
+	auto_skills = value
+	if not progress.set_auto(value) and is_instance_valid(campaign_panel):
+		campaign_panel.message(progress.last_error)
+
+func start_campaign(id: int) -> void:
+	if id < 1 or id > progress.unlocked() or progress.read_only: return
+	var token: int = progress.begin_run(id)
+	if token < 0:
+		if is_instance_valid(campaign_panel): campaign_panel.message(progress.last_error)
+		return
+	selected_stage = id
+	battle_stage_id = id
+	battle_stage = Campaign.stage(id)
+	battle_roster = progress.formation()
+	party_size = battle_roster.size()
+	campaign_active = true
+	run_id = token
+	receipt = {}
+	settlement_attempted = false
+	begin()
+
+func show_campaign_result() -> void:
+	if not campaign_active or battle.state not in ["won", "lost"]: return
+	if not receipt.get("ok", false):
+		settle_campaign()
+	screen = "result"
+	new_campaign_panel()
+	campaign_panel.result(receipt)
+
+func settle_campaign() -> void:
+	settlement_attempted = true
+	receipt = progress.finish_run(run_id, battle.state == "won", battle.elapsed, battle.heroes.filter(func(a): return a.hp > 0).size())

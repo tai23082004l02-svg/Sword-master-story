@@ -1,10 +1,19 @@
-# Kiếm Hành — prototype 0.4.3
+# Kiếm Hành — prototype 0.5.0
 
 Game nhập vai đội hình nhìn ngang, tham khảo nhịp chơi Sword Master Story.
-Đã có nền chiến đấu đội tối đa năm tướng, kỹ năng riêng và chế độ tự động.
+Đã có chương10ải, chuẩn bị đội1–5tướng, kỹ năng riêng/tự động, thưởng và lưu tiến trình local.
 Bốn đồng đội Brann/Lyra/Nyx/Sol đã có sprite fantasy riêng và sáu trạng thái.
 Kiếm sĩ Aether đã có sprite anime fantasy riêng và sáu trạng thái hoạt ảnh.
 Hai loại quái và bối cảnh đã có hình fantasy riêng.
+
+## Chương I · 0.5.0
+Sảnh → **Chọn ải** → chuẩn bị đội → chiến đấu → nhận thưởng → mở ải tiếp.
+Boss ở1-05/1-10. Thưởng lần đầu tách thưởng chơi lại; đóng/mở game giữ tiến trình,
+đội hình, vàng và XP hành trình. Vàng/XP mới tích lũy, chưa có nâng cấp/trang bị.
+[Xem thông số, cách thử và lưu dữ liệu](docs/CAMPAIGN.md).
+
+![Chọn ải](docs/screenshots/campaign_stages.png)
+![Chuẩn bị đội](docs/screenshots/campaign_prepare.png)
 
 ## Frame rời 0.4.3
 Đã gỡ bản thử bộ xương. Năm tướng, hai loại quái và boss dùng168PNG độc lập,
@@ -49,14 +58,15 @@ Nhân vật tóc bạc/giáp bạc viền vàng/áo choàng xanh đêm đã thay
 [Xem nguồn, cách tích hợp và giới hạn](docs/CHARACTER_AETHER.md).
 
 ## Chơi thử
-Godot 4.6.3, renderer Compatibility. Import `project.godot`, đợi import, Run.
-Màn hình ngang 1280×720 logical, canvas co theo màn hình.
-- Bấm Bắt đầu; cả đội tự chạy tới địch và đánh.
-- Chạm thẻ kỹ năng hoặc phím 1–5; Space dùng Kiếm khí. Có chế độ tự động.
-- Ba đợt gồm2/3/4quái cận chiến và đánh xa, sau đó boss600HP.
-- Tạm dừng hoặc Esc; chuyển ứng dụng tự pause, quay lại bấm Tiếp tục.
-- Có thắng/thua, chơi lại, về sảnh khi pause và bật/tắt âm lưu riêng.
-- Chưa có thưởng, save tiến trình, trang bị, nhạc hoặc APK.
+Godot4.6.3, renderer Compatibility. Import project.godot, đợi import, Run.
+Màn hình ngang1280×720logical, canvas co theo màn hình.
+- Chọn ải đã mở, thêm/bớt/đổi thứ tự đồng đội ở màn chuẩn bị; Aether giữ đầu.
+- Tướng tự chạy/đánh; chạm thẻ kỹ năng hoặc phím1–5, Space dùng Kiếm khí.
+- Có bật/tắt tự động dùng skill; lựa chọn lưu cùng profile.
+- Tạm dừng/Esc; chuyển ứng dụng tự pause, quay lại bấm Tiếp tục.
+- Thắng mở ải tiếp và cộng thưởng, chơi lại nhận thưởng trận; thua/bỏ không mất ví.
+- Đóng/mở lại giữ các ải đã vượt và tài nguyên; trận đang đánh phải chơi lại.
+- Âm bật/tắt lưu riêng; không APK, trang bị, nâng tướng hoặc đồng bộ cloud.
 
 ## Cập nhật trên S23 Ultra
 Giữ SSH hiện có. Repo này có thư mục riêng, không ghi đè Game-2.5D.
@@ -83,6 +93,9 @@ Import project.godot ở thư mục mới. Không cần ZIP hoặc APK.
 
 ```sh
 godot --headless --path . --editor --import
+XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/campaign_smoke.gd
+XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/campaign_save_smoke.gd
+XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/campaign_scene_smoke.gd
 XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/battle_smoke.gd
 XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/scene_smoke.gd
 XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/party_smoke.gd

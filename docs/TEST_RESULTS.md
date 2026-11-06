@@ -95,3 +95,26 @@ Godot4.6.3, save directory riêng:
   particle Nyx và seam glow boss; ảnh kiểm tra trong SPRITE_FRAMES.md.
 Driver cảnh báo không hỗ trợ đổi VSync, không lỗi script. Không suy ra duyệt
 máy thật/cảm ứng/âm/FPS/nhiệt hoặc sửa được chi tiết vốn thiếu trong ảnh nguồn.
+
+## 0.5.0 — Chương10ải, chuẩn bị đội, thưởng và save
+Godot4.6.3 Linux, mọi lần chạy dùng XDG_DATA_HOME riêng trong workspace:
+- campaign_smoke:10ải data riêng, đúng số wave/địch, boss chỉ5/10, đội đảo thứ tự
+  và skill khi hồi đều thắng; thời gian1–10:4.8/6.0/12.0/13.2/18.7/17.8/18.7/
+  20.4/23.9/43.3s. Đây là bot logic60Hz, không dùng để cam kết cân bằng/FPS.
+- campaign_save_smoke:đội/auto giữ qua load, first/repeat (cả sau reload), khóa
+  ải, mất trận/abandon không thưởng, trùng token không trả lại, full chapter và
+  tổng ví, lỗi commit/retry, backup/recover/giữ.damaged, hỏng cả2/future schema
+  không ghi đè: PASS. Ghi kiểm byte serialization rồi normalize JSON, tránh
+  lỗi IDint/float và so sánh float thời gian tuyệt đối sau serialization.
+- campaign_scene_smoke:nút chọn ải, khóa, chuẩn bị/đổi thứ tự, đúng artID,
+  auto/pause, chốt lưu ngay khi thắng trước delay kết quả, nhận thưởng một lần,
+  next/replay/thua/abandon, tạo lại scene giữ dữ liệu và màn retry khi save fail:
+  PASS.
+- battle_smoke,boss_smoke,scene_smoke,hero_art_smoke,enemy_art_smoke,party_smoke,
+  party_scene_smoke,companion_art_smoke,frame_assets_smoke:PASS. Tổng12bộ.
+- capture_campaign:mô phỏng từ1-01 tới1-10 trên scene thực, có repeat1-01;
+  chụp/xem màn sảnh/chọn/chuẩn bị/trận/thưởng đầu/repeat/bossphase2/hoàn thành/
+  mở toàn bộải. OpenGL Compatibility/Mesa llvmpipe trên Xorg dummy, audio Dummy.
+Editor import thành công, không lỗi script. Driver cảnh báo không hỗ trợ đổi
+VSync. Chưa thửWindows/S23 thực, cảm ứng/safe area, nghe âm, FPS/nhiệt. Chỉ2loại
+quái và hình cũ, vàng/XP tích lũy chưa dùng nâng cấp/trang bị; save local khôngcloud.

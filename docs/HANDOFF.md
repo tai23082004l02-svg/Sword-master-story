@@ -1,3 +1,16 @@
+# Bổ sung 0.5.0 — Chương10ải, thưởng, chuẩn bị đội và save
+Đọc CAMPAIGN.md. Đã thêm CampaignData/Progress/UI, snapshot stage/roster vào
+Battle, giữ API trận cũ cho regression. Boss5/10,2loại quái/hình cũ, không copyAPK.
+Flow chọn ải→chuẩn bị→trận→thưởng→ải tiếp, mở tuần tự và chơi lại. Aether luôn
+đầu, bốn đồng đội chọn/đổi thứ tự; art/auto theo ID. Vàng/XP hiện chỉ tích lũy.
+Save user://campaign.json schema1; audio.cfg riêng. Token trước trận, chốt cùng
+thưởng/mởải ngay khi won/lost trước delay0.85s; không cộng lại. JSON normalize
+ID vềint. Ghi.tmp/flush/verify/backup/rename; recover.bak, giữ.damaged, hỏng cả2
+hoặc future schema thì khóa ghi, không reset. Battle bị ngắt không resume/award.
+Giữ hình0.4.3, không thêm APK/online/phó bản phụ/nâng tướng/trang bị/nhạc.
+Kiểm12smoke + render full scene chương trên Linux/Godot4.6.3; chưa thửS23,
+Windows thực, FPS/nhiệt hoặc âm. Capture profile/save riêng trong workspace.
+
 # Bổ sung 0.4.3 — Gỡ rig, dùng frame rời
 Người dùng không chọn bộ xương, yêu cầu xóa và tiếp tục tách frame kiểu cũ.
 Đã gỡ toàn bộ asset/scene/script/tool/test/docs rig và nút mở lab; giữ lịch sử Git.

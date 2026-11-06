@@ -1,4 +1,7 @@
-# Kỵ sĩ Nguyệt Thực — 0.3.3
+# Kỵ sĩ Nguyệt Thực — cơ chế từ 0.3.3
+
+Từ0.5.0, campaign dùng boss ởải5/10 với750/1500HP và hệ số damage riêng; xem
+[CAMPAIGN.md](CAMPAIGN.md). Mô tả600HP/4chặng bên dưới là trậnlegacy hồi quy.
 
 ## Quyết định người dùng
 Không có sơ hở tăng sát thương, invulnerability, parry hoặc yêu cầu canh kỹ năng.

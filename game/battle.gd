@@ -27,11 +27,24 @@ var intermission := 0.0
 var serial := 0
 var effects: Array[Dictionary] = []
 var kills := 0
+var stage_config: Dictionary = {}
+var wave_limit: int:
+	get: return stage_config.waves.size() if not stage_config.is_empty() else 4
+func boss_wave() -> bool:
+	return stage_config.waves[wave - 1].has("boss_hp") if not stage_config.is_empty() else wave == 4
 
-func start(party_size: int = 1) -> void:
+func start(party_size: int = 1, roster: Array = [], stage: Dictionary = {}) -> void:
+	stage_config = stage.duplicate(true)
 	heroes.clear()
-	for i in range(clampi(party_size, 1, 5)):
-		heroes.append(Party.create(i))
+	var selected: Array = roster.duplicate() if not roster.is_empty() else range(clampi(party_size, 1, 5))
+	assert(selected.size() >= 1 and selected.size() <= 5 and selected[0] == 0)
+	var used: Array = []
+	for i in range(selected.size()):
+		assert(selected[i] >= 0 and selected[i] < 5 and not selected[i] in used)
+		used.append(selected[i])
+		var actor := Party.create(selected[i])
+		actor.x = 240.0 - i * 42.0
+		heroes.append(actor)
 	state = "playing"
 	wave = 0
 	enemies.clear()
@@ -48,13 +61,22 @@ func spawn_wave() -> void:
 		heroes[i].x = 240.0 - i * 42.0
 		heroes[i].windup = 0.0
 		heroes[i].target = -1
-	if wave == 4:
+	if boss_wave():
 		serial += 1
-		enemies.append(Boss.create(serial))
+		var boss := Boss.create(serial)
+		if not stage_config.is_empty():
+			boss.hp = stage_config.waves[wave - 1].boss_hp
+			boss.max_hp = boss.hp
+		boss.damage_scale = stage_config.get("damage_scale", 1.0)
+		enemies.append(boss)
 	else:
-		for i in range(wave + 1):
+		var config: Dictionary = stage_config.waves[wave - 1] if not stage_config.is_empty() else {}
+		var count: int = config.enemies.size() if not config.is_empty() else wave + 1
+		for i in range(count):
 			serial += 1
-			enemies.append({"id": serial, "x": 820.0 + i * 105.0, "hp": 55.0 + wave * 12.0, "max_hp": 55.0 + wave * 12.0, "ranged": i % 2 == 1, "timer": 0.8 + i * 0.25, "windup": 0.0, "target": ""})
+			var hp: float = config.get("hp", 55.0 + wave * 12.0)
+			var ranged: bool = config.enemies[i] == "ranged" if not config.is_empty() else i % 2 == 1
+			enemies.append({"id": serial, "x": 820.0 + i * 105.0, "hp": hp, "max_hp": hp, "ranged": ranged, "timer": 0.8 + i * 0.25, "windup": 0.0, "target": "", "damage_scale": stage_config.get("damage_scale", 1.0)})
 	cue.emit("wave")
 
 func target_index(origin: float = -1.0) -> int:
@@ -159,7 +181,7 @@ func tick(dt: float) -> void:
 		for actor in heroes:
 			actor.windup = 0.0
 			actor.target = -1
-		if wave == 4:
+		if wave == wave_limit:
 			state = "won"
 			cue.emit("win")
 			return
@@ -189,7 +211,7 @@ func tick(dt: float) -> void:
 			if event.phase_changed:
 				cue.emit("skill")
 			if event.damage > 0 and victim.hp > 0:
-				damage_hero(victim, event.damage)
+				damage_hero(victim, event.damage * enemy.get("damage_scale", 1.0))
 			continue
 		var attack_range := 330.0 if enemy.ranged else 75.0
 		if enemy.windup > 0:
@@ -198,7 +220,7 @@ func tick(dt: float) -> void:
 				# Lock the victim at windup; never silently redirect a committed hit.
 				for ally in heroes:
 					if ally.id == enemy.get("target", victim.id) and ally.hp > 0 and absf(enemy.x - ally.x) <= attack_range + 20:
-						damage_hero(ally, 7.0 if enemy.ranged else 10.0)
+						damage_hero(ally, (7.0 if enemy.ranged else 10.0) * enemy.get("damage_scale", 1.0))
 						break
 				enemy.timer = 1.8
 		else:

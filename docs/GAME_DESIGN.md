@@ -21,3 +21,9 @@ không buff damage theo thời điểm. Skill cố định48; xem BOSS.md cho th
 ## 0.4.0
 Đội tối đa5, kỹ năng riêng và tự động; thông số/quy tắc hiện hành trong PARTY.md.
 Mô tả0.2/0.3 ở trên là lịch sử bản một tướng. Toàn đội gục mới thua.
+
+## 0.5.0 — Campaign
+Hiện hành:10ải cấu hình riêng, boss5/10; chọn đội Aether+0–4đồng đội, thứ tự lưu.
+Thưởng trận và thưởng đầu, mở tuần tự, XP/vàng chỉ tích lũy. Save local transaction
+với run token, backup và schema validation. Xem CAMPAIGN.md cho toàn bộ thông số.
+Mô tả trận4chặng ở0.3.3 chỉ là APIlegacy cho regression, không phải mọi ải hiện tại.
