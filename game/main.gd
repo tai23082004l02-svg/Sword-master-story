@@ -14,6 +14,7 @@ var auto_skills := false
 var skill_buttons: Array[Button] = []
 var companion_views: Array[Node2D] = []
 var auto_button: Button
+var rig_button: Button
 var pause_button: Button
 var menu: VBoxContainer
 var audio: Node
@@ -78,8 +79,10 @@ func _ready() -> void:
 		var view := preload("res://game/companion_art.gd").new()
 		art_layer.add_child(view)
 		companion_views.append(view)
+	rig_button = make_button("Thử Aether · bộ xương", Vector2(940, 650), Vector2(290, 50), func(): get_tree().change_scene_to_file("res://scenes/aether_rig_lab.tscn"))
+	rig_button.add_theme_font_size_override("font_size", 20)
 	pause_button = make_button("Tạm dừng", Vector2(1060, 25), Vector2(170, 52), toggle_pause)
-	show_menu("KIẾM HÀNH", "ĐỘI HÌNH · 0.4.1\nNăm vai trò · Ba đợt quái và boss\nChạm kỹ năng hoặc bật tự động", "Bắt đầu", begin)
+	show_menu("KIẾM HÀNH", "ĐỘI HÌNH · 0.4.2\nNăm vai trò · Ba đợt quái và boss\nChạm kỹ năng hoặc bật tự động", "Bắt đầu", begin)
 	get_viewport().size_changed.connect(resize_ui)
 	resize_ui()
 
@@ -215,6 +218,7 @@ func _process(delta: float) -> void:
 	feedback.visible = screen == "battle"
 	feedback.queue_redraw()
 	status.visible = screen in ["battle", "paused"]
+	rig_button.visible = screen == "title"
 	auto_button.visible = screen == "battle"
 	auto_button.text = "Kỹ năng: tự động" if auto_skills else "Kỹ năng: tay"
 	for i in range(skill_buttons.size()):

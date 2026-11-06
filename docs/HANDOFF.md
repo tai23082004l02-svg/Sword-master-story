@@ -1,3 +1,14 @@
+# Bổ sung 0.4.2 — Chuẩn bị hình rời và thử rig Aether
+Người dùng đổi hướng từ tách frame sang bộ xương, yêu cầu làm thử Aether trước.
+Đọc AETHER_RIG.md. Có24PNG rời sinh mới, scene editable20Bone2D/24Sprite2D,
+6AnimationPlayer clip và lab riêng mở bằng nút sảnh. Chưa đổi battle renderer.
+Giữ nguyên0.4.1/chỉ số/audio/save và4đồng đội. Work tách frame đã chuyển vào
+work/suspended-frame-work/, không commit/phát hành. Rig hiện là cutout cứng,
+chưa mesh/IK/động tác cuối; cần duyệt hình/pivot trước khi nối vào trận.
+Nguồn và source rect/hash trong assets/aether_rig/manifest.json. Công cụ extract
+chỉ tách kit/bake alpha/trim; build ghi lại scene từ code, lưu bản sao nếu sửa tay.
+Đã xem render thực bằng Godot/Mesa/audio Dummy; chưa thử máy S23 hoặc FPS.
+
 # Bổ sung 0.4.1 — Hình và hoạt ảnh bốn đồng đội
 Đọc PARTY_ART.md. Đã thay hình học Brann/Lyra/Nyx/Sol bằng atlas24ô/tướng,
 sáu trạng thái. CompanionArt kế thừa renderer HeroArt với sheet cấu hình được,

@@ -62,3 +62,19 @@ Godot4.6.3 Linux, dữ liệu thử ở XDG_DATA_HOME riêng:
   Brann/Lyra và vùng kỹ năng Lyra lộ pose kế bên; chụp/xem lại sau sửa.
 Audio Dummy; cảnh báo driver không hỗ trợ đổi VSync, không có lỗi script.
 Không suy ra FPS, nhiệt, âm hoặc cảm ứng trên S23 Ultra từ kiểm tra desktop.
+
+## 0.4.2 — Bộ phận rời và rig thử Aether
+Godot4.6.3, XDG_DATA_HOME riêng trong workspace:
+- Extract:24PNG độc lập, alpha lọc một lần, trim viền; source kit giữ để đối chiếu.
+- Build: scene editable Skeleton2D/20Bone2D/24Sprite2D/AnimationPlayer,6clip.
+- aether_rig_smoke:24texture riêng đúng parent/owner,20bone,6clip có transform
+  hữu hạn, chân thực sự di chuyển theo hierarchy, pause giữ transform,
+  tách/ghép trả đúng offset và lab mở được: PASS.
+- aether_rig_navigation: nút sảnh mở lab, Về sảnh trở lại main: PASS.
+- battle_smoke, boss_smoke, scene_smoke, hero_art_smoke, enemy_art_smoke,
+  party_smoke, party_scene_smoke, companion_art_smoke: PASS.
+- Chụp/xem idle, overlay xương, attack và exploded trong Godot OpenGL
+  Compatibility/Mesa llvmpipe/Xorg dummy. Đã sửa thứ tự lớp và điểm cầm kiếm.
+Audio Dummy. Driver cảnh báo không hỗ trợ đổi VSync; không có lỗi script.
+Chưa duyệt máy S23/cảm ứng/âm/FPS/nhiệt; chưa mesh deformation/IK hoặc thay rig
+vào trận. Kiểm tra hiện phục vụ chuẩn bị hình và rig cutout thử.
