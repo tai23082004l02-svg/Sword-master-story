@@ -1,10 +1,16 @@
-# Kiếm Hành — prototype 0.6.1
+# Kiếm Hành — prototype 0.6.2
 
 Game nhập vai đội hình nhìn ngang, tham khảo nhịp chơi Sword Master Story.
 Đã có chương10ải, chuẩn bị đội1–5tướng, kỹ năng riêng/tự động, thưởng và lưu tiến trình local.
 Bốn đồng đội Brann/Lyra/Nyx/Sol đã có sprite fantasy riêng và sáu trạng thái.
 Kiếm sĩ Aether đã có sprite anime fantasy riêng và sáu trạng thái hoạt ảnh.
 Hai loại quái và bối cảnh đã có hình fantasy riêng.
+
+## Trang bị · 0.6.2
+Sảnh hoặc chuẩn bị → **Trang bị**. Mua6món bằng vàng, mặc/tháo vũ khí và giáp
+cho5tướng; mỗi món một bản, tháo để đổi người dùng. Cộng HP/đòn thường sau cấp,
+lưu ngay và áp dụng ở trận mới. Tự đọc save0.5/0.6, giữ bản sao trước chuyển đổi.
+[Giá, cách thử, dữ liệu và giới hạn](docs/EQUIPMENT.md).
 
 ## Kéo thả đội hình · 0.6.1
 Trong màn chuẩn bị, kéo thẻ đồng đội sang thẻ khác để đổi vị trí rồi thả để lưu.
@@ -80,7 +86,7 @@ Màn hình ngang1280×720logical, canvas co theo màn hình.
 - Thắng mở ải tiếp và cộng thưởng, chơi lại nhận thưởng trận; thua/bỏ không mất ví.
 - Đóng/mở lại giữ các ải đã vượt và tài nguyên; trận đang đánh phải chơi lại.
 - Sảnh hoặc chuẩn bị → Nâng tướng; chi phí và chỉ số mới hiện rõ, lưu ngay khi nâng.
-- Âm bật/tắt lưu riêng; không APK, trang bị hoặc đồng bộ cloud.
+- Âm bật/tắt lưu riêng; không APK hoặc đồng bộ cloud.
 
 ## Cập nhật trên S23 Ultra
 Giữ SSH hiện có. Repo này có thư mục riêng, không ghi đè Game-2.5D.
@@ -106,7 +112,9 @@ Import project.godot ở thư mục mới. Không cần ZIP hoặc APK.
 ## Kiểm tra phát triển
 
 ```sh
-godot --headless --path . --editor --import
+godot --headless --path . --editor --import --quit
+XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/equipment_smoke.gd
+XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/equipment_scene_smoke.gd
 XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/growth_smoke.gd
 XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/growth_scene_smoke.gd
 XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/campaign_smoke.gd

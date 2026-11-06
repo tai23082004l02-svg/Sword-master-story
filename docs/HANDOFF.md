@@ -1,3 +1,13 @@
+# Bổ sung 0.6.2 — Trang bị
+Đọc EQUIPMENT.md. Catalogue6món tự thiết kế, mỗi món một bản,5tướng×2ô.
+Mua vàng và mặc/tháo dùng transaction hiện có; không tự mặc khi mua, thay món
+trả kho, không cho mặc trùng. Bonus HP/ATK cộng sau cấp, growth before/after
+và prep dùng cùng stats; Battle chụp equipment theoID, legacy mặc định rỗng.
+Schema3migrate1/2, giữ .v1.bak/.v2.bak một lần kể cả recover backup; load không
+ghi. Giữ ví/cấp/ải/đội/token. 17smoke PASS trên Godot4.6.3 headless/save riêng,
+có2test equipment mới. Chưa duyệt render, S23/cảm ứng/âm/FPS. Chưa rơi đồ,
+bán/cường hóa/nhiều bản sao/icon; không thêm dịch vụ/tài nguyên/APK.
+
 # Bổ sung 0.6.1 — Kéo thả đội hình
 Đọc PARTY_DRAG.md. Prep hiển thị thẻ theo roster rồi các tướng dự bị; bỏ nút
 Lên trước/Ra sau. PartyDrag nhận native touch/mouse, bỏ mouse tổng hợp từ touch,

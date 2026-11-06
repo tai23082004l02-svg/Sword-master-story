@@ -1,3 +1,10 @@
+# Bổ sung 0.6.2
+Godot4.6.3 headless trên Linux, XDG_DATA_HOME=/tmp/sword-equipment/data.
+17/17 scripts *smoke.gd PASS, gồm equipment_smoke/equipment_scene_smoke mới.
+Kiểm migration1/2/bản sao, mua/mặc/tháo/chuyển, thiếu vàng, save failure/reload,
+validation, stat/snapshot theoID, đường đi UI và hồi quy campaign/growth/drag/
+party/battle/boss/art/frames. Không thực hiện render, điện thoại, âm hoặc benchmark.
+
 # Kiểm tra 2026-11-06 — 0.2.0
 Godot4.6.3 Linux headless:
 - Editor import: thành công.
