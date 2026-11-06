@@ -1,3 +1,13 @@
+# Bổ sung 0.4.1 — Hình và hoạt ảnh bốn đồng đội
+Đọc PARTY_ART.md. Đã thay hình học Brann/Lyra/Nyx/Sol bằng atlas24ô/tướng,
+sáu trạng thái. CompanionArt kế thừa renderer HeroArt với sheet cấu hình được,
+tắt overlay kiếm xanh; sync actor/pause/hurt/death/skill và reset lúc begin.
+Màn xem5tướng có chọn tên và6trạng thái. Giữ logic/chỉ số/audio/save0.4.0.
+PNG riêng sinh bằng OpenAI image generation, Brann/Lyra sửa alpha bằng cùng công cụ;
+manifest ghi nguồn/hash, shader alpha cũ giữ nguyên. Không dùng asset game khác.
+Đã render/chụp/xem scene thật và viewer bằng OpenGL/Mesa, audio Dummy.
+Chưa duyệt máy S23/âm/FPS. Atlas AI có giới hạn in-between/độ ổn định giữa frame.
+
 # Bổ sung 0.4.0 — Nền đội hình
 Đọc PARTY.md trước khi sửa. PartyData tạo actor riêng, Battle.heroes điều phối
 đội1–5; Aether giữ nguyên chỉ số, alias một tướng giữ kiểm tra hồi quy.

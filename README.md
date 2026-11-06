@@ -1,10 +1,16 @@
-# Kiếm Hành — prototype 0.4.0
+# Kiếm Hành — prototype 0.4.1
 
 Game nhập vai đội hình nhìn ngang, tham khảo nhịp chơi Sword Master Story.
 Đã có nền chiến đấu đội tối đa năm tướng, kỹ năng riêng và chế độ tự động.
-Bốn đồng đội mới dùng hình học tạm; chưa phải bản mỹ thuật hoàn thiện.
+Bốn đồng đội Brann/Lyra/Nyx/Sol đã có sprite fantasy riêng và sáu trạng thái.
 Kiếm sĩ Aether đã có sprite anime fantasy riêng và sáu trạng thái hoạt ảnh.
 Hai loại quái và bối cảnh đã có hình fantasy riêng.
+
+## Bốn đồng đội 0.4.1
+Đã thay hình tạm bằng sprite Brann, Lyra, Nyx và Sol. Sảnh → **Xem nhân vật · 5 tướng**
+để đổi tướng và thử sáu trạng thái. [Chi tiết, nguồn và ảnh thật](docs/PARTY_ART.md).
+
+![Đội năm tướng trong Godot](docs/screenshots/party_battle.png)
 
 ## Đội hình 0.4.0
 Mặc định năm tướng: Aether, Brann, Lyra, Nyx và Sol. Chọn số tướng 1–5 ở sảnh;
@@ -75,6 +81,7 @@ XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/battle_sm
 XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/scene_smoke.gd
 XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/party_smoke.gd
 XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/party_scene_smoke.gd
+XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/companion_art_smoke.gd
 ```
 
 Xem [thiết kế](docs/GAME_DESIGN.md), [lộ trình](docs/ROADMAP.md),

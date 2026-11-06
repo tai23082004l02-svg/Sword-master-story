@@ -47,3 +47,18 @@ Godot4.6.3 Linux headless, XDG_DATA_HOME riêng trong workspace:
 Mô phỏng dùng skill ngay khi hồi: đội1/2/3/4/5 lần lượt36.7/33.7/25.4/23.3/22.5s;
 không dùng các số này thay duyệt cân bằng thực tế. Chưa render/duyệt ảnh0.4
 vì môi trường chưa có display, chưa thử S23/cảm ứng/âm thanh/FPS/nhiệt.
+
+## 0.4.1 — Bốn đồng đội có sprite
+Godot4.6.3 Linux, dữ liệu thử ở XDG_DATA_HOME riêng:
+- Editor import bốn atlas và script mới: thành công, không lỗi script.
+- battle_smoke, boss_smoke, scene_smoke, hero_art_smoke, enemy_art_smoke,
+  party_smoke, party_scene_smoke: PASS.
+- companion_art_smoke: bốn sheet đúng kích thước, sáu trạng thái theo actor,
+  đóng băng khi pause, death khi toàn đội thua, reset khi chơi lại, màn xem5tướng
+  và tích hợp trận: PASS.
+- alpha_render trên display thực: PASS cho cả5tướng, quái và boss.
+- capture_party: chụp/xem ảnh thực4viewer và đội5 trong Godot OpenGL
+  Compatibility/Mesa llvmpipe trên Xorg dummy. Đã phát hiện/sửa nền mờ
+  Brann/Lyra và vùng kỹ năng Lyra lộ pose kế bên; chụp/xem lại sau sửa.
+Audio Dummy; cảnh báo driver không hỗ trợ đổi VSync, không có lỗi script.
+Không suy ra FPS, nhiệt, âm hoặc cảm ứng trên S23 Ultra từ kiểm tra desktop.

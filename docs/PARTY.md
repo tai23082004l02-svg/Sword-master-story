@@ -1,4 +1,4 @@
-# Đội hình — prototype 0.4.0
+# Đội hình — prototype 0.4.1
 
 ## Cách thử
 Ở sảnh, mặc định đủ năm tướng. Chạm **Đội hình** để đổi số lượng 1–5;
@@ -32,9 +32,9 @@ Ba đợt và boss giữ thông số cũ, không có sơ hở/multiplier hoặc 
 lá chắn/hồi máu và kết quả. Alias hero_hp/hero_x/cooldown giữ API một tướng
 cho kiểm tra hồi quy. `start()` mặc định một tướng; UI gọi `start(party_size)`.
 `main.gd` quản lý nút, tự động và trình bày, không quyết định sát thương.
-Aether giữ atlas đã duyệt. Bốn đồng đội dùng hình học vẽ bằng code mới trong
-`companion_art.gd`, màu/vũ khí riêng; **chưa có sprite anime cuối**. Không thêm
-asset bên ngoài, âm thanh, dịch vụ hoặc API runtime. Không đổi save âm thanh.
+Aether giữ atlas đã duyệt. Bốn đồng đội đã có atlas fantasy riêng, dùng chung
+renderer với Aether và đồng bộ qua `companion_art.gd`; xem PARTY_ART.md cho nguồn
+và giới hạn. Không thêm âm thanh, dịch vụ hoặc API runtime. Không đổi save âm thanh.
 
 ## Giới hạn và kiểm tra
 Đây là nền cơ chế đội năm tướng: chưa xếp đội tùy ý, chọn tướng từ kho, trang bị,
@@ -44,5 +44,5 @@ hiện mạnh hơn nhiều so với trận thiết kế cho một tướng. Khô
 Godot 4.6.3 headless: kiểm tra một tướng cũ và đội 1–5, chiêu độc lập,
 lá chắn, hồi máu/không hồi sinh, mục tiêu đã chốt, pause, reset và thắng/thua.
 Kiểm scene cho năm nút, đồng đội, tự động, về sảnh, khởi động lại một tướng.
-Chưa render/duyệt ảnh 0.4 bằng display; chưa thử cảm ứng, âm thanh hoặc đo FPS
-trên S23 Ultra. Cần thử thực tế cả năm thẻ kỹ năng và độ rõ các hình tạm.
+Đã render/chụp/xem cảnh đội5 và màn xem bốn nhân vật ở0.4.1. Chưa thử cảm ứng,
+âm thanh hoặc đo FPS trên S23 Ultra; cần duyệt mỹ thuật trên thiết bị.

@@ -18,6 +18,10 @@ var pause_button: Button
 var menu: VBoxContainer
 var audio: Node
 var hero_art: Node2D
+var companion_preview: Node2D
+var preview_index := 0
+var preview_skill_button: Button
+const PartyData = preload("res://game/party_data.gd")
 var feedback: Node2D
 var art_layer: Node2D
 var skill_visual := 0.0
@@ -36,9 +40,14 @@ func _ready() -> void:
 	battle.cue.connect(audio.play_cue)
 	art_layer = Node2D.new()
 	art_layer.z_index = 2
+	art_layer.y_sort_enabled = true
 	add_child(art_layer)
 	hero_art = preload("res://game/hero_art.gd").new()
 	art_layer.add_child(hero_art)
+	companion_preview = preload("res://game/companion_art.gd").new()
+	companion_preview.configure("brann")
+	companion_preview.visible = false
+	art_layer.add_child(companion_preview)
 	feedback = preload("res://game/combat_feedback.gd").new()
 	feedback.model = battle
 	feedback.z_index = 3
@@ -70,7 +79,7 @@ func _ready() -> void:
 		art_layer.add_child(view)
 		companion_views.append(view)
 	pause_button = make_button("Tạm dừng", Vector2(1060, 25), Vector2(170, 52), toggle_pause)
-	show_menu("KIẾM HÀNH", "ĐỘI HÌNH · 0.4.0\nNăm vai trò · Ba đợt quái và boss\nChạm kỹ năng hoặc bật tự động", "Bắt đầu", begin)
+	show_menu("KIẾM HÀNH", "ĐỘI HÌNH · 0.4.1\nNăm vai trò · Ba đợt quái và boss\nChạm kỹ năng hoặc bật tự động", "Bắt đầu", begin)
 	get_viewport().size_changed.connect(resize_ui)
 	resize_ui()
 
@@ -117,7 +126,7 @@ func show_menu(title: String, subtitle: String, action: String, callback: Callab
 			formation.text = "Đội hình: %d/5 · chạm để đổi số tướng" % party_size)
 		menu.add_child(formation)
 		var character := Button.new()
-		character.text = "Xem nhân vật · Aether"
+		character.text = "Xem nhân vật · 5 tướng"
 		character.custom_minimum_size.y = 60
 		character.add_theme_font_size_override("font_size", 23)
 		character.pressed.connect(show_character)
@@ -141,6 +150,8 @@ func begin() -> void:
 	hero_art.set_clip("idle", true)
 	clear_preview()
 	clear_enemies()
+	for i in range(companion_views.size()):
+		companion_views[i].configure(PartyData.HEROES[i + 1].id)
 
 func to_title() -> void:
 	clear_enemies()
@@ -250,9 +261,15 @@ func refresh_mute() -> void:
 	ui.get_node("Mute").text = "Âm: tắt" if audio.muted else "Âm: bật"
 
 func update_hero(delta: float) -> void:
-	hero_art.visible = screen in ["battle", "character"]
+	hero_art.visible = screen == "battle" or (screen == "character" and preview_index == 0)
+	companion_preview.visible = screen == "character" and preview_index > 0
 	hero_art.frozen = screen == "paused"
 	if screen == "character":
+		companion_preview.position = Vector2(380, 530)
+		companion_preview.scale = Vector2(1.75, 1.75)
+		companion_preview.preview = true
+		companion_preview.frozen = false
+		companion_preview.set_clip(preview_clip)
 		hero_art.position = Vector2(380, 530)
 		hero_art.scale = Vector2(1.75, 1.75)
 		hero_art.preview = true
@@ -296,14 +313,22 @@ func show_character() -> void:
 	menu.queue_free()
 	screen = "character"
 	preview_clip = "idle"
-	var names := ["Đứng", "Chạy", "Chém kiếm", "Ngân nguyệt", "Trúng đòn", "Ngã xuống"]
+	var names := ["Đứng", "Chạy", "Đánh thường", PartyData.HEROES[preview_index].skill, "Trúng đòn", "Ngã xuống"]
 	var clips := ["idle", "run", "attack", "skill", "hurt", "death"]
 	for i in range(clips.size()):
 		var selected: String = clips[i]
 		var button := make_button(names[i], Vector2(735 + (i % 2) * 230, 330 + (i / 2) * 74), Vector2(210, 60), func():
 			preview_clip = selected
-			hero_art.set_clip(selected, true))
+			active_preview().set_clip(selected, true))
+		if i == 3:
+			preview_skill_button = button
 		preview_buttons.append(button)
+	for i in range(5):
+		var selected_index := i
+		var button := make_button(PartyData.HEROES[i].name, Vector2(715 + i * 100, 110), Vector2(94, 48), func(): select_character(selected_index))
+		button.add_theme_font_size_override("font_size", 18)
+		preview_buttons.append(button)
+	select_character(preview_index)
 	preview_buttons.append(make_button("Về sảnh", Vector2(735, 590), Vector2(440, 60), to_title))
 
 func draw_character_backdrop() -> void:
@@ -314,10 +339,12 @@ func draw_character_backdrop() -> void:
 	draw_arc(Vector2(380, 340), 188, 0, TAU, 100, Color("426b70"), 2)
 	draw_ellipse_shadow(Vector2(380, 572))
 	var font := ThemeDB.fallback_font
-	draw_string(font, Vector2(730, 160), "AETHER", HORIZONTAL_ALIGNMENT_LEFT, -1, 52, Color("ebd7a5"))
-	draw_string(font, Vector2(735, 202), "KIẾM SĨ NGÂN NGUYỆT", HORIZONTAL_ALIGNMENT_LEFT, -1, 24, Color("8ed9dc"))
-	draw_string(font, Vector2(735, 250), "Lưỡi kiếm gìn giữ ánh trăng cuối cùng.", HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color("d2dfe2"))
-	draw_string(font, Vector2(735, 285), "Xem sáu trạng thái của nhân vật", HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color("93aab6"))
+	var data: Dictionary = PartyData.HEROES[preview_index]
+	var stories := ["Lưỡi kiếm gìn giữ ánh trăng cuối cùng.", "Tấm khiên đứng vững trước màn đêm.", "Mũi tên dẫn lối qua rừng sao.", "Tinh hỏa soi những vì sao đã tắt.", "Ánh bình minh gọi đồng đội đứng vững."]
+	draw_string(font, Vector2(730, 220), data.name.to_upper(), HORIZONTAL_ALIGNMENT_LEFT, -1, 48, Color(data.color))
+	draw_string(font, Vector2(735, 256), data.role + " · " + data.skill, HORIZONTAL_ALIGNMENT_LEFT, -1, 24, Color("d2dfe2"))
+	draw_string(font, Vector2(735, 290), stories[preview_index], HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color("d2dfe2"))
+	draw_string(font, Vector2(735, 318), "Xem sáu trạng thái của nhân vật", HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color("93aab6"))
 
 func clear_enemies() -> void:
 	for view in enemy_views.values():
@@ -366,5 +393,18 @@ func update_companions() -> void:
 		view.visible = screen == "battle" and i + 1 < battle.heroes.size()
 		view.frozen = screen != "battle" or battle.state != "playing"
 		if i + 1 < battle.heroes.size():
-			view.actor = battle.heroes[i + 1]
-			view.position = Vector2(view.actor.x, 510 - i * 9)
+			view.sync(battle.heroes[i + 1], minf(get_process_delta_time(), 0.05), screen != "battle", battle.state in ["won", "lost"])
+			var offsets := [Vector2(30, 455), Vector2(-30, 480), Vector2(0, 500), Vector2(40, 520)]
+			view.position = Vector2(view.actor.x + offsets[i].x, offsets[i].y)
+			view.scale = Vector2(0.72, 0.72)
+
+func active_preview() -> Node2D:
+	return hero_art if preview_index == 0 else companion_preview
+
+func select_character(index: int) -> void:
+	preview_index = index
+	preview_clip = "idle"
+	if index > 0:
+		companion_preview.configure(PartyData.HEROES[index].id)
+	active_preview().set_clip("idle", true)
+	preview_skill_button.text = PartyData.HEROES[index].skill

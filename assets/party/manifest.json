@@ -1,0 +1,93 @@
+{
+  "source": "Original character atlases generated with OpenAI image generation in this session, 2026-11-06; Brann and Lyra transparency revised with image generation before integration.",
+  "third_party_game_assets": false,
+  "license_note": "Generated original assets for this project; not represented as hand-drawn, CC0 or assets from Sword Master Story.",
+  "dimensions": [
+    1536,
+    1024
+  ],
+  "grid": [
+    6,
+    4
+  ],
+  "cell": [
+    256,
+    256
+  ],
+  "clips": {
+    "idle": [
+      0,
+      6
+    ],
+    "run": [
+      6,
+      6
+    ],
+    "attack": [
+      12,
+      6
+    ],
+    "skill": [
+      18,
+      3
+    ],
+    "hurt": [
+      21,
+      1
+    ],
+    "death": [
+      22,
+      2
+    ]
+  },
+  "rendering": "Original generated PNGs copied unchanged; existing alpha-residue shader applied at render time.",
+  "characters": [
+    {
+      "id": "brann",
+      "name": "Brann — Hộ vệ Bình Minh",
+      "file": "brann_sheet.png",
+      "sha256": "fd9fef1fde712a1b42309fd92621be988ecd179ff4b8f47f1d247e66211bda87"
+    },
+    {
+      "id": "lyra",
+      "name": "Lyra — Cung thủ Rừng Sao",
+      "file": "lyra_sheet.png",
+      "sha256": "c58b7238d4a0315169ac59def0a7c5cd8ddf0d1aefcf77d8a930064b2415f29b"
+    },
+    {
+      "id": "nyx",
+      "name": "Nyx — Pháp sư Tinh Hỏa",
+      "file": "nyx_sheet.png",
+      "sha256": "7794146a2a3faac6cbae889f0e2c2bc2db6e9df97e7828dac07bad67f036f4b8"
+    },
+    {
+      "id": "sol",
+      "name": "Sol — Người giữ Bình Minh",
+      "file": "sol_sheet.png",
+      "sha256": "45ef05ee8178494081cae0b8473e9f10225f02bfa9b75e2b5c74c758ebd8e19e"
+    }
+  ],
+  "status": "Integrated and viewed in actual Godot desktop render; pending user approval on S23 Ultra.",
+  "frame_region_overrides": {
+    "lyra": {
+      "18": [
+        0,
+        768,
+        232,
+        256
+      ],
+      "19": [
+        236,
+        768,
+        212,
+        256
+      ],
+      "20": [
+        450,
+        768,
+        318,
+        256
+      ]
+    }
+  }
+}

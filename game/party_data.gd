@@ -1,5 +1,5 @@
 extends RefCounted
-## Original prototype roster. Companion artwork is procedural, not final character art.
+## Original prototype roster and independent actor state.
 const HEROES = [
 	{"id": "aether", "name": "Aether", "role": "Kiếm sĩ", "hp": 220.0, "damage": 22.0, "range": 85.0, "recovery": 0.48, "color": "91dcf0", "skill": "Kiếm khí", "kind": "area", "power": 48.0, "cooldown": 6.0},
 	{"id": "brann", "name": "Brann", "role": "Hộ vệ", "hp": 320.0, "damage": 13.0, "range": 80.0, "recovery": 0.85, "color": "e5b76d", "skill": "Hộ thuẫn", "kind": "shield", "power": 35.0, "cooldown": 10.0},
