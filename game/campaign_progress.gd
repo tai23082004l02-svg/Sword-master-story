@@ -2,7 +2,8 @@ extends RefCounted
 ## Transactional local progression. Audio settings remain in their original file.
 const Campaign = preload("res://game/campaign_data.gd")
 const Party = preload("res://game/party_data.gd")
-const SCHEMA_VERSION := 2
+const Equipment = preload("res://game/equipment_data.gd")
+const SCHEMA_VERSION := 3
 var path: String
 var data: Dictionary
 var last_error := ""
@@ -12,18 +13,35 @@ func _init(save_path: String = "user://campaign.json") -> void:
 	path = save_path
 	data = defaults()
 func defaults() -> Dictionary:
-	return {"version": SCHEMA_VERSION, "hero_levels": [1, 1, 1, 1, 1], "gold": 0, "xp": 0, "cleared": [], "records": {}, "formation": [0, 1, 2, 3, 4], "auto_skills": false, "serial": 0, "last_claimed": 0, "pending": {}}
+	return {"version": SCHEMA_VERSION, "owned_equipment": [], "equipment": Equipment.empty_slots(), "hero_levels": [1, 1, 1, 1, 1], "gold": 0, "xp": 0, "cleared": [], "records": {}, "formation": [0, 1, 2, 3, 4], "auto_skills": false, "serial": 0, "last_claimed": 0, "pending": {}}
 func whole(value: Variant, low: int, high: int) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and value == floorf(value) and value >= low and value <= high
 func valid(candidate: Variant) -> bool:
 	if not candidate is Dictionary: return false
 	var required: Array = defaults().keys()
 	required.erase("hero_levels")
+	required.erase("owned_equipment")
+	required.erase("equipment")
 	if not candidate.has_all(required) or not whole(candidate.version, 1, SCHEMA_VERSION): return false
-	if candidate.version == SCHEMA_VERSION:
+	if candidate.version >= 2:
 		if not candidate.get("hero_levels") is Array or candidate.hero_levels.size() != 5: return false
 		for level in candidate.hero_levels:
 			if not whole(level, 1, Party.MAX_LEVEL): return false
+	if candidate.version >= 3:
+		if not candidate.get("owned_equipment") is Array or not candidate.get("equipment") is Array or candidate.equipment.size() != 5: return false
+		var owned: Array = []
+		for id in candidate.owned_equipment:
+			if not id is String or not Equipment.ITEMS.has(id) or id in owned: return false
+			owned.append(id)
+		var used_items: Array = []
+		for slots in candidate.equipment:
+			if not slots is Dictionary or slots.size() != 2 or not slots.has_all(["weapon", "armor"]): return false
+			for slot in ["weapon", "armor"]:
+				var id: Variant = slots[slot]
+				if not id is String: return false
+				if id == "": continue
+				if not id in owned or id in used_items or Equipment.ITEMS[id].slot != slot: return false
+				used_items.append(id)
 	for key in ["gold", "xp", "serial", "last_claimed"]:
 		if not whole(candidate[key], 0, 9007199254740991): return false
 	if candidate.last_claimed > candidate.serial or not candidate.auto_skills is bool: return false
@@ -51,8 +69,11 @@ func valid(candidate: Variant) -> bool:
 func normalize(candidate: Dictionary) -> Dictionary:
 	var result := candidate.duplicate(true)
 	if int(result.version) == 1:
-		result.version = SCHEMA_VERSION
 		result.hero_levels = [1, 1, 1, 1, 1]
+	if int(result.version) < 3:
+		result.owned_equipment = []
+		result.equipment = Equipment.empty_slots()
+	result.version = SCHEMA_VERSION
 	var levels: Array = []
 	for level in result.hero_levels: levels.append(int(level))
 	result.hero_levels = levels
@@ -136,16 +157,16 @@ func commit(candidate: Dictionary) -> bool:
 		if DirAccess.copy_absolute(absolute, preserved) != OK:
 			last_error = "Không giữ được bản dữ liệu cũ. Hãy thử lại."
 			return false
-	# Preserve a legacy save once, including when recovery used a v1 backup.
-	if not FileAccess.file_exists(path + ".v1.bak"):
-		for source in [path, path + ".bak"]:
-			if read_file(source).is_empty(): continue
-			var old: Variant = parse_file(source)
-			if old is Dictionary and old.get("version", 1) == 1:
-				if DirAccess.copy_absolute(ProjectSettings.globalize_path(source), absolute + ".v1.bak") != OK:
-					last_error = "Chưa giữ được bản tiến trình cũ. Hãy thử lại."
-					return false
-				break
+	# Keep each supported pre-migration schema once, including recovered backups.
+	for source in [path, path + ".bak"]:
+		if read_file(source).is_empty(): continue
+		var old: Variant = parse_file(source)
+		var version := int(old.get("version", SCHEMA_VERSION))
+		var preserved := absolute + ".v%d.bak" % version
+		if version < SCHEMA_VERSION and not FileAccess.file_exists(preserved):
+			if DirAccess.copy_absolute(ProjectSettings.globalize_path(source), preserved) != OK:
+				last_error = "Chưa giữ được bản tiến trình cũ. Hãy thử lại."
+				return false
 	if not read_file(path).is_empty():
 		if DirAccess.copy_absolute(absolute, absolute + ".bak") != OK:
 			last_error = "Không tạo được bản dự phòng. Hãy thử lưu lại."
@@ -206,14 +227,14 @@ func levels() -> Array[int]:
 	return result
 
 func hero_stats(index: int) -> Dictionary:
-	return Party.stats(index, int(data.hero_levels[index]))
+	return Equipment.apply(Party.stats(index, int(data.hero_levels[index])), data.equipment[index])
 
 func upgrade_quote(index: int) -> Dictionary:
 	if index < 0 or index >= 5: return {}
 	var current := int(data.hero_levels[index])
 	var cost := Party.upgrade_cost(current)
 	var maxed := current >= Party.MAX_LEVEL
-	return {"level": current, "next_level": mini(Party.MAX_LEVEL, current + 1), "before": hero_stats(index), "after": Party.stats(index, mini(Party.MAX_LEVEL, current + 1)), "cost": cost, "maxed": maxed, "affordable": not maxed and data.gold >= cost.gold and data.xp >= cost.xp}
+	return {"level": current, "next_level": mini(Party.MAX_LEVEL, current + 1), "before": hero_stats(index), "after": Equipment.apply(Party.stats(index, mini(Party.MAX_LEVEL, current + 1)), data.equipment[index]), "cost": cost, "maxed": maxed, "affordable": not maxed and data.gold >= cost.gold and data.xp >= cost.xp}
 
 func upgrade_hero(index: int, expected_level: int = -1) -> Dictionary:
 	if read_only: return {"ok": false, "error": last_error}
@@ -229,3 +250,37 @@ func upgrade_hero(index: int, expected_level: int = -1) -> Dictionary:
 	candidate.hero_levels[index] += 1
 	if not commit(candidate): return {"ok": false, "error": last_error}
 	return {"ok": true, "level": int(data.hero_levels[index]), "gold": quote.cost.gold, "xp": quote.cost.xp}
+
+func item_owner(id: String) -> int:
+	for i in range(5):
+		if id in data.equipment[i].values(): return i
+	return -1
+
+func buy_equipment(id: String) -> bool:
+	if not Equipment.ITEMS.has(id) or id in data.owned_equipment:
+		last_error = "Trang bị không hợp lệ hoặc đã sở hữu."
+		return false
+	var price: int = Equipment.ITEMS[id].gold
+	if data.gold < price:
+		last_error = "Chưa đủ vàng để mua trang bị."
+		return false
+	var candidate := data.duplicate(true)
+	candidate.gold -= price
+	candidate.owned_equipment.append(id)
+	return commit(candidate)
+
+func equip_item(index: int, slot: String, id: String) -> bool:
+	if index < 0 or index >= 5 or slot not in ["weapon", "armor"]:
+		last_error = "Ô trang bị không hợp lệ."
+		return false
+	if id != "":
+		if not Equipment.ITEMS.has(id) or not id in data.owned_equipment or Equipment.ITEMS[id].slot != slot:
+			last_error = "Chưa sở hữu trang bị phù hợp."
+			return false
+		var owner := item_owner(id)
+		if owner >= 0 and owner != index:
+			last_error = "Hãy tháo trang bị ở tướng đang dùng trước."
+			return false
+	var candidate := data.duplicate(true)
+	candidate.equipment[index][slot] = id
+	return commit(candidate)

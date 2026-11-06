@@ -37,3 +37,6 @@ Kỹ năng/tầm/tốc độ không đổi. Xem HERO_GROWTH.md cho giá, save v�
 ## 0.6.1 — Kéo thả đội hình
 Màn chuẩn bị hiển thị đúng thứ tự đội. Kéo đồng đội sang vị trí khác để chèn,
 chạm thêm/bỏ, Aether cố định. Lưu nguyên tử; hủy thao tác không đổi đội.
+
+## 0.6.2 — Trang bị
+Catalogue6món/mỗi món một bản, mỗi tướng một vũ khí/một giáp. Mua vàng, tháo/chuyển miễn phí; bonus cố định sau cấp, snapshot lúc vào trận. Schema3migrate1/2. Xem EQUIPMENT.md.

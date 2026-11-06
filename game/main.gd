@@ -16,6 +16,7 @@ var run_id := -1
 var receipt: Dictionary = {}
 var settlement_attempted := false
 var battle_roster: Array[int] = []
+var battle_equipment: Array = []
 var battle_levels: Array[int] = []
 var growth_index := 0
 var growth_return := "title"
@@ -166,6 +167,12 @@ func show_menu(title: String, subtitle: String, action: String, callback: Callab
 		growth.add_theme_font_size_override("font_size", 23)
 		growth.pressed.connect(func(): open_growth())
 		menu.add_child(growth)
+		var gear := Button.new()
+		gear.text = "Trang bị"
+		gear.custom_minimum_size.y = 50
+		gear.add_theme_font_size_override("font_size", 23)
+		gear.pressed.connect(func(): open_equipment())
+		menu.add_child(gear)
 		if progress.read_only:
 			var retry := Button.new()
 			retry.text = "Thử tải lại tiến trình"
@@ -188,7 +195,7 @@ func begin() -> void:
 		menu = null
 	screen = "battle"
 	if campaign_active:
-		battle.start(battle_roster.size(), battle_roster, battle_stage, battle_levels)
+		battle.start(battle_roster.size(), battle_roster, battle_stage, battle_levels, battle_equipment)
 	else:
 		battle.start(party_size)
 	result_delay = 0
@@ -272,7 +279,7 @@ func _process(delta: float) -> void:
 			show_campaign_result()
 		else:
 			show_menu("CHIẾN THẮNG" if battle.state == "won" else "THẤT BẠI", "Hạ %d địch · Chặng %d/4 · %.1f giây\nTrận kiểm tra cơ chế · Không tính thưởng" % [battle.kills, battle.wave, battle.elapsed], "Chơi lại", begin)
-	wallet.visible = screen in ["title", "stages", "prepare", "result", "growth"]
+	wallet.visible = screen in ["title", "stages", "prepare", "result", "growth", "equipment"]
 	wallet.text = "Tiến trình đang khóa · " + progress.last_error if progress.read_only else "Vàng: %d     XP hành trình: %d     Đã vượt: %d/10" % [progress.data.gold, progress.data.xp, progress.data.cleared.size()]
 	if progress.recovered and not progress.read_only:
 		wallet.text += " · Đã mở bản dự phòng"
@@ -566,6 +573,7 @@ func start_campaign(id: int) -> void:
 	battle_stage = Campaign.stage(id)
 	battle_roster = progress.formation()
 	battle_levels = progress.levels()
+	battle_equipment = progress.data.equipment.duplicate(true)
 	party_size = battle_roster.size()
 	campaign_active = true
 	run_id = token
@@ -605,3 +613,18 @@ func upgrade_selected(index: int, expected_level: int) -> void:
 	var outcome: Dictionary = progress.upgrade_hero(index, expected_level)
 	open_growth(growth_return, index)
 	campaign_panel.message("Đã nâng %s lên cấp %d." % [PartyData.HEROES[index].name, outcome.level] if outcome.ok else outcome.error, outcome.ok)
+
+func open_equipment(origin: String = "title", index: int = 0) -> void:
+	if screen not in ["title", "prepare", "equipment", "growth"]: return
+	growth_return = origin
+	growth_index = index
+	screen = "equipment"
+	new_campaign_panel()
+	campaign_panel.equipment(index, origin)
+
+func change_equipment(id: String, slot: String = "") -> void:
+	if screen != "equipment": return
+	var ok: bool = progress.buy_equipment(id) if slot == "" else progress.equip_item(growth_index, slot, id)
+	var error: String = progress.last_error
+	open_equipment(growth_return, growth_index)
+	campaign_panel.message("Đã lưu trang bị." if ok else error, ok)

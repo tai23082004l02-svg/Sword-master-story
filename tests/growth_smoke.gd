@@ -33,7 +33,7 @@ func _initialize() -> void:
 	legacy.pending = {"id": 7, "stage": 3}
 	var original := JSON.stringify(legacy, "  ")
 	write(path, original)
-	assert(p.load_game() and p.data.version == 2 and p.levels() == [1, 1, 1, 1, 1])
+	assert(p.load_game() and p.data.version == Progress.SCHEMA_VERSION and p.levels() == [1, 1, 1, 1, 1])
 	assert(FileAccess.get_file_as_string(path) == original, "Load must not rewrite a legacy file")
 	var quote := p.upgrade_quote(0)
 	assert(quote.before.hp == 220 and quote.after.hp == 242 and quote.after.damage == 25)

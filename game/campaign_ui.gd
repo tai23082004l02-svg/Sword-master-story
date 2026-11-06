@@ -111,6 +111,7 @@ func prepare(id: int) -> void:
 	auto.toggled.connect(func(value): host.set_auto_mode(value))
 	add_child(auto)
 	notice = text(host.progress.last_error, Vector2(50, 550), Vector2(820, 35), 18, Color("ffb6a5"))
+	button("Trang bị", Vector2(655, 655), Vector2(250, 48), func(): host.open_equipment("prepare"))
 	button("Nâng tướng", Vector2(655, 590), Vector2(250, 58), func(): host.open_growth("prepare"))
 	button("Chọn ải khác", Vector2(50, 590), Vector2(260, 58), host.open_stages)
 	button("Bắt đầu · 1-%02d" % id, Vector2(930, 580), Vector2(300, 68), func(): host.start_campaign(id), host.progress.read_only)
@@ -187,4 +188,29 @@ func growth(index: int, origin: String) -> void:
 		if missing_xp > 0: pieces.append("%d XP" % missing_xp)
 		status = "Cần thêm " + " và ".join(pieces) + "."
 	notice = text(status, Vector2(570, 612), Vector2(640, 32), 19, Color("ffb6a5"))
+	button("Về chuẩn bị đội" if origin == "prepare" else "Về sảnh", Vector2(940, 650), Vector2(290, 50), host.close_growth)
+
+func equipment(index: int, origin: String) -> void:
+	var gear = preload("res://game/equipment_data.gd")
+	text("TRANG BỊ · Mỗi món có một bản, tháo để đổi tướng", Vector2(50, 92), Vector2(1180, 40), 28, Color("edce92"))
+	for i in range(5):
+		var selected := i
+		button(("• " if i == index else "") + Party.HEROES[i].name, Vector2(50 + i * 238, 145), Vector2(224, 52), func(): host.open_equipment(origin, selected))
+	var hero: Dictionary = host.progress.hero_stats(index)
+	text("%s · Cấp %d · %d HP · Đánh %d (đã gồm trang bị)" % [hero.name, hero.level, hero.hp, hero.damage], Vector2(50, 205), Vector2(1180, 36), 23)
+	var row := 0
+	for id in gear.ITEMS:
+		var item: Dictionary = gear.ITEMS[id]
+		var owned: bool = id in host.progress.data.owned_equipment
+		var owner: int = host.progress.item_owner(id)
+		var state := "Chưa sở hữu" if not owned else ("Trong kho" if owner < 0 else "Đang dùng: " + str(Party.HEROES[owner].name))
+		var y := 255 + row * 52
+		text("%s · +%d %s · %s" % [item.name, item.hp if item.slot == "armor" else item.damage, "HP" if item.slot == "armor" else "đánh", state], Vector2(50, y), Vector2(850, 44), 21)
+		var item_id: String = id
+		var slot: String = item.slot
+		button("Mua · %d vàng" % item.gold if not owned else ("Đã mặc" if owner == index else "Trang bị"), Vector2(950, y), Vector2(280, 44), func(): host.change_equipment(item_id, "" if not owned else slot), host.progress.read_only or (not owned and host.progress.data.gold < item.gold) or owner >= 0)
+		row += 1
+	button("Tháo vũ khí", Vector2(50, 580), Vector2(260, 48), func(): host.change_equipment("", "weapon"), host.progress.read_only or host.progress.data.equipment[index].weapon == "")
+	button("Tháo giáp", Vector2(330, 580), Vector2(260, 48), func(): host.change_equipment("", "armor"), host.progress.read_only or host.progress.data.equipment[index].armor == "")
+	notice = text("Mua không tự mặc · Thay món trả món cũ về kho · Chỉ áp dụng ở trận mới", Vector2(50, 640), Vector2(850, 54), 18, Color("94cfbd"))
 	button("Về chuẩn bị đội" if origin == "prepare" else "Về sảnh", Vector2(940, 650), Vector2(290, 50), host.close_growth)
