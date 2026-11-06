@@ -9,6 +9,11 @@ var screen := "title"
 var ui: Control
 var status: Label
 var skill_button: Button
+var party_size := 5
+var auto_skills := false
+var skill_buttons: Array[Button] = []
+var companion_views: Array[Node2D] = []
+var auto_button: Button
 var pause_button: Button
 var menu: VBoxContainer
 var audio: Node
@@ -43,7 +48,7 @@ func _ready() -> void:
 	var layer := CanvasLayer.new()
 	add_child(layer)
 	layer.add_child(ui)
-	var mute_button := make_button("Âm: bật", Vector2(40, 640), Vector2(170, 50), func():
+	var mute_button := make_button("Âm: bật", Vector2(40, 650), Vector2(170, 50), func():
 		audio.toggle_mute()
 		refresh_mute())
 	mute_button.name = "Mute"
@@ -52,9 +57,20 @@ func _ready() -> void:
 	status.position = Vector2(40, 28)
 	status.add_theme_font_size_override("font_size", 25)
 	ui.add_child(status)
-	skill_button = make_button("KIẾM KHÍ · Space", Vector2(920, 600), Vector2(310, 76), use_skill)
+	for i in range(5):
+		var slot := i
+		var button := make_button("", Vector2(30 + i * 248, 550), Vector2(232, 90), func(): use_party_skill(slot))
+		button.add_theme_font_size_override("font_size", 18)
+		skill_buttons.append(button)
+	skill_button = skill_buttons[0]
+	auto_button = make_button("Kỹ năng: tay", Vector2(940, 650), Vector2(290, 50), func():
+		auto_skills = not auto_skills)
+	for i in range(1, 5):
+		var view := preload("res://game/companion_art.gd").new()
+		art_layer.add_child(view)
+		companion_views.append(view)
 	pause_button = make_button("Tạm dừng", Vector2(1060, 25), Vector2(170, 52), toggle_pause)
-	show_menu("KIẾM HÀNH", "KỴ SĨ NGUYỆT THỰC · 0.3.3\nBa đợt quái · Một boss\nTự đánh — chạm Kiếm khí để dùng kỹ năng", "Bắt đầu", begin)
+	show_menu("KIẾM HÀNH", "ĐỘI HÌNH · 0.4.0\nNăm vai trò · Ba đợt quái và boss\nChạm kỹ năng hoặc bật tự động", "Bắt đầu", begin)
 	get_viewport().size_changed.connect(resize_ui)
 	resize_ui()
 
@@ -93,6 +109,13 @@ func show_menu(title: String, subtitle: String, action: String, callback: Callab
 	button.pressed.connect(callback)
 	menu.add_child(button)
 	if screen == "title":
+		var formation := Button.new()
+		formation.text = "Đội hình: %d/5 · chạm để đổi số tướng" % party_size
+		formation.custom_minimum_size.y = 52
+		formation.pressed.connect(func():
+			party_size = party_size % 5 + 1
+			formation.text = "Đội hình: %d/5 · chạm để đổi số tướng" % party_size)
+		menu.add_child(formation)
 		var character := Button.new()
 		character.text = "Xem nhân vật · Aether"
 		character.custom_minimum_size.y = 60
@@ -109,7 +132,7 @@ func show_menu(title: String, subtitle: String, action: String, callback: Callab
 func begin() -> void:
 	menu.queue_free()
 	screen = "battle"
-	battle.start()
+	battle.start(party_size)
 	result_delay = 0
 	skill_visual = 0
 	hurt_visual = 0
@@ -124,10 +147,13 @@ func to_title() -> void:
 	clear_preview()
 	screen = "title"
 	battle.state = "idle"
-	show_menu("KIẾM HÀNH", "Đánh thường tự động\nKỹ năng gây 48 sát thương cho toàn bộ địch · hồi 6 giây", "Bắt đầu", begin)
+	show_menu("KIẾM HÀNH", "Đánh thường tự động · Kỹ năng riêng từng tướng\n1 Aether · 2 Brann · 3 Lyra · 4 Nyx · 5 Sol", "Bắt đầu", begin)
 
 func use_skill() -> void:
-	if battle.skill():
+	use_party_skill(0)
+
+func use_party_skill(slot: int) -> void:
+	if battle.skill(slot) and slot == 0:
 		skill_visual = 0.48
 		hero_art.set_clip("skill", true)
 
@@ -152,11 +178,22 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_SPACE:
 			use_skill()
+		elif event.keycode >= KEY_1 and event.keycode <= KEY_5:
+			use_party_skill(event.keycode - KEY_1)
 		elif event.keycode == KEY_ESCAPE:
 			toggle_pause()
 
 func _process(delta: float) -> void:
+	if auto_skills and screen == "battle" and battle.state == "playing":
+		# Shield before damage; heal only after an ally actually needs it.
+		for slot in [1, 4, 0, 2, 3]:
+			if slot >= battle.heroes.size():
+				continue
+			if slot == 4 and not battle.heroes.any(func(a): return a.hp > 0 and a.hp <= a.max_hp - 30):
+				continue
+			use_party_skill(slot)
 	battle.tick(minf(delta, 0.05))
+	update_companions()
 	update_hero(delta)
 	update_enemies(minf(delta, 0.05))
 	if screen == "battle" and battle.state in ["won", "lost"]:
@@ -167,11 +204,21 @@ func _process(delta: float) -> void:
 	feedback.visible = screen == "battle"
 	feedback.queue_redraw()
 	status.visible = screen in ["battle", "paused"]
-	skill_button.visible = screen == "battle"
+	auto_button.visible = screen == "battle"
+	auto_button.text = "Kỹ năng: tự động" if auto_skills else "Kỹ năng: tay"
+	for i in range(skill_buttons.size()):
+		var button := skill_buttons[i]
+		button.visible = screen == "battle" and i < battle.heroes.size()
+		if i >= battle.heroes.size():
+			continue
+		var actor: Dictionary = battle.heroes[i]
+		button.disabled = battle.state != "playing" or actor.hp <= 0 or actor.cooldown_left > 0 or battle.intermission > 0 or battle.target_index() < 0
+		var timing := "%.1fs" % actor.cooldown_left if actor.cooldown_left > 0 else "Sẵn sàng"
+		if actor.hp <= 0:
+			timing = "Đã gục"
+		button.text = "%d · %s  %d/%d HP\n%s · %s" % [i + 1, actor.name, ceili(actor.hp), int(actor.max_hp), actor.skill, timing]
 	pause_button.visible = screen == "battle"
-	status.text = ("BOSS" if battle.wave == 4 else "ĐỢT %d / 3" % battle.wave) + "      AETHER  %d / 220 HP" % ceili(battle.hero_hp)
-	skill_button.disabled = battle.cooldown > 0 or battle.intermission > 0
-	skill_button.text = "KIẾM KHÍ · %.1fs" % battle.cooldown if battle.cooldown > 0 else "KIẾM KHÍ · Space"
+	status.text = ("BOSS" if battle.wave == 4 else "ĐỢT %d / 3" % battle.wave) + "      ĐỘI %d/%d · %.1fs" % [battle.heroes.filter(func(a): return a.hp > 0).size(), battle.heroes.size(), battle.elapsed]
 	queue_redraw()
 
 func draw_ellipse_shadow(pos: Vector2) -> void:
@@ -223,7 +270,7 @@ func update_hero(delta: float) -> void:
 	if battle.hero_hp < prior_hp:
 		hurt_visual = 0.2
 	prior_hp = battle.hero_hp
-	if battle.state == "lost":
+	if battle.hero_hp <= 0:
 		hero_art.set_clip("death")
 	elif battle.state == "won":
 		hero_art.set_clip("idle")
@@ -312,3 +359,12 @@ func draw_boss_hud(enemy: Dictionary) -> void:
 	if enemy.windup > 0:
 		label += "  ·  " + enemy.attack_name
 	draw_string(font, Vector2(330, 172), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color("ead7f0"))
+
+func update_companions() -> void:
+	for i in range(companion_views.size()):
+		var view := companion_views[i]
+		view.visible = screen == "battle" and i + 1 < battle.heroes.size()
+		view.frozen = screen != "battle" or battle.state != "playing"
+		if i + 1 < battle.heroes.size():
+			view.actor = battle.heroes[i + 1]
+			view.position = Vector2(view.actor.x, 510 - i * 9)

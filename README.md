@@ -1,9 +1,16 @@
-# Kiếm Hành — prototype 0.3.3
+# Kiếm Hành — prototype 0.4.0
 
 Game nhập vai đội hình nhìn ngang, tham khảo nhịp chơi Sword Master Story.
-Đang ở mốc nền tảng + trận đánh một kiếm sĩ, **chưa phải game đội năm tướng**.
+Đã có nền chiến đấu đội tối đa năm tướng, kỹ năng riêng và chế độ tự động.
+Bốn đồng đội mới dùng hình học tạm; chưa phải bản mỹ thuật hoàn thiện.
 Kiếm sĩ Aether đã có sprite anime fantasy riêng và sáu trạng thái hoạt ảnh.
 Hai loại quái và bối cảnh đã có hình fantasy riêng.
+
+## Đội hình 0.4.0
+Mặc định năm tướng: Aether, Brann, Lyra, Nyx và Sol. Chọn số tướng 1–5 ở sảnh;
+chạm thẻ kỹ năng hoặc phím 1–5 trong trận. Có bật/tắt tự động dùng kỹ năng,
+hộ thuẫn toàn đội và hồi máu. Chỉ thua khi cả đội gục.
+[Thông số, cách thử và giới hạn](docs/PARTY.md).
 
 ## Boss đầu tiên 0.3.3
 Sau ba đợt quái, đối đầu **Kỵ sĩ Nguyệt Thực**: ba đòn, hai giai đoạn,
@@ -32,8 +39,8 @@ Nhân vật tóc bạc/giáp bạc viền vàng/áo choàng xanh đêm đã thay
 ## Chơi thử
 Godot 4.6.3, renderer Compatibility. Import `project.godot`, đợi import, Run.
 Màn hình ngang 1280×720 logical, canvas co theo màn hình.
-- Bấm Bắt đầu; kiếm sĩ tự chạy tới địch và đánh.
-- Chạm Kiếm khí (hoặc Space): 48 sát thương toàn bộ địch, hồi 6 giây.
+- Bấm Bắt đầu; cả đội tự chạy tới địch và đánh.
+- Chạm thẻ kỹ năng hoặc phím 1–5; Space dùng Kiếm khí. Có chế độ tự động.
 - Ba đợt gồm2/3/4quái cận chiến và đánh xa, sau đó boss600HP.
 - Tạm dừng hoặc Esc; chuyển ứng dụng tự pause, quay lại bấm Tiếp tục.
 - Có thắng/thua, chơi lại, về sảnh khi pause và bật/tắt âm lưu riêng.
@@ -66,6 +73,8 @@ Import project.godot ở thư mục mới. Không cần ZIP hoặc APK.
 godot --headless --path . --editor --import
 XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/battle_smoke.gd
 XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/scene_smoke.gd
+XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/party_smoke.gd
+XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/party_scene_smoke.gd
 ```
 
 Xem [thiết kế](docs/GAME_DESIGN.md), [lộ trình](docs/ROADMAP.md),

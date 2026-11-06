@@ -1,3 +1,14 @@
+# Bổ sung 0.4.0 — Nền đội hình
+Đọc PARTY.md trước khi sửa. PartyData tạo actor riêng, Battle.heroes điều phối
+đội1–5; Aether giữ nguyên chỉ số, alias một tướng giữ kiểm tra hồi quy.
+Bốn đồng đội mới dùng hình học tạm tự vẽ bằng code, chưa có sprite cuối.
+UI mặc định5, đổi số ở sảnh, kỹ năng riêng/phím1–5/Space và tự động.
+Có lá chắn/hồi máu không hồi sinh; chỉ thua khi toàn đội gục. Quái/boss giữ
+mục tiêu lúc chuẩn bị đòn. HP/shield/cooldown giữ qua đợt, reset khi chơi lại.
+Giữ ba đợt/boss và audio/save cũ, không thêm dịch vụ/tài nguyên ngoài/APK.
+Kiểm tra headless hồi quy và party_smoke/party_scene_smoke PASS; chưa render
+ảnh0.4 hoặc thử S23/cảm ứng/âm/FPS. Cần duyệt hình tạm và cân bằng đội5.
+
 # Bổ sung 0.3.3 — Boss đầu tiên
 Người dùng chốt bỏ canh sơ hở; BossBrain không có vulnerability/multiplier.
 Boss600HP sau ba đợt,3đòn,phase2ở50%, chỉ thắng khi hạboss. BossArt riêng với

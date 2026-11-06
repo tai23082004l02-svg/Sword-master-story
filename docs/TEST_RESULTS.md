@@ -34,3 +34,16 @@ Chưa dùng kết quả mô phỏng thay cho duyệt cân bằng/chơi thật.
 scene_smoke,hero_art_smoke,enemy_art_smoke PASS. Shader alpha_render mở rộng
 sang boss PASS. Đã render full trận OpenGL/Mesa llvmpipe60Hz, chụp/xem phase2
 và chiến thắng; không skip3đợt. Audio Dummy, chưa nghe duyệt hoặc đo máy thật.
+
+## 0.4.0 — Đội hình
+Godot4.6.3 Linux headless, XDG_DATA_HOME riêng trong workspace:
+- Import editor thành công, không lỗi script.
+- battle_smoke, boss_smoke, scene_smoke, hero_art_smoke, enemy_art_smoke: PASS.
+- party_smoke: đội1–5 thắng đủ10địch; skill độc lập, lá chắn, hồi máu có trần,
+  không hồi sinh, leader gục vẫn chơi, toàn đội gục ưu tiên thua, pause/reset,
+  quái và boss không đổi mục tiêu giữa đòn: PASS.
+- party_scene_smoke: năm nút/đồng đội, hồi chiêu riêng, pause, tự động,
+  về sảnh và restart một tướng: PASS.
+Mô phỏng dùng skill ngay khi hồi: đội1/2/3/4/5 lần lượt36.7/33.7/25.4/23.3/22.5s;
+không dùng các số này thay duyệt cân bằng thực tế. Chưa render/duyệt ảnh0.4
+vì môi trường chưa có display, chưa thử S23/cảm ứng/âm thanh/FPS/nhiệt.

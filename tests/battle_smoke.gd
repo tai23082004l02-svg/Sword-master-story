@@ -27,6 +27,7 @@ func _initialize() -> void:
 	b.hero_hp = 1
 	b.enemies[0].x = b.hero_x + 10
 	b.enemies[0].windup = 0.01
+	b.enemies[0].target = b.heroes[0].id
 	b.tick(0.02)
 	assert(b.state == "lost")
 	assert(not b.skill())

@@ -11,8 +11,13 @@ Nếu cả hai phe hết máu cùng tick, thất bại được ưu tiên. Chuy�
 Chưa có đạn bay: địch xa gây sát thương trực tiếp sau báo đòn.
 
 Battle RefCounted giữ trạng thái thuần, main.gd trình bày/input, audio.gd phát local.
-Trước mở rộng đội hình sẽ tách actor/skill/content data khỏi model nhỏ hiện tại.
+0.4 đã tách dữ liệu tướng/kỹ năng vào party_data.gd, actor là dictionary riêng
+trong Battle.heroes. UI mặc định5, API start() vẫn hỗ trợ một tướng để hồi quy.
 
 ##0.3.3
 Trận hiện gồm ba đợt cũ+boss; thắng ởchặng4, tổng10địch. Không canh sơ hở,
 không buff damage theo thời điểm. Skill cố định48; xem BOSS.md cho thông số.
+
+## 0.4.0
+Đội tối đa5, kỹ năng riêng và tự động; thông số/quy tắc hiện hành trong PARTY.md.
+Mô tả0.2/0.3 ở trên là lịch sử bản một tướng. Toàn đội gục mới thua.
