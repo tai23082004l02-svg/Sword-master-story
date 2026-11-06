@@ -33,6 +33,8 @@ var battle_stage_id := 0
 var battle = BattleModel.new()
 var screen := "title"
 var ui: Control
+var progress_error := ""
+var progress_error_until := 0
 var status: Label
 var skill_button: Button
 var party_size := 5
@@ -234,7 +236,9 @@ func begin() -> void:
 func to_title() -> void:
 	trial_index = -1
 	if campaign_active and not progress.data.pending.is_empty():
-		progress.abandon_run(run_id)
+		if not progress.abandon_run(run_id):
+			show_progress_error()
+			return
 	campaign_active = false
 	clear_campaign_panel()
 	clear_enemies()
@@ -325,6 +329,7 @@ func _process(delta: float) -> void:
 		button.text = "%d · %s · Cấp %d\n%d/%d HP · %s\n%s" % [i + 1, actor.name, actor.level, ceili(actor.hp), int(actor.max_hp), actor.skill, timing]
 	pause_button.visible = screen == "battle"
 	status.text = ((battle_stage.title + " · ") if activity_mode != "" and campaign_active else ((Campaign.label(battle_stage_id) + " · ") if campaign_active else "")) + ("BOSS" if battle.wave > 0 and battle.boss_wave() else "ĐỢT %d / %d" % [battle.wave, battle.wave_limit]) + "      ĐỘI %d/%d · %.1fs" % [battle.heroes.filter(func(a): return a.hp > 0).size(), battle.heroes.size(), battle.elapsed]
+	if Time.get_ticks_msec() < progress_error_until: status.text = "Chưa lưu: " + progress_error
 	queue_redraw()
 
 func draw_ellipse_shadow(pos: Vector2) -> void:
@@ -339,7 +344,7 @@ func _draw() -> void:
 	draw_texture_rect(BACKGROUND, Rect2(0, 0, 1280, 720), false,chapter_tint)
 	# Subtle vignette strips preserve HUD readability over painted scenery.
 	draw_rect(Rect2(0, 0, 1280, 90), Color(0.02, 0.04, 0.08, 0.6))
-	if screen in ["battle", "paused", "result"]:
+	if screen in ["battle", "paused"]:
 		draw_ellipse_shadow(Vector2(battle.hero_x, 517))
 		for enemy in battle.enemies:
 			if enemy.hp <= 0:
@@ -543,7 +548,9 @@ func new_campaign_panel() -> void:
 
 func open_stages() -> void:
 	if campaign_active and not progress.data.pending.is_empty():
-		progress.abandon_run(run_id)
+		if not progress.abandon_run(run_id):
+			show_progress_error()
+			return
 	campaign_active = false
 	battle.state = "idle"
 	clear_enemies()
@@ -590,9 +597,22 @@ func reorder_companion(id: int, target_id: int) -> bool:
 	return false
 
 func set_auto_mode(value: bool) -> void:
-	auto_skills = value
-	if not progress.set_auto(value) and is_instance_valid(campaign_panel):
+	if progress.set_auto(value):
+		auto_skills = value
+	else:
+		show_progress_error()
+
+func show_progress_error() -> void:
+	if is_instance_valid(campaign_panel):
 		campaign_panel.message(progress.last_error)
+	elif screen == "battle":
+		progress_error = progress.last_error
+		progress_error_until = Time.get_ticks_msec()+4000
+	elif screen == "paused" and is_instance_valid(menu):
+		for child in menu.get_children():
+			if child is Label:
+				child.text = progress.last_error
+				break
 
 func start_campaign(id: int) -> void:
 	if id < 1 or id > progress.unlocked() or progress.read_only: return
@@ -683,7 +703,9 @@ func open_rpg(section: String, index: int = -1) -> void:
 	if section == "stages": open_stages(); return
 	if section == "team": prepare_stage(progress.unlocked()); return
 	if campaign_active and not progress.data.pending.is_empty():
-		if not progress.abandon_run(run_id): return
+		if not progress.abandon_run(run_id):
+			show_progress_error()
+			return
 	campaign_active = false
 	battle.state = "idle"
 	clear_enemies()

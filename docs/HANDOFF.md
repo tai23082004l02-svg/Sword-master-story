@@ -1,3 +1,25 @@
+# Rà soát tự động 0.8.1 — đã hoàn tất
+
+Đã thực hiện lượt kiểm tra được hẹn sau hai tiếng. Remote main trước rà là
+89c92f2, PR1/2/3 đã merged, không có thay đổi mã local khác; giữ nguyên UID test
+chưa track đã có trong workspace. Đọc RPG_REVIEW.md cho trạng thái từng phần.
+
+Sửa: receipt hầm có đủ bụi/gems/shards/vé quét và UI hiện đủ; tầng30 khóa nút
+đánh tiếp; challenge lưu rotation_week trong pending từ lúc bắt đầu và dùng
+cho cả nhóm địch/mảnh thưởng, không đổi khi qua tuần. Field này tùy chọn để đọc
+pending schema4 cũ. Normalize floor/rotation_week vềint và validate metadata.
+Lỗi abandon khi về sảnh/chọnải/màn RPG giữ màn/trận và báo lỗi; auto_skills chỉ
+đổi sau commit thành công. Ẩn HP/nhãn địch của trận cũ trên màn kết quả.
+
+23/23 smoke PASS với save riêng /tmp/sword-review-final/data, thêm một test rà
+soát cho rollover tuần, pending cũ/validation, save failure/auto, thưởng và UI
+tháp cuối. Hai ảnh thưởng render OpenGL/Mesa từ fixture mô phỏng kết quả đã xem.
+Không thử điện thoại/nghe âm/đo FPS. Không thêm API, phí, runtime service, APK
+hoặc tính năng ngoài kế hoạch. Hình độc lập/S23/cân bằng và giữ chân thực tế vẫn
+chưa hoàn tất; không coi thống kê local là bằng chứng giữ chân.
+
+---
+
 # Bàn giao 0.8.0 — Mở rộng vòng chơi RPG
 
 Người dùng yêu cầu triển khai toàn bộ kế hoạch từ ảnh tham khảo, tập trung giữ

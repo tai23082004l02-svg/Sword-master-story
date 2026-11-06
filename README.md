@@ -1,8 +1,13 @@
-# Kiếm Hành — prototype 0.8.0
+# Kiếm Hành — prototype 0.8.1
 
 RPG đội hình fantasy nhìn ngang, Godot 4.6.3 Compatibility, tiếng Việt, offline.
 Vòng chơi: **vượt ải → nhận trang bị → xây đội → vượt thử thách mới**.
 Tài nguyên/hình/nhân vật riêng, không dùng asset Sword Master Story.
+
+## Rà soát 0.8.1
+Đã kiểm tra toàn bộ phạm vi RPG, sửa hiển thị thưởng hầm/tháp, giữ vòng tuần
+của thử thách từ lúc bắt đầu và giữ trạng thái khi lưu thất bại.
+[Báo cáo tiến độ và giới hạn](docs/RPG_REVIEW.md).
 
 ## Chơi bản mới
 - **Sảnh:** nhân vật đại diện, mục tiêu tiếp theo và lối vào các hệ thống.

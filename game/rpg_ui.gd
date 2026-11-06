@@ -187,10 +187,14 @@ func activity_result(receipt: Dictionary) -> void:
 		button("Thử lưu lại",Vector2(850,550),Vector2(360,65),host.show_campaign_result)
 	else:
 		var detail: String="+%d vàng · +%d XP\n%s" % [receipt.gold,receipt.xp,receipt.get("loot",{}).get("name","")]
+		detail += "\n+%d bụi · +%d tinh thạch · +%d vé quét" % [receipt.get("dust",0),receipt.get("gems",0),receipt.get("sweep_tokens",0)]
+		if receipt.get("shards",0)>0:
+			detail += "\n+%d mảnh %s" % [receipt.shards,Party.HEROES[int(receipt.shard_hero)].name]
 		if not receipt.won:detail="Không mất tài nguyên. Thử thay đội hoặc nâng trang bị."
 		text(detail,Vector2(70,270),Vector2(1140,160),28,Color("94cfbd"))
 		button("Hầm ngục",Vector2(70,550),Vector2(360,65),func():host.open_rpg("dungeons"))
-		button("Đánh tiếp",Vector2(850,550),Vector2(360,65),func():host.start_activity(host.activity_mode))
+		var tower_done: bool = host.activity_mode=="tower" and host.progress.data.rpg.tower>=30
+		button("Đã hoàn thành tháp" if tower_done else "Đánh tiếp",Vector2(850,550),Vector2(360,65),func():host.start_activity(host.activity_mode),tower_done)
 	footer("Nyx + Lyra đối phó nhóm địch; Iris + Aether phá giáp; hộ vệ và trị liệu giúp sống lâu.")
 
 func stats_page() -> void:
