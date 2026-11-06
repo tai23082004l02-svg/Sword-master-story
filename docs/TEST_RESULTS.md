@@ -20,3 +20,9 @@ giữ fade, dọn về sảnh và chặn pause trạng thái kết thúc.
 Đã render/chụp/xem docs/screenshots/moon_ruins_battle.png và aether_viewer.png
 trên Xvfb/OpenGL Compatibility/Mesa llvmpipe với audio Dummy. Driver cảnh báo
 không hỗ trợ đổi VSync; không có lỗi script. Không suy ra FPS/âm thanh S23.
+
+## 0.3.2 — Alpha residue
+Đã đo ảnh nguồn: nền ngoài hình có alpha thấp1–20/255, có cả vùng mờ cao hơn.
+alpha_render.gd chạy OpenGL Compatibility kiểm từng pixel alpha0.04–0.075 ở
+frame đầu hai sheet: output trùng màu nền (sai số<0.005), PASS. Import shader
+không lỗi; ảnh trận/viewer đã chụp và xem lại. Chưa xác minh trực tiếp thiết bị.

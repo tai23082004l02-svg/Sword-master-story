@@ -1,3 +1,10 @@
+# Bổ sung 0.3.2 — Lọc nền alpha
+Người dùng thấy hình vuông mờ quanh sprite. Ảnh AI có nhiều pixel alpha1–20/255
+ngoài nhân vật. HeroArt/EnemyArt dùng shader sprite_alpha: texel.a nhân smoothstep
+0.08–0.20 trước vertex tint, giữ modulation/fade. Không chỉnh PNG/import/chỉ số.
+Đã render kiểm low-alpha thực bằng tests/alpha_render.gd và xem lại ảnh Godot.
+Chưa xác minh máy người dùng. Hiệu ứng glow rất mờ có thể giảm theo bộ lọc.
+
 # Bổ sung 0.3.1 — Quái và nền
 Người dùng đã chấp nhận Aether/hướng đồ họa0.3.0. Đã thêm2quái sprite và nền
 Phế tích Ngân Nguyệt; EnemyArt theo ID, animation/windup/hurt/death và cleanup.

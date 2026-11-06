@@ -1,9 +1,13 @@
-# Kiếm Hành — prototype 0.3.1
+# Kiếm Hành — prototype 0.3.2
 
 Game nhập vai đội hình nhìn ngang, tham khảo nhịp chơi Sword Master Story.
 Đang ở mốc nền tảng + trận đánh một kiếm sĩ, **chưa phải game đội năm tướng**.
 Kiếm sĩ Aether đã có sprite anime fantasy riêng và sáu trạng thái hoạt ảnh.
 Hai loại quái và bối cảnh đã có hình fantasy riêng.
+
+## Sửa nền mờ 0.3.2
+Lọc pixel nền bán trong suốt còn sót trong sprite Aether và quái khi render,
+giảm khung chữ nhật mờ quanh nhân vật. Giữ ảnh gốc và cách chơi.
 
 ## Cảnh chiến đấu mới 0.3.1
 Kỵ sĩ Hắc giáp và Pháp sư U ảnh có hoạt ảnh di chuyển/đánh, phản hồi trúng đòn

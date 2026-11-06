@@ -13,6 +13,9 @@ var cast_time := 0.0
 var target_x := 0.0
 
 func _ready() -> void:
+	var cleanup := ShaderMaterial.new()
+	cleanup.shader = preload("res://game/shaders/sprite_alpha.gdshader")
+	material = cleanup
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 
 func sync(enemy: Dictionary, delta: float, hero_x: float) -> void:

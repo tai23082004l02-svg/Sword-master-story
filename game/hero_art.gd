@@ -17,6 +17,9 @@ func set_clip(value: String, restart := false) -> void:
 		queue_redraw()
 
 func _ready() -> void:
+	var cleanup := ShaderMaterial.new()
+	cleanup.shader = preload("res://game/shaders/sprite_alpha.gdshader")
+	material = cleanup
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 
 func _process(delta: float) -> void:
