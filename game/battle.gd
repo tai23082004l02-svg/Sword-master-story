@@ -33,7 +33,7 @@ var wave_limit: int:
 func boss_wave() -> bool:
 	return stage_config.waves[wave - 1].has("boss_hp") if not stage_config.is_empty() else wave == 4
 
-func start(party_size: int = 1, roster: Array = [], stage: Dictionary = {}) -> void:
+func start(party_size: int = 1, roster: Array = [], stage: Dictionary = {}, levels: Array = []) -> void:
 	stage_config = stage.duplicate(true)
 	heroes.clear()
 	var selected: Array = roster.duplicate() if not roster.is_empty() else range(clampi(party_size, 1, 5))
@@ -42,7 +42,8 @@ func start(party_size: int = 1, roster: Array = [], stage: Dictionary = {}) -> v
 	for i in range(selected.size()):
 		assert(selected[i] >= 0 and selected[i] < 5 and not selected[i] in used)
 		used.append(selected[i])
-		var actor := Party.create(selected[i])
+		var level: int = int(levels[selected[i]]) if levels.size() == 5 else 1
+		var actor := Party.create(selected[i], level)
 		actor.x = 240.0 - i * 42.0
 		heroes.append(actor)
 	state = "playing"

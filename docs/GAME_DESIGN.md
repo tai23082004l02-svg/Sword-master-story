@@ -27,3 +27,9 @@ Hiện hành:10ải cấu hình riêng, boss5/10; chọn đội Aether+0–4đ�
 Thưởng trận và thưởng đầu, mở tuần tự, XP/vàng chỉ tích lũy. Save local transaction
 với run token, backup và schema validation. Xem CAMPAIGN.md cho toàn bộ thông số.
 Mô tả trận4chặng ở0.3.3 chỉ là APIlegacy cho regression, không phải mọi ải hiện tại.
+
+## 0.6.0 — Growth
+Progress hero_levels lưu5cấp độc lập, migrate1→2; ví+level cùng transaction.
+PartyData tính HP/đòn thường từ base+10%base×(level−1), làm tròn lên, tối đa20.
+UI/prepare/battle cùng dùng công thức, battle giữ snapshot theoID lúc bắt đầu.
+Kỹ năng/tầm/tốc độ không đổi. Xem HERO_GROWTH.md cho giá, save và giới hạn.

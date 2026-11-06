@@ -118,3 +118,25 @@ Godot4.6.3 Linux, mọi lần chạy dùng XDG_DATA_HOME riêng trong workspace:
 Editor import thành công, không lỗi script. Driver cảnh báo không hỗ trợ đổi
 VSync. Chưa thửWindows/S23 thực, cảm ứng/safe area, nghe âm, FPS/nhiệt. Chỉ2loại
 quái và hình cũ, vàng/XP tích lũy chưa dùng nâng cấp/trang bị; save local khôngcloud.
+
+## 0.6.0 — Nâng5tướng và chuyển save
+Godot4.6.3 Linux; XDG_DATA_HOME riêng cho từng test, không dùng dữ liệu người chơi.
+- growth_smoke:save1đọc thành2 không tự ghi; giữ ải/ví/records/đội/auto/token,
+  bản.v1.bak nguyên vẹn; before/after/cost, thiếu riêng vàng/XP/đúng đủ,
+  stale quote không trừ lần2, max20/tổng3990vàng1900XP, cấp độc lập,
+  write-fail/retry không đổi file/ví/cấp, recover từ backup1cũng giữ.v1.bak,
+  stat theo ID trong đội đảo, sát thương thực và snapshot không đổi giữa trận:PASS.
+- growth_scene_smoke:đi sảnh/prep→growth→trở về, chọn5tướng, nâng/bấm trùng,
+  chỉ số prep/HUD/battle đúng, nâng chỉ ảnh hưởng trận kế, reload giữ level/ví/ải,
+  UI lỗi ghi/retry, cap và thiếu tiền:PASS.
+- campaign_smoke,campaign_save_smoke,campaign_scene_smoke,battle_smoke,boss_smoke,
+  scene_smoke,hero_art_smoke,enemy_art_smoke,party_smoke,party_scene_smoke,
+  companion_art_smoke,frame_assets_smoke:PASS. Tổng14bộ.
+- Editor import thành công, không lỗi script.
+- capture_growth:ảnh thực OpenGL Compatibility/Mesa llvmpipe/audio Dummy từ
+  fixture schema1sau1-01, nâng Aether/Sol, xem chuẩn bị và đánh1-02 với stat
+  mới; screenshot cap/thiếu tiền dùng fixture riêng. Đã chụp/xem before/after,
+  support hero, prepare, HUD và cap/thiếu tiền.
+Driver cảnh báo không hỗ trợ đổi VSync; không có lỗi script. Chưa thử0.6trên
+S23/Windows thật, FPS/nhiệt/cảm ứng/safe area hoặc nghe âm. Không thêm tài
+nguyên game khác/API runtime/âm thanh; chưa có trang bị hoặc phó bản mới.

@@ -39,8 +39,10 @@ func button(value: String, pos: Vector2, size: Vector2, action: Callable, disabl
 	b.pressed.connect(action)
 	add_child(b)
 	return b
-func message(value: String) -> void:
-	if is_instance_valid(notice): notice.text = value
+func message(value: String, success: bool = false) -> void:
+	if is_instance_valid(notice):
+		notice.text = value
+		notice.add_theme_color_override("font_color", Color("94cfbd") if success else Color("ffb6a5"))
 func stages() -> void:
 	text("CHƯƠNG I · PHẾ TÍCH NGÂN NGUYỆT", Vector2(50, 94), Vector2(1180, 40), 30, Color("edce92"))
 	text("Vượt ải để mở đường đi tiếp · Đã vượt %d / 10" % host.progress.data.cleared.size(), Vector2(50, 140), Vector2(1180, 35), 21)
@@ -74,12 +76,12 @@ func prepare(id: int) -> void:
 	text("Thắng: +%d vàng · +%d XP%s" % [rewards.gold, rewards.xp, " (gồm thưởng vượt lần đầu)" if first else " (thưởng chơi lại)"], Vector2(50, 178), Vector2(1180, 32), 21, Color("94cfbd"))
 	var roster: Array[int] = host.progress.formation()
 	for i in range(5):
-		var hero: Dictionary = Party.HEROES[i]
+		var hero: Dictionary = host.progress.hero_stats(i)
 		var selected: bool = i in roster
 		var order := "Vị trí %d" % (roster.find(i) + 1) if selected else "Dự bị"
 		var slot := i
 		var x := 50 + i * 238
-		var card := button("%s · %s\n%s\n%d HP · Đánh %d\n%s\n%s" % [hero.name, hero.role, order, int(hero.hp), int(hero.damage), hero.skill, "Giữ vị trí đầu" if i == 0 else ("Chạm để bỏ" if selected else "Chạm để thêm")], Vector2(x, 235), Vector2(224, 192), func(): host.select_companion(slot), i == 0)
+		var card := button("%s · %s\nCấp %d · %s\n%d HP · Đánh %d\n%s\n%s" % [hero.name, hero.role, hero.level, order, int(hero.hp), int(hero.damage), hero.skill, "Giữ vị trí đầu" if i == 0 else ("Chạm để bỏ" if selected else "Chạm để thêm")], Vector2(x, 235), Vector2(224, 192), func(): host.select_companion(slot), i == 0)
 		var style: StyleBoxFlat = card.get_theme_stylebox("disabled" if i == 0 else "normal").duplicate()
 		style.border_color = Color(hero.color) if selected else Color("3b5362")
 		style.bg_color = Color("183344") if selected else Color("101f2c")
@@ -100,6 +102,7 @@ func prepare(id: int) -> void:
 	auto.toggled.connect(func(value): host.set_auto_mode(value))
 	add_child(auto)
 	notice = text(host.progress.last_error, Vector2(50, 550), Vector2(820, 35), 18, Color("ffb6a5"))
+	button("Nâng tướng", Vector2(655, 590), Vector2(250, 58), func(): host.open_growth("prepare"))
 	button("Chọn ải khác", Vector2(50, 590), Vector2(260, 58), host.open_stages)
 	button("Bắt đầu · 1-%02d" % id, Vector2(930, 580), Vector2(300, 68), func(): host.start_campaign(id), host.progress.read_only)
 func result(receipt: Dictionary) -> void:
@@ -131,3 +134,48 @@ func result(receipt: Dictionary) -> void:
 		button("Ải tiếp theo", Vector2(860, 580), Vector2(350, 66), func(): host.prepare_stage(host.selected_stage + 1))
 	else:
 		button("Chuẩn bị đội", Vector2(860, 580), Vector2(350, 66), func(): host.prepare_stage(host.selected_stage))
+
+func growth(index: int, origin: String) -> void:
+	text("TƯỚNG · NÂNG CẤP", Vector2(50, 92), Vector2(1180, 42), 32, Color("edce92"))
+	for i in range(5):
+		var hero: Dictionary = host.progress.hero_stats(i)
+		var selected := i
+		var selector := button("%s · Cấp %d" % [hero.name, hero.level], Vector2(50 + i * 238, 153), Vector2(224, 60), func(): host.open_growth(origin, selected))
+		if i == index:
+			var style: StyleBoxFlat = selector.get_theme_stylebox("normal").duplicate()
+			style.border_color = Color(hero.color)
+			selector.add_theme_stylebox_override("normal", style)
+	var quote: Dictionary = host.progress.upgrade_quote(index)
+	var before: Dictionary = quote.before
+	var after: Dictionary = quote.after
+	var portrait: Node2D = load("res://game/hero_art.gd").new() if index == 0 else load("res://game/companion_art.gd").new()
+	if index > 0: portrait.configure(before.id)
+	portrait.position = Vector2(290, 540)
+	portrait.scale = Vector2(1.25, 1.25)
+	portrait.preview = true
+	add_child(portrait)
+	text("%s · %s" % [before.name, before.role], Vector2(80, 600), Vector2(440, 34), 25, Color(before.color))
+	text(before.name.to_upper() + " · " + before.role, Vector2(570, 245), Vector2(640, 42), 30, Color(before.color))
+	text("Cấp %d / %d" % [quote.level, Party.MAX_LEVEL], Vector2(570, 290), Vector2(640, 35), 24)
+	text("HP: %d" % int(before.hp) + ("  →  %d" % int(after.hp) if not quote.maxed else ""), Vector2(570, 335), Vector2(640, 38), 28)
+	text("Đòn thường: %d" % int(before.damage) + ("  →  %d" % int(after.damage) if not quote.maxed else ""), Vector2(570, 382), Vector2(640, 38), 28)
+	var effects := {"area": "Gây %d sát thương cho toàn bộ địch.", "single": "Gây %d sát thương cho một địch.", "shield": "Tạo lá chắn %d cho đồng đội sống.", "heal": "Hồi %d HP cho đồng đội sống."}
+	var effect: String = effects[before.kind] % int(before.power)
+	text("%s · Hồi %.0fs\n%s\nChỉ HP và đòn thường tăng khi nâng cấp." % [before.skill, before.cooldown, effect], Vector2(570, 422), Vector2(640, 75), 18)
+	var detail := "Đã đạt cấp tối đa."
+	if not quote.maxed:
+		detail = "Chi phí: %d vàng + %d XP hành trình" % [quote.cost.gold, quote.cost.xp]
+	text(detail, Vector2(570, 500), Vector2(640, 32), 23, Color("edce92"))
+	var old_level: int = quote.level
+	button("Đã đạt cấp %d" % Party.MAX_LEVEL if quote.maxed else "Nâng lên cấp %d" % quote.next_level, Vector2(570, 543), Vector2(640, 58), func(): host.upgrade_selected(index, old_level), quote.maxed or not quote.affordable or host.progress.read_only)
+	var status := ""
+	if host.progress.read_only: status = "Tiến trình đang khóa; chưa thể nâng cấp."
+	elif not quote.maxed and not quote.affordable:
+		var missing_gold := maxi(0, int(quote.cost.gold - host.progress.data.gold))
+		var missing_xp := maxi(0, int(quote.cost.xp - host.progress.data.xp))
+		var pieces: PackedStringArray = []
+		if missing_gold > 0: pieces.append("%d vàng" % missing_gold)
+		if missing_xp > 0: pieces.append("%d XP" % missing_xp)
+		status = "Cần thêm " + " và ".join(pieces) + "."
+	notice = text(status, Vector2(570, 612), Vector2(640, 32), 19, Color("ffb6a5"))
+	button("Về chuẩn bị đội" if origin == "prepare" else "Về sảnh", Vector2(940, 650), Vector2(290, 50), host.close_growth)

@@ -46,16 +46,17 @@ chọn **Về sảnh · bỏ kết quả** để thoát màn lỗi mà không nh
 HP quái tăng6mỗi đợt trong cùng ải. 1-01 chỉ cận chiến; từ1-02 có cận chiến và
 đánh xa theo cấu hình. Boss dùng hình/cơ chế cũ, đổi phase50%, không sơ hở hay
 multiplier nhận damage. Địch cơ sở vẫn10/7, boss9/12/17(+2phase2), nhân hệ số
-của ải. Chỉ số/kỹ năng tướng giữ nguyên0.4.3; Aether skill48không đổi theo phase.
+của ải. Chỉ số cơ sở/kỹ năng tướng giữ nguyên0.4.3;0.6.0 có nâng HP/đòn thường; Aether skill48không đổi theo phase.
 Vượt đủ10ải lần đầu được tổng2650vàng/1150XP; chơi lại cộng thưởng trận tương ứng.
 
-Vàng và XP hành trình hiện chỉ tích lũy; **chưa có nâng tướng, trang bị hay nơi
-tiêu tài nguyên**. Không tự tăng chỉ số chiến đấu từ XP. Chưa có thêm hai loại
+Vàng và XP hành trình **từ0.6.0 dùng để nâng tướng**, xem [HERO_GROWTH.md](HERO_GROWTH.md).
+Không tự tăng chỉ số chỉ vì nhận XP; chưa có trang bị. Chưa có thêm hai loại
 quái, nền/nhân vật mới, cốt truyện hội thoại, phó bản phụ hoặc chươngII.
 
 ## Lưu dữ liệu
-Profile riêng tại `user://campaign.json`, schema1; audio.cfg không bị thay thế.
-Có cleared/records, wallet, formation, auto_skills, serial/last_claimed/pending.
+Profile riêng tại `user://campaign.json`, schema2 từ0.6.0 (đọc save1 cũ); audio.cfg không bị thay thế.
+Có cleared/records, wallet, formation, auto_skills, serial/last_claimed/pending và
+hero_levels. Xem HERO_GROWTH.md cho chuyển save và bản.v1.bak.
 Mỗi trận được cấp token tăng dần đã lưu trước khi bắt đầu; chỉ pending token
 hiện tại được chốt một lần. Tất cả thưởng, mở ải và kỷ lục cùng commit, không
 cộng từng phần trước khi ghi. Tải lại JSON chuẩn hóa số nguyên để không nhầm

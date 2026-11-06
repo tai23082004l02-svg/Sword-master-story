@@ -1,6 +1,8 @@
 extends RefCounted
 ## Transactional local progression. Audio settings remain in their original file.
 const Campaign = preload("res://game/campaign_data.gd")
+const Party = preload("res://game/party_data.gd")
+const SCHEMA_VERSION := 2
 var path: String
 var data: Dictionary
 var last_error := ""
@@ -10,12 +12,18 @@ func _init(save_path: String = "user://campaign.json") -> void:
 	path = save_path
 	data = defaults()
 func defaults() -> Dictionary:
-	return {"version": 1, "gold": 0, "xp": 0, "cleared": [], "records": {}, "formation": [0, 1, 2, 3, 4], "auto_skills": false, "serial": 0, "last_claimed": 0, "pending": {}}
+	return {"version": SCHEMA_VERSION, "hero_levels": [1, 1, 1, 1, 1], "gold": 0, "xp": 0, "cleared": [], "records": {}, "formation": [0, 1, 2, 3, 4], "auto_skills": false, "serial": 0, "last_claimed": 0, "pending": {}}
 func whole(value: Variant, low: int, high: int) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and value == floorf(value) and value >= low and value <= high
 func valid(candidate: Variant) -> bool:
-	if not candidate is Dictionary or not candidate.has_all(defaults().keys()): return false
-	if not whole(candidate.version, 1, 1): return false
+	if not candidate is Dictionary: return false
+	var required: Array = defaults().keys()
+	required.erase("hero_levels")
+	if not candidate.has_all(required) or not whole(candidate.version, 1, SCHEMA_VERSION): return false
+	if candidate.version == SCHEMA_VERSION:
+		if not candidate.get("hero_levels") is Array or candidate.hero_levels.size() != 5: return false
+		for level in candidate.hero_levels:
+			if not whole(level, 1, Party.MAX_LEVEL): return false
 	for key in ["gold", "xp", "serial", "last_claimed"]:
 		if not whole(candidate[key], 0, 9007199254740991): return false
 	if candidate.last_claimed > candidate.serial or not candidate.auto_skills is bool: return false
@@ -42,6 +50,12 @@ func valid(candidate: Variant) -> bool:
 	return true
 func normalize(candidate: Dictionary) -> Dictionary:
 	var result := candidate.duplicate(true)
+	if int(result.version) == 1:
+		result.version = SCHEMA_VERSION
+		result.hero_levels = [1, 1, 1, 1, 1]
+	var levels: Array = []
+	for level in result.hero_levels: levels.append(int(level))
+	result.hero_levels = levels
 	for key in ["version", "gold", "xp", "serial", "last_claimed"]:
 		result[key] = int(result[key])
 	var roster: Array = []
@@ -79,7 +93,7 @@ func load_game() -> bool:
 	# A newer schema is kept intact, even if an older backup can be read.
 	if FileAccess.file_exists(path):
 		var raw: Variant = parse_file(path)
-		if raw is Dictionary and raw.get("version", 1) != 1:
+		if raw is Dictionary and not whole(raw.get("version", 1), 1, SCHEMA_VERSION):
 			read_only = true
 			last_error = "Tiến trình thuộc phiên bản khác. Cần cập nhật game để mở."
 			return false
@@ -122,6 +136,16 @@ func commit(candidate: Dictionary) -> bool:
 		if DirAccess.copy_absolute(absolute, preserved) != OK:
 			last_error = "Không giữ được bản dữ liệu cũ. Hãy thử lại."
 			return false
+	# Preserve a legacy save once, including when recovery used a v1 backup.
+	if not FileAccess.file_exists(path + ".v1.bak"):
+		for source in [path, path + ".bak"]:
+			if read_file(source).is_empty(): continue
+			var old: Variant = parse_file(source)
+			if old is Dictionary and old.get("version", 1) == 1:
+				if DirAccess.copy_absolute(ProjectSettings.globalize_path(source), absolute + ".v1.bak") != OK:
+					last_error = "Chưa giữ được bản tiến trình cũ. Hãy thử lại."
+					return false
+				break
 	if not read_file(path).is_empty():
 		if DirAccess.copy_absolute(absolute, absolute + ".bak") != OK:
 			last_error = "Không tạo được bản dự phòng. Hãy thử lưu lại."
@@ -175,3 +199,33 @@ func abandon_run(run_id: int) -> bool:
 	var candidate := data.duplicate(true)
 	candidate.pending = {}
 	return commit(candidate)
+
+func levels() -> Array[int]:
+	var result: Array[int] = []
+	for level in data.hero_levels: result.append(int(level))
+	return result
+
+func hero_stats(index: int) -> Dictionary:
+	return Party.stats(index, int(data.hero_levels[index]))
+
+func upgrade_quote(index: int) -> Dictionary:
+	if index < 0 or index >= 5: return {}
+	var current := int(data.hero_levels[index])
+	var cost := Party.upgrade_cost(current)
+	var maxed := current >= Party.MAX_LEVEL
+	return {"level": current, "next_level": mini(Party.MAX_LEVEL, current + 1), "before": hero_stats(index), "after": Party.stats(index, mini(Party.MAX_LEVEL, current + 1)), "cost": cost, "maxed": maxed, "affordable": not maxed and data.gold >= cost.gold and data.xp >= cost.xp}
+
+func upgrade_hero(index: int, expected_level: int = -1) -> Dictionary:
+	if read_only: return {"ok": false, "error": last_error}
+	if index < 0 or index >= 5: return {"ok": false, "error": "Tướng không hợp lệ."}
+	var quote := upgrade_quote(index)
+	if expected_level >= 0 and quote.level != expected_level:
+		return {"ok": false, "error": "Cấp tướng đã thay đổi. Hãy xem lại chi phí mới."}
+	if quote.maxed: return {"ok": false, "error": "Tướng đã đạt cấp tối đa."}
+	if not quote.affordable: return {"ok": false, "error": "Chưa đủ vàng hoặc XP để nâng cấp."}
+	var candidate := data.duplicate(true)
+	candidate.gold -= quote.cost.gold
+	candidate.xp -= quote.cost.xp
+	candidate.hero_levels[index] += 1
+	if not commit(candidate): return {"ok": false, "error": last_error}
+	return {"ok": true, "level": int(data.hero_levels[index]), "gold": quote.cost.gold, "xp": quote.cost.xp}

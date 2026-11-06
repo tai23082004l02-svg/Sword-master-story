@@ -1,4 +1,4 @@
-# Kiếm Hành — prototype 0.5.0
+# Kiếm Hành — prototype 0.6.0
 
 Game nhập vai đội hình nhìn ngang, tham khảo nhịp chơi Sword Master Story.
 Đã có chương10ải, chuẩn bị đội1–5tướng, kỹ năng riêng/tự động, thưởng và lưu tiến trình local.
@@ -6,10 +6,18 @@ Bốn đồng đội Brann/Lyra/Nyx/Sol đã có sprite fantasy riêng và sáu 
 Kiếm sĩ Aether đã có sprite anime fantasy riêng và sáu trạng thái hoạt ảnh.
 Hai loại quái và bối cảnh đã có hình fantasy riêng.
 
+## Nâng tướng · 0.6.0
+Sảnh hoặc màn chuẩn bị → **Nâng tướng**. Năm tướng cấp1–20, nâng bằng vàng+XP,
+xem HP/đòn thường trước–sau và chi phí. Cấp lưu cùng tiến trình, áp dụng ở trận
+kế tiếp. Tự đọc save0.5, giữ ải/ví/đội và bản sao dữ liệu cũ.
+[Xem cách dùng, chi phí và chuyển save](docs/HERO_GROWTH.md).
+
+![Màn nâng tướng](docs/screenshots/growth_after.png)
+
 ## Chương I · 0.5.0
 Sảnh → **Chọn ải** → chuẩn bị đội → chiến đấu → nhận thưởng → mở ải tiếp.
 Boss ở1-05/1-10. Thưởng lần đầu tách thưởng chơi lại; đóng/mở game giữ tiến trình,
-đội hình, vàng và XP hành trình. Vàng/XP mới tích lũy, chưa có nâng cấp/trang bị.
+đội hình, vàng và XP hành trình. Vàng/XP dùng nâng tướng từ0.6.0; chưa có trang bị.
 [Xem thông số, cách thử và lưu dữ liệu](docs/CAMPAIGN.md).
 
 ![Chọn ải](docs/screenshots/campaign_stages.png)
@@ -66,7 +74,8 @@ Màn hình ngang1280×720logical, canvas co theo màn hình.
 - Tạm dừng/Esc; chuyển ứng dụng tự pause, quay lại bấm Tiếp tục.
 - Thắng mở ải tiếp và cộng thưởng, chơi lại nhận thưởng trận; thua/bỏ không mất ví.
 - Đóng/mở lại giữ các ải đã vượt và tài nguyên; trận đang đánh phải chơi lại.
-- Âm bật/tắt lưu riêng; không APK, trang bị, nâng tướng hoặc đồng bộ cloud.
+- Sảnh hoặc chuẩn bị → Nâng tướng; chi phí và chỉ số mới hiện rõ, lưu ngay khi nâng.
+- Âm bật/tắt lưu riêng; không APK, trang bị hoặc đồng bộ cloud.
 
 ## Cập nhật trên S23 Ultra
 Giữ SSH hiện có. Repo này có thư mục riêng, không ghi đè Game-2.5D.
@@ -93,6 +102,8 @@ Import project.godot ở thư mục mới. Không cần ZIP hoặc APK.
 
 ```sh
 godot --headless --path . --editor --import
+XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/growth_smoke.gd
+XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/growth_scene_smoke.gd
 XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/campaign_smoke.gd
 XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/campaign_save_smoke.gd
 XDG_DATA_HOME=/tmp/sword-test godot --headless --path . --script tests/campaign_scene_smoke.gd

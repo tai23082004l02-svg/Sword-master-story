@@ -16,6 +16,9 @@ var run_id := -1
 var receipt: Dictionary = {}
 var settlement_attempted := false
 var battle_roster: Array[int] = []
+var battle_levels: Array[int] = []
+var growth_index := 0
+var growth_return := "title"
 var battle_stage: Dictionary = {}
 var battle_stage_id := 0
 var battle = BattleModel.new()
@@ -88,6 +91,17 @@ func _ready() -> void:
 		var slot := i
 		var button := make_button("", Vector2(30 + i * 248, 550), Vector2(232, 90), func(): use_party_skill(slot))
 		button.add_theme_font_size_override("font_size", 18)
+		button.add_theme_color_override("font_disabled_color", Color("b8cbd7"))
+		var card := StyleBoxFlat.new()
+		card.bg_color = Color(0.025, 0.07, 0.11, 0.94)
+		card.border_color = Color("3b6178")
+		card.set_border_width_all(1)
+		card.set_corner_radius_all(8)
+		button.add_theme_stylebox_override("normal", card)
+		button.add_theme_stylebox_override("disabled", card)
+		var hover: StyleBoxFlat = card.duplicate()
+		hover.bg_color = Color("244b5c")
+		button.add_theme_stylebox_override("hover", hover)
 		skill_buttons.append(button)
 	skill_button = skill_buttons[0]
 	auto_button = make_button("Kỹ năng: tay", Vector2(940, 650), Vector2(290, 50), func(): set_auto_mode(not auto_skills))
@@ -100,7 +114,7 @@ func _ready() -> void:
 	wallet.add_theme_font_size_override("font_size", 22)
 	ui.add_child(wallet)
 	pause_button = make_button("Tạm dừng", Vector2(1060, 25), Vector2(170, 52), toggle_pause)
-	show_menu("KIẾM HÀNH", "CHƯƠNG I · 0.5.0\nPhế tích Ngân Nguyệt · 10 ải\nChiến đấu, nhận thưởng và mở đường đi tiếp", "Chọn ải", open_stages)
+	show_menu("KIẾM HÀNH", "CHƯƠNG I · 0.6.0\nPhế tích Ngân Nguyệt · 10 ải\nChiến đấu, nhận thưởng và mở đường đi tiếp", "Chọn ải", open_stages)
 	get_viewport().size_changed.connect(resize_ui)
 	resize_ui()
 
@@ -145,6 +159,13 @@ func show_menu(title: String, subtitle: String, action: String, callback: Callab
 		character.add_theme_font_size_override("font_size", 23)
 		character.pressed.connect(show_character)
 		menu.add_child(character)
+		var growth := Button.new()
+		growth.text = "Nâng tướng"
+		growth.custom_minimum_size.y = 56
+		growth.disabled = progress.read_only
+		growth.add_theme_font_size_override("font_size", 23)
+		growth.pressed.connect(func(): open_growth())
+		menu.add_child(growth)
 		if progress.read_only:
 			var retry := Button.new()
 			retry.text = "Thử tải lại tiến trình"
@@ -167,7 +188,7 @@ func begin() -> void:
 		menu = null
 	screen = "battle"
 	if campaign_active:
-		battle.start(battle_roster.size(), battle_roster, battle_stage)
+		battle.start(battle_roster.size(), battle_roster, battle_stage, battle_levels)
 	else:
 		battle.start(party_size)
 	result_delay = 0
@@ -251,7 +272,7 @@ func _process(delta: float) -> void:
 			show_campaign_result()
 		else:
 			show_menu("CHIẾN THẮNG" if battle.state == "won" else "THẤT BẠI", "Hạ %d địch · Chặng %d/4 · %.1f giây\nTrận kiểm tra cơ chế · Không tính thưởng" % [battle.kills, battle.wave, battle.elapsed], "Chơi lại", begin)
-	wallet.visible = screen in ["title", "stages", "prepare", "result"]
+	wallet.visible = screen in ["title", "stages", "prepare", "result", "growth"]
 	wallet.text = "Tiến trình đang khóa · " + progress.last_error if progress.read_only else "Vàng: %d     XP hành trình: %d     Đã vượt: %d/10" % [progress.data.gold, progress.data.xp, progress.data.cleared.size()]
 	if progress.recovered and not progress.read_only:
 		wallet.text += " · Đã mở bản dự phòng"
@@ -270,7 +291,7 @@ func _process(delta: float) -> void:
 		var timing := "%.1fs" % actor.cooldown_left if actor.cooldown_left > 0 else "Sẵn sàng"
 		if actor.hp <= 0:
 			timing = "Đã gục"
-		button.text = "%d · %s  %d/%d HP\n%s · %s" % [i + 1, actor.name, ceili(actor.hp), int(actor.max_hp), actor.skill, timing]
+		button.text = "%d · %s · Cấp %d\n%d/%d HP · %s\n%s" % [i + 1, actor.name, actor.level, ceili(actor.hp), int(actor.max_hp), actor.skill, timing]
 	pause_button.visible = screen == "battle"
 	status.text = (("1-%02d · " % battle_stage_id) if campaign_active else "") + ("BOSS" if battle.wave > 0 and battle.boss_wave() else "ĐỢT %d / %d" % [battle.wave, battle.wave_limit]) + "      ĐỘI %d/%d · %.1fs" % [battle.heroes.filter(func(a): return a.hp > 0).size(), battle.heroes.size(), battle.elapsed]
 	queue_redraw()
@@ -541,6 +562,7 @@ func start_campaign(id: int) -> void:
 	battle_stage_id = id
 	battle_stage = Campaign.stage(id)
 	battle_roster = progress.formation()
+	battle_levels = progress.levels()
 	party_size = battle_roster.size()
 	campaign_active = true
 	run_id = token
@@ -559,3 +581,24 @@ func show_campaign_result() -> void:
 func settle_campaign() -> void:
 	settlement_attempted = true
 	receipt = progress.finish_run(run_id, battle.state == "won", battle.elapsed, battle.heroes.filter(func(a): return a.hp > 0).size())
+
+func open_growth(origin: String = "title", index: int = -1) -> void:
+	if screen not in ["title", "prepare", "growth"]: return
+	growth_return = origin
+	if index >= 0 and index < 5: growth_index = index
+	campaign_active = false
+	battle.state = "idle"
+	clear_enemies()
+	screen = "growth"
+	new_campaign_panel()
+	campaign_panel.growth(growth_index, growth_return)
+
+func close_growth() -> void:
+	if growth_return == "prepare": prepare_stage(selected_stage)
+	else: to_title()
+
+func upgrade_selected(index: int, expected_level: int) -> void:
+	if screen != "growth" or index != growth_index: return
+	var outcome: Dictionary = progress.upgrade_hero(index, expected_level)
+	open_growth(growth_return, index)
+	campaign_panel.message("Đã nâng %s lên cấp %d." % [PartyData.HEROES[index].name, outcome.level] if outcome.ok else outcome.error, outcome.ok)

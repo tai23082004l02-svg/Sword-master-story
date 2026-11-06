@@ -1,3 +1,16 @@
+# Bổ sung 0.6.0 — Nâng cấp5tướng
+Đọc HERO_GROWTH.md. PartyData.stats/create cấp1–20, +10%HP/ATKgốc mỗi cấp,
+ceil bằng số nguyên; skill/tầm/tốc độ giữ. Giá L→L+1:30+20(L−1)vàng,10LXP.
+Progress schema2 hero_levels5số, đọc/migrate schema1 giữ toàn bộ dữ liệu cũ.
+Không ghi khi chỉ load; trước lần ghi mới giữ nguyên.v1.bak (cả recover từ.bak).
+Upgrade trừ ví+cấp cùng commit, thiếu/đạtcap/quote cũ/lỗi ghi không đổi dữ liệu.
+UI sảnh/prep chọn tướng, xem trước-sau/giá/thiếu tài nguyên, xác nhận bằng nút
+nâng1cấp; cấp/HP/ATK cũng hiện ởprep vàHUD. Battle nhận snapshot cấp theoID,
+đảođội không nhầm tướng và không đổi giữa trận. Legacy API mặc địnhlvl1.
+Giữ project name/audio.cfg, chương10ải, frame/hình; chưa trang bị/phó bản mới.
+Kiểm14smoke + render fixture schema1/nâng/trận/cap/thiếu, save riêng. Chưa thử
+S23/Windows thực, FPS/nhiệt/âm. Không có code/tài nguyên game tham khảo mới.
+
 # Bổ sung 0.5.0 — Chương10ải, thưởng, chuẩn bị đội và save
 Đọc CAMPAIGN.md. Đã thêm CampaignData/Progress/UI, snapshot stage/roster vào
 Battle, giữ API trận cũ cho regression. Boss5/10,2loại quái/hình cũ, không copyAPK.

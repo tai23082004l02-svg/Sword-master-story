@@ -1,4 +1,4 @@
-# Đội hình — prototype 0.5.0
+# Đội hình — prototype 0.6.0
 
 ## Cách thử
 Chọn ải → màn chuẩn bị: thêm/bớt bốn đồng đội và đổi thứ tự bằng nút;
@@ -8,6 +8,8 @@ và trạng thái gục. Chạm thẻ hoặc phím 1–5 để dùng kỹ năng;
 Chạm **Kỹ năng: tay** để bật tự động. Bật lại để dùng tay. Tự động ưu tiên
 lá chắn, hồi máu nếu có tướng còn sống thiếu ít nhất 30 HP, rồi sát thương.
 Có thể bấm tay cả khi tự động đang bật. Tùy chọn đội/tự động lưu cùng tiến trình.
+
+Bảng dưới là cấp1; cấp cao tăng HP/đòn thường theo HERO_GROWTH.md, skill giữ nguyên.
 
 | Tướng | Vai trò | HP | Đánh thường | Kỹ năng | Hồi |
 | --- | --- | ---: | ---: | --- | ---: |
@@ -38,7 +40,7 @@ và giới hạn. Không thêm âm thanh, dịch vụ hoặc API runtime. Không
 
 ## Giới hạn và kiểm tra
 Đã có chọn/đổi thứ tự đồng đội, chương10ải và lưu local; chưa kho tướng mở rộng,
-trang bị, nâng tướng hoặc APK. Xem CAMPAIGN.md. Chưa coi chỉ số là cân bằng cuối; đội năm
+trang bị hoặc APK.0.6.0 đã có nâng5tướng, xem HERO_GROWTH.md và CAMPAIGN.md. Chưa coi chỉ số là cân bằng cuối; đội năm
 hiện mạnh hơn nhiều so với trận thiết kế cho một tướng. Không có thưởng mới.
 
 Godot 4.6.3 headless: kiểm tra một tướng cũ và đội 1–5, chiêu độc lập,
