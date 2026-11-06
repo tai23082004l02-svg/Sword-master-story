@@ -9,4 +9,5 @@
 - 0.8 Chỉnh theo phản hồi, APK thử.
 Các mốc sau chưa triển khai, phạm vi có thể chỉnh theo chơi thử.
 
-- 0.4.2 Theo hướng mới đã chuẩn bị24phần rời và rig thử Aether; chưa thay trong trận. Chờ duyệt trước khi chuyển toàn đội. Xem AETHER_RIG.md.
+
+- 0.4.3 Đã gỡ rig theo phản hồi;168frame PNG rời cho5tướng/2quái/boss, viewer có bước frame. Xem SPRITE_FRAMES.md.

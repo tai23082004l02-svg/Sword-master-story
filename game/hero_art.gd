@@ -1,10 +1,10 @@
 extends Node2D
-## Atlas animation only: gameplay timing remains owned by Battle.
-const SHEET = preload("res://assets/hero/aether_sheet.png")
+## Independent frame textures only; gameplay timing remains owned by Battle.
+const Frames = preload("res://game/sprite_frames.gd")
 const CLIPS = {"idle": [0, 6, 0.16], "run": [6, 6, 0.09], "attack": [12, 6, 0.06], "skill": [18, 3, 0.16], "hurt": [21, 1, 0.20], "death": [22, 2, 0.36]}
-var sheet: Texture2D = SHEET
+var character_id := "aether"
+var frame_override := -1
 var sword_overlays := true
-var frame_regions: Dictionary = {}
 var clip := "idle"
 var clock := 0.0
 var facing := 1.0
@@ -30,18 +30,20 @@ func _process(delta: float) -> void:
 		clock += delta
 	queue_redraw()
 
-func _draw() -> void:
+func frame_index() -> int:
 	var data: Array = CLIPS[clip]
-	var index := int(clock / float(data[2]))
-	if clip in ["death", "hurt", "attack", "skill"] and not preview:
+	var index := maxi(0, frame_override) if frame_override >= 0 else maxi(0, int(clock / float(data[2])))
+	if frame_override >= 0 or (clip in ["death", "hurt", "attack", "skill"] and not preview):
 		index = mini(index, int(data[1]) - 1)
 	else:
 		index %= int(data[1])
-	var frame := int(data[0]) + index
-	var cell := Vector2(sheet.get_width() / 6.0, sheet.get_height() / 4.0)
-	var source: Rect2 = frame_regions.get(frame, Rect2(Vector2(frame % 6, frame / 6) * cell, cell))
+	return int(data[0]) + index
+
+func _draw() -> void:
+	var frame := frame_index()
+	var index := frame - int(CLIPS[clip][0])
 	draw_set_transform(Vector2.ZERO, 0, Vector2(facing, 1))
-	draw_texture_rect_region(sheet, Rect2(-source.size.x / 2, -224, source.size.x, source.size.y), source)
+	Frames.draw_frame(self, character_id, frame)
 	if sword_overlays and clip == "skill":
 		var phase := fmod(clock, 0.48) / 0.48
 		var tint := Color(0.3, 0.95, 1, (1.0 - phase) * 0.7)

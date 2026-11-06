@@ -1,4 +1,4 @@
-# Kiếm Hành — prototype 0.4.2
+# Kiếm Hành — prototype 0.4.3
 
 Game nhập vai đội hình nhìn ngang, tham khảo nhịp chơi Sword Master Story.
 Đã có nền chiến đấu đội tối đa năm tướng, kỹ năng riêng và chế độ tự động.
@@ -6,12 +6,11 @@ Bốn đồng đội Brann/Lyra/Nyx/Sol đã có sprite fantasy riêng và sáu 
 Kiếm sĩ Aether đã có sprite anime fantasy riêng và sáu trạng thái hoạt ảnh.
 Hai loại quái và bối cảnh đã có hình fantasy riêng.
 
-## Thử Aether bằng bộ xương 0.4.2
-Sảnh → **Thử Aether · bộ xương**: bộ24PNG rời, Skeleton2D/20Bone2D và sáu
-động tác thử, có hiện xương/tách hình/chỉnh tốc độ. Chưa thay Aether trong trận.
-[Hình, cách thử và hướng dẫn chỉnh rig](docs/AETHER_RIG.md).
-
-![Aether ghép từ bộ phận trong Godot](docs/screenshots/aether_rig_idle.png)
+## Frame rời 0.4.3
+Đã gỡ bản thử bộ xương. Năm tướng, hai loại quái và boss dùng168PNG độc lập,
+không lấy ô256×256 khi render. Vào **Xem nhân vật · 5 tướng**, chọn trạng thái,
+bấm **Frame trước / Frame sau** để dừng xem từng hình, **Phát lại** để chạy tiếp.
+[Chi tiết và ảnh kiểm tra](docs/SPRITE_FRAMES.md).
 
 ## Bốn đồng đội 0.4.1
 Đã thay hình tạm bằng sprite Brann, Lyra, Nyx và Sol. Sảnh → **Xem nhân vật · 5 tướng**

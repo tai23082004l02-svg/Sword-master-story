@@ -1,4 +1,6 @@
-# Aether — Kiếm sĩ Ngân Nguyệt · 0.3.0
+# Aether — Kiếm sĩ Ngân Nguyệt · thiết kế 0.3.0
+
+Từ0.4.3, runtime dùng PNG rời thay atlas; xem [SPRITE_FRAMES.md](SPRITE_FRAMES.md). Phần dưới ghi nguồn và tích hợp ban đầu.
 
 Thiết kế riêng: tóc bạc, áo choàng xanh đêm lót ngọc, giáp bạc viền vàng,
 kiếm bạc xanh ngọc. Fantasy anime chi tiết, góc nghiêng hướng phải.

@@ -63,7 +63,7 @@ Godot4.6.3 Linux, dữ liệu thử ở XDG_DATA_HOME riêng:
 Audio Dummy; cảnh báo driver không hỗ trợ đổi VSync, không có lỗi script.
 Không suy ra FPS, nhiệt, âm hoặc cảm ứng trên S23 Ultra từ kiểm tra desktop.
 
-## 0.4.2 — Bộ phận rời và rig thử Aether
+## 0.4.2 — Bộ phận rời và rig thử Aether (đã gỡ ở0.4.3)
 Godot4.6.3, XDG_DATA_HOME riêng trong workspace:
 - Extract:24PNG độc lập, alpha lọc một lần, trim viền; source kit giữ để đối chiếu.
 - Build: scene editable Skeleton2D/20Bone2D/24Sprite2D/AnimationPlayer,6clip.
@@ -78,3 +78,20 @@ Godot4.6.3, XDG_DATA_HOME riêng trong workspace:
 Audio Dummy. Driver cảnh báo không hỗ trợ đổi VSync; không có lỗi script.
 Chưa duyệt máy S23/cảm ứng/âm/FPS/nhiệt; chưa mesh deformation/IK hoặc thay rig
 vào trận. Kiểm tra hiện phục vụ chuẩn bị hình và rig cutout thử.
+
+## 0.4.3 — Gỡ bộ xương, frame PNG độc lập
+Đã gỡ asset/scene/script/tool/test rig theo yêu cầu, bỏ nút mở lab.
+Godot4.6.3, save directory riêng:
+- Editor import168PNG và7SpriteFrames bank: thành công, không lỗi script.
+- frame_assets_smoke:168PNG độc lập, không AtlasTexture, padding8, offset
+  khớp manifest, giữ cung/halo vượt hàng, viewer bước đủ frame cả5tướng/
+  6clip/giữ clock/quay vòng: PASS.
+- battle_smoke, boss_smoke, scene_smoke, hero_art_smoke, enemy_art_smoke,
+  party_smoke, party_scene_smoke, companion_art_smoke: PASS.
+- alpha_render trên OpenGL kiểm cả168texture: cạnh trong suốt khớp màu nền,
+  không lấy mẫu từ texture kế bên: PASS.
+- Đã render/chụp/xem đủ7bảng24frame, viewer4đồng đội và trận bằng Godot
+  OpenGL Compatibility/Mesa llvmpipe/audio Dummy. Rà lại tên thường/skill Lyra,
+  particle Nyx và seam glow boss; ảnh kiểm tra trong SPRITE_FRAMES.md.
+Driver cảnh báo không hỗ trợ đổi VSync, không lỗi script. Không suy ra duyệt
+máy thật/cảm ứng/âm/FPS/nhiệt hoặc sửa được chi tiết vốn thiếu trong ảnh nguồn.

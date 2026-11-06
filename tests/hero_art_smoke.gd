@@ -10,7 +10,7 @@ func run() -> void:
 	await process_frame
 	scene.show_character()
 	await process_frame
-	assert(scene.screen == "character" and scene.preview_buttons.size() == 12)
+	assert(scene.screen == "character" and scene.preview_buttons.size() == 15)
 	for clip in scene.hero_art.CLIPS:
 		scene.preview_clip = clip
 		await process_frame

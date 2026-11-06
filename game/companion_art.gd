@@ -1,13 +1,6 @@
 extends "res://game/hero_art.gd"
 ## Presentation only. All damage, shields and healing remain owned by Battle.
-const SHEETS = {
-	"brann": preload("res://assets/party/brann_sheet.png"),
-	"lyra": preload("res://assets/party/lyra_sheet.png"),
-	"nyx": preload("res://assets/party/nyx_sheet.png"),
-	"sol": preload("res://assets/party/sol_sheet.png")
-}
 var actor: Dictionary = {}
-var character_id := "brann"
 var last_hp := -1.0
 var last_x := 0.0
 var hurt_left := 0.0
@@ -16,12 +9,7 @@ var initialized := false
 func configure(id: String) -> void:
 	sword_overlays = false
 	character_id = id
-	sheet = SHEETS[id]
-	frame_regions = {}
-	if id == "lyra":
-		# Generated skill poses are spaced slightly closer than the regular grid.
-		# Explicit regions exclude the next pose while preserving the full bow.
-		frame_regions = {18: Rect2(0, 768, 232, 256), 19: Rect2(236, 768, 212, 256), 20: Rect2(450, 768, 318, 256)}
+	frame_override = -1
 	initialized = false
 	hurt_left = 0
 	set_clip("idle", true)
@@ -35,6 +23,7 @@ func _process(dt: float) -> void:
 func sync(data: Dictionary, dt: float, paused: bool, finished: bool = false) -> void:
 	if character_id != data.id or actor != data:
 		configure(data.id)
+	frame_override = -1
 	actor = data
 	preview = false
 	frozen = paused
@@ -59,7 +48,7 @@ func sync(data: Dictionary, dt: float, paused: bool, finished: bool = false) -> 
 		set_clip("hurt")
 	elif actor.windup > 0 or actor.timer > 0.04:
 		set_clip("attack")
-		# Map preparation and recovery to the same six atlas frames as Aether.
+		# Map preparation and recovery to the same six animation frames as Aether.
 		clock = (0.18 - actor.windup) if actor.windup > 0 else 0.18 + (actor.recovery - actor.timer) * 0.18 / actor.recovery
 	elif absf(actor.x - last_x) > 0.01:
 		set_clip("run")

@@ -1,6 +1,6 @@
 extends Node2D
 ## Cosmetic state only. The Battle model owns HP, range and damage timing.
-const SHEET = preload("res://assets/enemies/hollows_sheet.png")
+const Frames = preload("res://game/sprite_frames.gd")
 var ranged := false
 var phase := "walk"
 var clock := 0.0
@@ -67,9 +67,8 @@ func _draw() -> void:
 		frame = mini(5, int(clock / 0.1))
 	elif phase == "walk":
 		frame = int(clock / 0.11) % 6
-	var cell := Vector2(SHEET.get_width() / 6.0, SHEET.get_height() / 4.0)
 	var tint := Color(1.6, 1.3, 1.3) if hurt_time > 0 else Color.WHITE
-	draw_texture_rect_region(SHEET, Rect2(-128, -224, 256, 256), Rect2(Vector2(frame, row) * cell, cell), tint)
+	Frames.draw_frame(self, "hollows", row * 6 + frame, tint)
 	if phase == "attack" and clock < 0.3:
 		draw_arc(Vector2(-5, -68), 65, -2.8, -0.4, 20, Color(0.75, 0.35, 1, 0.8) if ranged else Color(1, 0.5, 0.22, 0.8), 3)
 	if ranged and cast_time > 0:

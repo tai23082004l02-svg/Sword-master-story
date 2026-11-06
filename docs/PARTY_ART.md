@@ -1,4 +1,6 @@
-# Bốn đồng đội — 0.4.1
+# Bốn đồng đội — thiết kế từ 0.4.1
+
+**Từ0.4.3:** runtime đã chuyển sang PNG rời và offset riêng, xem [SPRITE_FRAMES.md](SPRITE_FRAMES.md). Phần atlas bên dưới ghi cách tích hợp ban đầu, không còn là cách render hiện hành.
 
 Đã thay toàn bộ hình học tạm trong trận bằng bốn atlas fantasy riêng:
 - **Brann**: tóc nâu đỏ/râu ngắn, giáp thép viền vàng, áo choàng hổ phách,

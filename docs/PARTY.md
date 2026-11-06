@@ -1,4 +1,4 @@
-# Đội hình — prototype 0.4.1
+# Đội hình — prototype 0.4.3
 
 ## Cách thử
 Ở sảnh, mặc định đủ năm tướng. Chạm **Đội hình** để đổi số lượng 1–5;
@@ -32,7 +32,7 @@ Ba đợt và boss giữ thông số cũ, không có sơ hở/multiplier hoặc 
 lá chắn/hồi máu và kết quả. Alias hero_hp/hero_x/cooldown giữ API một tướng
 cho kiểm tra hồi quy. `start()` mặc định một tướng; UI gọi `start(party_size)`.
 `main.gd` quản lý nút, tự động và trình bày, không quyết định sát thương.
-Aether giữ atlas đã duyệt. Bốn đồng đội đã có atlas fantasy riêng, dùng chung
+Aether giữ atlas đã duyệt. Bốn đồng đội đã có frame PNG fantasy riêng (xem SPRITE_FRAMES.md), dùng chung
 renderer với Aether và đồng bộ qua `companion_art.gd`; xem PARTY_ART.md cho nguồn
 và giới hạn. Không thêm âm thanh, dịch vụ hoặc API runtime. Không đổi save âm thanh.
 

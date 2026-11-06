@@ -1,13 +1,14 @@
-# Bổ sung 0.4.2 — Chuẩn bị hình rời và thử rig Aether
-Người dùng đổi hướng từ tách frame sang bộ xương, yêu cầu làm thử Aether trước.
-Đọc AETHER_RIG.md. Có24PNG rời sinh mới, scene editable20Bone2D/24Sprite2D,
-6AnimationPlayer clip và lab riêng mở bằng nút sảnh. Chưa đổi battle renderer.
-Giữ nguyên0.4.1/chỉ số/audio/save và4đồng đội. Work tách frame đã chuyển vào
-work/suspended-frame-work/, không commit/phát hành. Rig hiện là cutout cứng,
-chưa mesh/IK/động tác cuối; cần duyệt hình/pivot trước khi nối vào trận.
-Nguồn và source rect/hash trong assets/aether_rig/manifest.json. Công cụ extract
-chỉ tách kit/bake alpha/trim; build ghi lại scene từ code, lưu bản sao nếu sửa tay.
-Đã xem render thực bằng Godot/Mesa/audio Dummy; chưa thử máy S23 hoặc FPS.
+# Bổ sung 0.4.3 — Gỡ rig, dùng frame rời
+Người dùng không chọn bộ xương, yêu cầu xóa và tiếp tục tách frame kiểu cũ.
+Đã gỡ toàn bộ asset/scene/script/tool/test/docs rig và nút mở lab; giữ lịch sử Git.
+Đọc SPRITE_FRAMES.md.168PNG rời/7bank, mỗi ảnh trim+padding8 và offset chân
+riêng. Runtime HeroArt/CompanionArt/EnemyArt/BossArt dùng SpriteFrames bank,
+không load sheet/source region. Source sheet giữ làm nguồn gốc, không repaint.
+Splitter tách component2D xuyên ranh giới cả hàng/cột; ghi source hash/anchor/
+offset/size trong manifest; Lyra có2override đạn rời, boss có seam cho glow dính.
+Viewer có Frame trước/sau/Phát lại và chỉ số, pause đồng bộ. Không đổi chỉ số,
+logic trận, audio/save. Kiểm tra PNG/margin/offset/step và render cả168frame.
+Atlas nguồn có dao động chi tiết/pose sẵn có; không coi tách ảnh là vẽ lại in-between.
 
 # Bổ sung 0.4.1 — Hình và hoạt ảnh bốn đồng đội
 Đọc PARTY_ART.md. Đã thay hình học Brann/Lyra/Nyx/Sol bằng atlas24ô/tướng,

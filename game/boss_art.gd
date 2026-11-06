@@ -1,5 +1,5 @@
 extends Node2D
-const SHEET = preload("res://assets/boss/eclipse_knight.png")
+const Frames = preload("res://game/sprite_frames.gd")
 var clock := 0.0
 var phase := "idle"
 var attack_kind := "slash"
@@ -64,9 +64,8 @@ func _draw() -> void:
 		frame = int(clock / 0.13) % 6
 	if empowered and phase != "dead":
 		draw_arc(Vector2(0, -82), 100, 0, TAU, 48, Color(0.6, 0.25, 0.9, 0.35), 3)
-	var cell := Vector2(SHEET.get_width() / 6.0, SHEET.get_height() / 4.0)
 	var tint := Color(1.15, 0.85, 1.2) if empowered else Color.WHITE
-	draw_texture_rect_region(SHEET, Rect2(-128, -224, 256, 256), Rect2(Vector2(frame % 6, frame / 6) * cell, cell), tint)
+	Frames.draw_frame(self, "eclipse", frame, tint)
 	if phase == "attack" and clock < 0.3:
 		draw_arc(Vector2(-25, -90), 70 + clock * 40, -2.8, -0.6, 24, Color(0.9, 0.4, 1, 0.75), 4)
 	if impact > 0 and phase != "dead":

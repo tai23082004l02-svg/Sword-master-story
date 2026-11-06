@@ -9,8 +9,8 @@ func run() -> void:
 		var art := Art.new()
 		art.configure(actor.id)
 		root.add_child(art)
-		var image := art.sheet.get_image()
-		assert(image.get_size() == Vector2i(1536, 1024))
+		var image := art.Frames.texture(actor.id, 0).get_image()
+		assert(image.get_size().x < 512 and image.get_size().y < 320)
 		assert(image.get_pixel(0, 0).a < 0.08)
 		assert(not art.sword_overlays)
 		art.sync(actor, 0.01, false)
@@ -59,12 +59,12 @@ func run() -> void:
 	assert(not scene.companion_preview.visible)
 	scene.begin()
 	await process_frame
-	assert(scene.companion_views.all(func(v): return v.visible and v.sheet != v.SHEET))
+	assert(scene.companion_views.all(func(v): return v.visible and v.character_id != "aether"))
 	scene.toggle_pause()
 	for voice in scene.audio.voices:
 		voice.stop()
 	await create_timer(0.15).timeout
 	scene.queue_free()
 	await process_frame
-	print("PASS: four sheets, six states, pause, terminal death, reset, five-character viewer and battle integration")
+	print("PASS: four frame banks, six states, pause, terminal death, reset, five-character viewer and battle integration")
 	quit()

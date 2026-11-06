@@ -1,0 +1,449 @@
+{
+  "source": "assets/party/brann_sheet.png",
+  "source_sha256": "fd9fef1fde712a1b42309fd92621be988ecd179ff4b8f47f1d247e66211bda87",
+  "logical_canvas": [
+    512,
+    384
+  ],
+  "logical_anchor": [
+    256,
+    272
+  ],
+  "padding": 8,
+  "reviewed_projectile_ownership": false,
+  "method": "alpha silhouette ownership; whole 2D components retained across nominal column AND row borders, nearest silhouette for disconnected particles; documented vertical seam for merged boss spell glow",
+  "frames": [
+    {
+      "index": 0,
+      "file": "00.png",
+      "source_row": 0,
+      "source_anchor": [
+        151,
+        224
+      ],
+      "visible_pixels": 25059,
+      "draw_offset": [
+        -140,
+        -216
+      ],
+      "size": [
+        214,
+        245
+      ]
+    },
+    {
+      "index": 1,
+      "file": "01.png",
+      "source_row": 0,
+      "source_anchor": [
+        408,
+        224
+      ],
+      "visible_pixels": 25113,
+      "draw_offset": [
+        -138,
+        -219
+      ],
+      "size": [
+        210,
+        248
+      ]
+    },
+    {
+      "index": 2,
+      "file": "02.png",
+      "source_row": 0,
+      "source_anchor": [
+        664,
+        224
+      ],
+      "visible_pixels": 25213,
+      "draw_offset": [
+        -138,
+        -221
+      ],
+      "size": [
+        211,
+        249
+      ]
+    },
+    {
+      "index": 3,
+      "file": "03.png",
+      "source_row": 0,
+      "source_anchor": [
+        921,
+        224
+      ],
+      "visible_pixels": 24882,
+      "draw_offset": [
+        -137,
+        -222
+      ],
+      "size": [
+        210,
+        251
+      ]
+    },
+    {
+      "index": 4,
+      "file": "04.png",
+      "source_row": 0,
+      "source_anchor": [
+        1176,
+        224
+      ],
+      "visible_pixels": 24427,
+      "draw_offset": [
+        -136,
+        -217
+      ],
+      "size": [
+        209,
+        246
+      ]
+    },
+    {
+      "index": 5,
+      "file": "05.png",
+      "source_row": 0,
+      "source_anchor": [
+        1431,
+        224
+      ],
+      "visible_pixels": 24697,
+      "draw_offset": [
+        -137,
+        -216
+      ],
+      "size": [
+        212,
+        244
+      ]
+    },
+    {
+      "index": 6,
+      "file": "06.png",
+      "source_row": 1,
+      "source_anchor": [
+        63,
+        480
+      ],
+      "visible_pixels": 22252,
+      "draw_offset": [
+        -58,
+        -200
+      ],
+      "size": [
+        225,
+        217
+      ]
+    },
+    {
+      "index": 7,
+      "file": "07.png",
+      "source_row": 1,
+      "source_anchor": [
+        340,
+        480
+      ],
+      "visible_pixels": 20251,
+      "draw_offset": [
+        -74,
+        -199
+      ],
+      "size": [
+        215,
+        215
+      ]
+    },
+    {
+      "index": 8,
+      "file": "08.png",
+      "source_row": 1,
+      "source_anchor": [
+        678,
+        480
+      ],
+      "visible_pixels": 20832,
+      "draw_offset": [
+        -163,
+        -203
+      ],
+      "size": [
+        228,
+        211
+      ]
+    },
+    {
+      "index": 9,
+      "file": "09.png",
+      "source_row": 1,
+      "source_anchor": [
+        894,
+        480
+      ],
+      "visible_pixels": 20147,
+      "draw_offset": [
+        -129,
+        -199
+      ],
+      "size": [
+        229,
+        216
+      ]
+    },
+    {
+      "index": 10,
+      "file": "10.png",
+      "source_row": 1,
+      "source_anchor": [
+        1182,
+        480
+      ],
+      "visible_pixels": 20070,
+      "draw_offset": [
+        -153,
+        -196
+      ],
+      "size": [
+        221,
+        213
+      ]
+    },
+    {
+      "index": 11,
+      "file": "11.png",
+      "source_row": 1,
+      "source_anchor": [
+        1350,
+        480
+      ],
+      "visible_pixels": 20399,
+      "draw_offset": [
+        -67,
+        -200
+      ],
+      "size": [
+        224,
+        218
+      ]
+    },
+    {
+      "index": 12,
+      "file": "12.png",
+      "source_row": 2,
+      "source_anchor": [
+        83,
+        736
+      ],
+      "visible_pixels": 24169,
+      "draw_offset": [
+        -79,
+        -201
+      ],
+      "size": [
+        217,
+        225
+      ]
+    },
+    {
+      "index": 13,
+      "file": "13.png",
+      "source_row": 2,
+      "source_anchor": [
+        324,
+        736
+      ],
+      "visible_pixels": 24801,
+      "draw_offset": [
+        -67,
+        -220
+      ],
+      "size": [
+        222,
+        243
+      ]
+    },
+    {
+      "index": 14,
+      "file": "14.png",
+      "source_row": 2,
+      "source_anchor": [
+        572,
+        736
+      ],
+      "visible_pixels": 25119,
+      "draw_offset": [
+        -64,
+        -228
+      ],
+      "size": [
+        210,
+        249
+      ]
+    },
+    {
+      "index": 15,
+      "file": "15.png",
+      "source_row": 2,
+      "source_anchor": [
+        811,
+        736
+      ],
+      "visible_pixels": 25089,
+      "draw_offset": [
+        -69,
+        -206
+      ],
+      "size": [
+        293,
+        229
+      ]
+    },
+    {
+      "index": 16,
+      "file": "16.png",
+      "source_row": 2,
+      "source_anchor": [
+        1079,
+        736
+      ],
+      "visible_pixels": 22167,
+      "draw_offset": [
+        -60,
+        -184
+      ],
+      "size": [
+        276,
+        208
+      ]
+    },
+    {
+      "index": 17,
+      "file": "17.png",
+      "source_row": 2,
+      "source_anchor": [
+        1356,
+        736
+      ],
+      "visible_pixels": 22512,
+      "draw_offset": [
+        -62,
+        -203
+      ],
+      "size": [
+        200,
+        227
+      ]
+    },
+    {
+      "index": 18,
+      "file": "18.png",
+      "source_row": 3,
+      "source_anchor": [
+        157,
+        992
+      ],
+      "visible_pixels": 27723,
+      "draw_offset": [
+        -154,
+        -203
+      ],
+      "size": [
+        240,
+        228
+      ]
+    },
+    {
+      "index": 19,
+      "file": "19.png",
+      "source_row": 3,
+      "source_anchor": [
+        405,
+        992
+      ],
+      "visible_pixels": 29605,
+      "draw_offset": [
+        -147,
+        -214
+      ],
+      "size": [
+        245,
+        241
+      ]
+    },
+    {
+      "index": 20,
+      "file": "20.png",
+      "source_row": 3,
+      "source_anchor": [
+        640,
+        992
+      ],
+      "visible_pixels": 43295,
+      "draw_offset": [
+        -128,
+        -225
+      ],
+      "size": [
+        258,
+        255
+      ]
+    },
+    {
+      "index": 21,
+      "file": "21.png",
+      "source_row": 3,
+      "source_anchor": [
+        850,
+        992
+      ],
+      "visible_pixels": 24615,
+      "draw_offset": [
+        -81,
+        -207
+      ],
+      "size": [
+        222,
+        231
+      ]
+    },
+    {
+      "index": 22,
+      "file": "22.png",
+      "source_row": 3,
+      "source_anchor": [
+        1125,
+        992
+      ],
+      "visible_pixels": 22072,
+      "draw_offset": [
+        -111,
+        -162
+      ],
+      "size": [
+        225,
+        179
+      ]
+    },
+    {
+      "index": 23,
+      "file": "23.png",
+      "source_row": 3,
+      "source_anchor": [
+        1413,
+        992
+      ],
+      "visible_pixels": 18292,
+      "draw_offset": [
+        -167,
+        -106
+      ],
+      "size": [
+        295,
+        122
+      ]
+    }
+  ]
+}

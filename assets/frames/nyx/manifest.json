@@ -1,0 +1,450 @@
+{
+  "source": "assets/party/nyx_sheet.png",
+  "source_sha256": "7794146a2a3faac6cbae889f0e2c2bc2db6e9df97e7828dac07bad67f036f4b8",
+  "logical_canvas": [
+    512,
+    384
+  ],
+  "logical_anchor": [
+    256,
+    272
+  ],
+  "padding": 8,
+  "reviewed_projectile_ownership": false,
+  "method": "alpha silhouette ownership; whole 2D components retained across nominal column AND row borders, nearest silhouette for disconnected particles; documented vertical seam for merged boss spell glow",
+  "frames": [
+    {
+      "index": 0,
+      "file": "00.png",
+      "source_row": 0,
+      "source_anchor": [
+        99,
+        224
+      ],
+      "visible_pixels": 25059,
+      "draw_offset": [
+        -70,
+        -225
+      ],
+      "size": [
+        204,
+        256
+      ]
+    },
+    {
+      "index": 1,
+      "file": "01.png",
+      "source_row": 0,
+      "source_anchor": [
+        357,
+        224
+      ],
+      "visible_pixels": 25200,
+      "draw_offset": [
+        -70,
+        -225
+      ],
+      "size": [
+        204,
+        256
+      ]
+    },
+    {
+      "index": 2,
+      "file": "02.png",
+      "source_row": 0,
+      "source_anchor": [
+        613,
+        224
+      ],
+      "visible_pixels": 25817,
+      "draw_offset": [
+        -67,
+        -225
+      ],
+      "size": [
+        201,
+        256
+      ]
+    },
+    {
+      "index": 3,
+      "file": "03.png",
+      "source_row": 0,
+      "source_anchor": [
+        873,
+        224
+      ],
+      "visible_pixels": 25877,
+      "draw_offset": [
+        -75,
+        -225
+      ],
+      "size": [
+        206,
+        256
+      ]
+    },
+    {
+      "index": 4,
+      "file": "04.png",
+      "source_row": 0,
+      "source_anchor": [
+        1128,
+        224
+      ],
+      "visible_pixels": 25046,
+      "draw_offset": [
+        -83,
+        -225
+      ],
+      "size": [
+        215,
+        256
+      ]
+    },
+    {
+      "index": 5,
+      "file": "05.png",
+      "source_row": 0,
+      "source_anchor": [
+        1384,
+        224
+      ],
+      "visible_pixels": 23949,
+      "draw_offset": [
+        -83,
+        -224
+      ],
+      "size": [
+        216,
+        255
+      ]
+    },
+    {
+      "index": 6,
+      "file": "06.png",
+      "source_row": 1,
+      "source_anchor": [
+        105,
+        480
+      ],
+      "visible_pixels": 27843,
+      "draw_offset": [
+        -107,
+        -219
+      ],
+      "size": [
+        248,
+        244
+      ]
+    },
+    {
+      "index": 7,
+      "file": "07.png",
+      "source_row": 1,
+      "source_anchor": [
+        344,
+        480
+      ],
+      "visible_pixels": 24195,
+      "draw_offset": [
+        -88,
+        -217
+      ],
+      "size": [
+        246,
+        243
+      ]
+    },
+    {
+      "index": 8,
+      "file": "08.png",
+      "source_row": 1,
+      "source_anchor": [
+        589,
+        480
+      ],
+      "visible_pixels": 23252,
+      "draw_offset": [
+        -79,
+        -216
+      ],
+      "size": [
+        247,
+        242
+      ]
+    },
+    {
+      "index": 9,
+      "file": "09.png",
+      "source_row": 1,
+      "source_anchor": [
+        919,
+        480
+      ],
+      "visible_pixels": 22327,
+      "draw_offset": [
+        -154,
+        -213
+      ],
+      "size": [
+        248,
+        240
+      ]
+    },
+    {
+      "index": 10,
+      "file": "10.png",
+      "source_row": 1,
+      "source_anchor": [
+        1162,
+        480
+      ],
+      "visible_pixels": 23263,
+      "draw_offset": [
+        -140,
+        -213
+      ],
+      "size": [
+        247,
+        241
+      ]
+    },
+    {
+      "index": 11,
+      "file": "11.png",
+      "source_row": 1,
+      "source_anchor": [
+        1401,
+        480
+      ],
+      "visible_pixels": 24004,
+      "draw_offset": [
+        -122,
+        -213
+      ],
+      "size": [
+        244,
+        241
+      ]
+    },
+    {
+      "index": 12,
+      "file": "12.png",
+      "source_row": 2,
+      "source_anchor": [
+        95,
+        736
+      ],
+      "visible_pixels": 25742,
+      "draw_offset": [
+        -77,
+        -224
+      ],
+      "size": [
+        221,
+        253
+      ]
+    },
+    {
+      "index": 13,
+      "file": "13.png",
+      "source_row": 2,
+      "source_anchor": [
+        348,
+        736
+      ],
+      "visible_pixels": 26889,
+      "draw_offset": [
+        -68,
+        -224
+      ],
+      "size": [
+        220,
+        252
+      ]
+    },
+    {
+      "index": 14,
+      "file": "14.png",
+      "source_row": 2,
+      "source_anchor": [
+        600,
+        736
+      ],
+      "visible_pixels": 29045,
+      "draw_offset": [
+        -69,
+        -224
+      ],
+      "size": [
+        226,
+        275
+      ]
+    },
+    {
+      "index": 15,
+      "file": "15.png",
+      "source_row": 2,
+      "source_anchor": [
+        844,
+        736
+      ],
+      "visible_pixels": 29697,
+      "draw_offset": [
+        -63,
+        -222
+      ],
+      "size": [
+        268,
+        251
+      ]
+    },
+    {
+      "index": 16,
+      "file": "16.png",
+      "source_row": 2,
+      "source_anchor": [
+        1102,
+        736
+      ],
+      "visible_pixels": 27535,
+      "draw_offset": [
+        -69,
+        -222
+      ],
+      "size": [
+        242,
+        251
+      ]
+    },
+    {
+      "index": 17,
+      "file": "17.png",
+      "source_row": 2,
+      "source_anchor": [
+        1358,
+        736
+      ],
+      "visible_pixels": 24240,
+      "draw_offset": [
+        -74,
+        -222
+      ],
+      "size": [
+        212,
+        251
+      ]
+    },
+    {
+      "index": 18,
+      "file": "18.png",
+      "source_row": 3,
+      "source_anchor": [
+        86,
+        992
+      ],
+      "visible_pixels": 33267,
+      "draw_offset": [
+        -81,
+        -231
+      ],
+      "size": [
+        243,
+        258
+      ]
+    },
+    {
+      "index": 19,
+      "file": "19.png",
+      "source_row": 3,
+      "source_anchor": [
+        348,
+        992
+      ],
+      "visible_pixels": 41019,
+      "draw_offset": [
+        -95,
+        -232
+      ],
+      "size": [
+        266,
+        259
+      ]
+    },
+    {
+      "index": 20,
+      "file": "20.png",
+      "source_row": 3,
+      "source_anchor": [
+        593,
+        992
+      ],
+      "visible_pixels": 27929,
+      "draw_offset": [
+        -76,
+        -225
+      ],
+      "size": [
+        243,
+        252
+      ]
+    },
+    {
+      "index": 21,
+      "file": "21.png",
+      "source_row": 3,
+      "source_anchor": [
+        862,
+        992
+      ],
+      "visible_pixels": 25624,
+      "draw_offset": [
+        -147,
+        -195
+      ],
+      "size": [
+        281,
+        219
+      ]
+    },
+    {
+      "index": 22,
+      "file": "22.png",
+      "source_row": 3,
+      "source_anchor": [
+        1114,
+        992
+      ],
+      "visible_pixels": 17766,
+      "draw_offset": [
+        -97,
+        -150
+      ],
+      "size": [
+        233,
+        171
+      ]
+    },
+    {
+      "index": 23,
+      "file": "23.png",
+      "source_row": 3,
+      "source_anchor": [
+        1394,
+        992
+      ],
+      "visible_pixels": 12581,
+      "draw_offset": [
+        -130,
+        -89
+      ],
+      "size": [
+        280,
+        97
+      ]
+    }
+  ],
+  "overlap_note": "Recovery motes at source rect730,768,51,132 assigned to skill20."
+}
