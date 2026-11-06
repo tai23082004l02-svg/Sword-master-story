@@ -1,0 +1,11 @@
+{
+  "character": "Aether — Kiếm sĩ Ngân Nguyệt",
+  "source": "Original character sprite sheet generated with OpenAI image generation in this session, 2026-11-06",
+  "file": "aether_sheet.png",
+  "dimensions": [1536, 1024],
+  "grid": [6, 4],
+  "cell": [256, 256],
+  "clips": {"idle": [0, 6], "run": [6, 6], "attack": [12, 6], "skill": [18, 3], "hurt": [21, 1], "death": [22, 2]},
+  "third_party_game_assets": false,
+  "status": "generated artwork integrated; pending user visual approval on device"
+}

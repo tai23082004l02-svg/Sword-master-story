@@ -7,3 +7,8 @@ Godot4.6.3 Linux headless:
 - Main scene chạy headless120frames không lỗi script.
 Chưa có display renderer để duyệt ảnh; chưa kiểm cảm ứng, safe area, loa/tai nghe,
 FPS/nhiệt hoặc lifecycle thực trên S23. Kiểm tự động không thay chơi thật/cân bằng.
+
+## 0.3.0 — Aether
+Godot4.6.3: import atlas và script thành công; battle_smoke, scene_smoke và
+hero_art_smoke PASS. Art test kiểm dimensions/alpha,6preview, về sảnh, skill
+và clock pause. Atlas đã xem; chưa render/duyệt cảnh Godot hoặc chạy máy thật.

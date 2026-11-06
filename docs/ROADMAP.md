@@ -1,7 +1,7 @@
 # Lộ trình
 - 0.1 Nền Godot, tài liệu, menu: đã triển khai.
 - 0.2 Một kiếm sĩ, ba đợt, kỹ năng, thắng/thua: đã triển khai; chờ thử máy thật.
-- 0.3 Cảnh mẫu sprite/animation anime pixel để duyệt.
+- 0.3 Đã tích hợp một kiếm sĩ Aether và6trạng thái; chờ duyệt. Quái/boss/nền mẫu còn lại.
 - 0.4 Đội năm tướng và phối hợp kỹ năng.
 - 0.5 Chương mười ải, bốn loại quái, boss.
 - 0.6 Nâng tướng/trang bị và lưu tiến trình.

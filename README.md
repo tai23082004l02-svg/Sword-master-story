@@ -1,8 +1,14 @@
-# Kiếm Hành — prototype 0.2.0
+# Kiếm Hành — prototype 0.3.0
 
 Game nhập vai đội hình nhìn ngang, tham khảo nhịp chơi Sword Master Story.
 Đang ở mốc nền tảng + trận đánh một kiếm sĩ, **chưa phải game đội năm tướng**.
-Hình vẽ hình học bằng code là placeholder, chưa phải sprite anime/pixel cuối.
+Kiếm sĩ Aether đã có sprite anime fantasy riêng và sáu trạng thái hoạt ảnh.
+Quái và nền vẫn dùng hình tạm bằng code.
+
+## Nhân vật mới 0.3.0
+Vào **Xem nhân vật · Aether** ở sảnh để xem lớn và thử sáu trạng thái.
+Nhân vật tóc bạc/giáp bạc viền vàng/áo choàng xanh đêm đã thay hình tạm trong trận.
+[Xem nguồn, cách tích hợp và giới hạn](docs/CHARACTER_AETHER.md).
 
 ## Chơi thử
 Godot 4.6.3, renderer Compatibility. Import `project.godot`, đợi import, Run.
