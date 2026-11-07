@@ -230,3 +230,15 @@ trên OpenGL Compatibility/Mesa llvmpipe, âm Dummy; đã xem ảnh, chữ khôn
 Driver cảnh báo không hỗ trợ đổi VSync. Không có lỗi script.
 
 ![Thưởng phiêu lưu khi kho đầy](screenshots/campaign_reward_full_inventory.png)
+
+## 0.8.3 — Tốc độ trận, 07/11/2026
+25 smoke PASS trên Godot4.6.3 Linux headless, save riêng từng bộ trong
+workspace/work/speed-final; giữ24test trước và thêm battle_speed_smoke.
+Test mới kiểm tỷ lệ thời gian1/2/3, cùng trận tự động có elapsed/HP/kills giống
+nhau ở cả3mức, nút chuyển2→3→1, pause/focus dừng và giữ mức, clamp delta50ms
+mỗi bước, tốc độ art, receipt theo giây mô phỏng và không cộng thưởng trùng.
+Editor import thành công. capture_battle_speed render OpenGL Compatibility/Mesa
+llvmpipe/audio Dummy với save riêng, đã xem nút x3 ở hàng dưới không chồng nút.
+Driver cảnh báo không hỗ trợ đổi VSync; chưa thử S23/cảm ứng/âm/FPS/nhiệt thật.
+
+![Nút tốc độ x3](screenshots/battle_speed_x3.png)

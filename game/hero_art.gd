@@ -7,6 +7,7 @@ var frame_override := -1
 var sword_overlays := true
 var clip := "idle"
 var clock := 0.0
+var playback_speed := 1.0
 var facing := 1.0
 var frozen := false
 var preview := false
@@ -27,7 +28,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if not frozen:
-		clock += delta
+		clock += delta * playback_speed
 	queue_redraw()
 
 func frame_index() -> int:

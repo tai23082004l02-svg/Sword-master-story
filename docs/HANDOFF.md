@@ -1,3 +1,13 @@
+# Bổ sung 0.8.3 — Tốc độ trận x1/x2/x3
+Nút dưới trận cạnh Âm, chuyển1→2→3→1, chỉ khi đang playing. Giữ trong session,
+không ghi save/schema4. advance_battle lặp battle_speed bước min(delta,0.05),
+chạy auto mỗi bước và dừng ngay khi thắng/thua; không dùng Engine.time_scale.
+Visual hero playback_speed, companion/enemy sync dt nhân tốc độ; preview ngoài
+trận vẫn1. Đồng hồ/kỷ lục là giây mô phỏng; delay kết quả0.85s/menu/âm giữ giờ
+thực. Pause/focus dừng. Test battle_speed_smoke kiểm ratio/kết quả giống nhau,
+auto/cycle/pause/focus/delta cap/art speed/receipt và chống cộng thưởng trùng.
+Không đổi art, cân bằng hoặc dữ liệu lưu. Chưa thử S23/nghe âm/FPS thực.
+
 # Rà soát tiếp 0.8.2 — 07/11/2026
 Đồng bộ fast-forward main a618b2a, giữ mọi bổ sung của chatbot khác và UID test
 cũ chưa track. Đọc lại README/RPG_SYSTEMS/RPG_REVIEW; chạy lại23smoke đều PASS.

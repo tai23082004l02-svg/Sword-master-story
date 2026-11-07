@@ -1,4 +1,4 @@
-# Kiếm Hành 0.8.2 — vòng chơi và tiến trình offline
+# Kiếm Hành 0.8.3 — vòng chơi và tiến trình offline
 
 Sảnh → Phiêu lưu → chuẩn bị đội → chiến đấu → nhận đồ → nâng đội → thử thách mới.
 Mọi tài nguyên kiếm qua chơi. Ảnh tham khảo dùng định hướng chức năng;
@@ -46,6 +46,12 @@ Trận chụp thông số theo ID, không đổi theo dữ liệu lưu sửa sau
 Chưa có affix ngẫu nhiên, bán, khóa món hoặc nhiều loại ô khác.
 
 ![Túi](screenshots/rpg_inventory.png)
+
+## Tốc độ trận x1/x2/x3
+Chạm nút Tốc độ ở hàng dưới trận để chuyển1→2→3→1. Tác động lên di chuyển,
+đánh, hồi chiêu, hiệu ứng và hoạt ảnh trong phiêu lưu/hầm/tháp/trận thử.
+Giữ mức đã chọn trong phiên; mở lại game về x1. Đồng hồ/kỷ lục ghi giây mô phỏng,
+không phải thời gian ngồi chơi; pause/focus dừng, âm/menu và delay kết quả giữ giờ thực.
 
 ## Chiến đấu và 30 ải
 Chương I giữ 10 ải gốc; chương II/III có 10 ải mỗi chương với địch mới:

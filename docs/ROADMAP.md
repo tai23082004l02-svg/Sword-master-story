@@ -13,6 +13,9 @@ Thưởng hầm hiện đủ, giữ vòng tuần thử thách, bảo toàn UI kh
 Đồng bộ các tính năng mới, sửa receipt và hiển thị bụi/vé quét phiêu lưu;
 24 smoke PASS. Không đổi schema hoặc giá trị thưởng.
 
+## 0.8.3 — Tốc độ trận
+Đã thêm nút x1/x2/x3 cho trận, đồng bộ mô phỏng và hình; giữ trong session.
+
 ## Tiếp theo sau phản hồi chơi thật
 1. Thử toàn bộ luồng trên S23, chỉnh nút/chữ/cảm ứng và nhịp mở tính năng.
 2. Cân bằng bằng kết quả chơi; xem điểm bỏ cuộc và giá trị của từng cách xây đội.

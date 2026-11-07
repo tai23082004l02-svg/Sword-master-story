@@ -1,8 +1,14 @@
-# Kiếm Hành — prototype 0.8.2
+# Kiếm Hành — prototype 0.8.3
 
 RPG đội hình fantasy nhìn ngang, Godot 4.6.3 Compatibility, tiếng Việt, offline.
 Vòng chơi: **vượt ải → nhận trang bị → xây đội → vượt thử thách mới**.
 Tài nguyên/hình/nhân vật riêng, không dùng asset Sword Master Story.
+
+## Tốc độ trận đấu · 0.8.3
+Trong trận, chạm **Tốc độ: x1/x2/x3** ở hàng dưới để chuyển vòng x1 → x2 → x3.
+Áp dụng phiêu lưu, hầm/tháp và trận thử; giữ mức đã chọn trong lần mở game.
+Đồng hồ/hồi chiêu theo thời gian chiến đấu: x3 chạy 3 giây trận mỗi giây thực.
+Pause dừng hoàn toàn; menu và âm thanh không bị tăng tốc. Đóng game trở về x1.
 
 ## Rà soát tiếp 0.8.2
 Đã đồng bộ và kiểm tra các bổ sung từ 0.6.1 đến 0.8.1. Sửa số thưởng phiêu lưu

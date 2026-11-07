@@ -42,6 +42,8 @@ var auto_skills := false
 var skill_buttons: Array[Button] = []
 var companion_views: Array[Node2D] = []
 var auto_button: Button
+var battle_speed := 1
+var speed_button: Button
 var pause_button: Button
 var menu: VBoxContainer
 var audio_settings_button: Button
@@ -127,6 +129,8 @@ func _ready() -> void:
 	wallet.position = Vector2(40, 28)
 	wallet.add_theme_font_size_override("font_size", 22)
 	ui.add_child(wallet)
+	speed_button = make_button("Tốc độ: x1", Vector2(230, 650), Vector2(200, 50), cycle_battle_speed)
+	speed_button.visible = false
 	pause_button = make_button("Tạm dừng", Vector2(1060, 25), Vector2(170, 52), toggle_pause)
 	show_menu("KIẾM HÀNH", title_subtitle(), "Chọn ải", open_stages)
 	get_viewport().size_changed.connect(resize_ui)
@@ -282,20 +286,31 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_ESCAPE:
 			toggle_pause()
 
+func cycle_battle_speed() -> void:
+	if screen != "battle" or battle.state != "playing": return
+	battle_speed = battle_speed % 3 + 1
+	speed_button.text = "Tốc độ: x%d" % battle_speed
+
+func advance_battle(delta: float) -> void:
+	# Repeat bounded steps so x3 never skips windups, heals or auto-skill checks.
+	if screen != "battle" or battle.state != "playing": return
+	for step in range(battle_speed):
+		if battle.state != "playing": break
+		if auto_skills:
+			for id in ["brann", "sol", "aether", "lyra", "nyx"]:
+				for slot in range(battle.heroes.size()):
+					if battle.heroes[slot].id != id: continue
+					if id == "sol" and not battle.heroes.any(func(a): return a.hp > 0 and a.hp <= a.max_hp - 30): continue
+					use_party_skill(slot)
+		battle.tick(minf(delta, 0.05))
+
 func _process(delta: float) -> void:
-	if auto_skills and screen == "battle" and battle.state == "playing":
-		# Shield before damage; heal only after an ally actually needs it.
-		for id in ["brann", "sol", "aether", "lyra", "nyx"]:
-			for slot in range(battle.heroes.size()):
-				if battle.heroes[slot].id != id:
-					continue
-				if id == "sol" and not battle.heroes.any(func(a): return a.hp > 0 and a.hp <= a.max_hp - 30):
-					continue
-				use_party_skill(slot)
-	battle.tick(minf(delta, 0.05))
-	update_companions()
-	update_hero(delta)
-	update_enemies(minf(delta, 0.05))
+	advance_battle(delta)
+	var visual_delta := minf(delta, 0.05) * battle_speed if screen == "battle" else 0.0
+	hero_art.playback_speed = float(battle_speed) if screen == "battle" else 1.0
+	update_companions(visual_delta)
+	update_hero(visual_delta)
+	update_enemies(visual_delta)
 	if screen == "battle" and battle.state in ["won", "lost"]:
 		if campaign_active and not settlement_attempted:
 			settle_campaign()
@@ -327,6 +342,9 @@ func _process(delta: float) -> void:
 		if actor.hp <= 0:
 			timing = "Đã gục"
 		button.text = "%d · %s · Cấp %d\n%d/%d HP · %s\n%s" % [i + 1, actor.name, actor.level, ceili(actor.hp), int(actor.max_hp), actor.skill, timing]
+	speed_button.visible = screen == "battle"
+	speed_button.disabled = battle.state != "playing"
+	speed_button.text = "Tốc độ: x%d" % battle_speed
 	pause_button.visible = screen == "battle"
 	status.text = ((battle_stage.title + " · ") if activity_mode != "" and campaign_active else ((Campaign.label(battle_stage_id) + " · ") if campaign_active else "")) + ("BOSS" if battle.wave > 0 and battle.boss_wave() else "ĐỢT %d / %d" % [battle.wave, battle.wave_limit]) + "      ĐỘI %d/%d · %.1fs" % [battle.heroes.filter(func(a): return a.hp > 0).size(), battle.heroes.size(), battle.elapsed]
 	if Time.get_ticks_msec() < progress_error_until: status.text = "Chưa lưu: " + progress_error
@@ -502,13 +520,14 @@ func draw_boss_hud(enemy: Dictionary) -> void:
 		label += "  ·  " + enemy.attack_name
 	draw_string(font, Vector2(330, 172), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color("ead7f0"))
 
-func update_companions() -> void:
+func update_companions(delta: float = -1.0) -> void:
+	if delta < 0: delta = minf(get_process_delta_time(), 0.05)
 	for i in range(companion_views.size()):
 		var view := companion_views[i]
 		view.visible = screen == "battle" and i + 1 < battle.heroes.size()
 		view.frozen = screen != "battle" or battle.state != "playing"
 		if i + 1 < battle.heroes.size():
-			view.sync(battle.heroes[i + 1], minf(get_process_delta_time(), 0.05), screen != "battle", battle.state in ["won", "lost"])
+			view.sync(battle.heroes[i + 1], delta, screen != "battle", battle.state in ["won", "lost"])
 			var offsets := {"brann": Vector2(30, 455), "lyra": Vector2(-30, 480), "nyx": Vector2(0, 500), "sol": Vector2(40, 520)}
 			var offset: Vector2 = offsets.get(view.actor.id, Vector2(0,480))
 			view.position = Vector2(view.actor.x + offset.x, offset.y)
