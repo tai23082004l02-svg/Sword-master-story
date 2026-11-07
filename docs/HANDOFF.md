@@ -1,3 +1,15 @@
+# Rà soát tiếp 0.8.2 — 07/11/2026
+Đồng bộ fast-forward main a618b2a, giữ mọi bổ sung của chatbot khác và UID test
+cũ chưa track. Đọc lại README/RPG_SYSTEMS/RPG_REVIEW; chạy lại23smoke đều PASS.
+Phát hiện campaign finish_run cộng5bụi khi kho đầy nhưng receipt chỉ ghi2;
+UI hardcode2bụi/2mảnh/1véquét. Nay receipt dust phản ánh delta thực2hoặc7,
+thêm sweep_tokens cho thắng/thua; UI dùng receipt. Không đổi phần thưởng,
+schema4, dữ liệu người chơi hay art. Không tự thêm hệ thống ngoài kế hoạch.
+Test campaign_reward_receipt_smoke kiểm reward thường/kho500, UI7bụi/1vé,
+lỗi ghi→retry không nhân thưởng, reload và thua0thưởng. Tổng24smoke PASS.
+Tiếp theo: chơi thật S23 theo ROADMAP, cân bằng và hình độc lập vẫn chờ.
+Chưa thử cảm ứng/âm/FPS/nhiệt trên điện thoại.
+
 # Rà soát tự động 0.8.1 — đã hoàn tất
 
 Đã thực hiện lượt kiểm tra được hẹn sau hai tiếng. Remote main trước rà là

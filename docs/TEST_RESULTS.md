@@ -216,3 +216,17 @@ canvas thu phóng, lỗi ghi giữ nguyên dữ liệu, reload và đội vào t
 capture_party_drag PASS: ảnh prep/đang kéo/đã lưu qua OpenGL Compatibility,
 Mesa llvmpipe, âm Dummy. Đã xem ảnh; driver cảnh báo VSync không hỗ trợ.
 Chưa thử thao tác trên S23 Ultra/Windows thật, FPS/nhiệt hoặc nghe âm.
+
+## 0.8.2 — 07/11/2026
+Đồng bộ main a618b2a và chạy lại23smoke có sẵn: tất cả PASS trên Godot4.6.3
+Linux headless, XDG_DATA_HOME riêng từng bộ trong workspace/work/review-081.
+Test mới campaign_reward_receipt_smoke PASS: thưởng thực khớp receipt ở kho
+thường/đầy500, UI7bụi/1vé quét, lỗi ghi/retry/dedup, reload và thua0thưởng.
+Không thay đổi phần thưởng/schema4, không dùng save người chơi. Tổng24bộ.
+Chưa thử S23 thật, cảm ứng/âm/FPS/nhiệt.
+Chạy lại toàn bộ24bộ sau sửa với save riêng review-082-final: PASS. Editor import
+thành công. capture_campaign_receipt render fixture kho500, giả lập chiến thắng
+trên OpenGL Compatibility/Mesa llvmpipe, âm Dummy; đã xem ảnh, chữ không bị cắt.
+Driver cảnh báo không hỗ trợ đổi VSync. Không có lỗi script.
+
+![Thưởng phiêu lưu khi kho đầy](screenshots/campaign_reward_full_inventory.png)

@@ -136,7 +136,7 @@ func result(receipt: Dictionary) -> void:
 		if host.progress.data.cleared.size() == Campaign.MAX_STAGE: note = "Đã hoàn thành ba chương! Có thể chơi lại các ải."
 		if not receipt.get("loot",{}).is_empty(): note += " · " + receipt.loot.name
 		if receipt.has("gems"):
-			note += "\n+%d tinh thạch · +%d vé triệu hồi · +2 bụi · +2 mảnh %s · +1 vé quét" % [receipt.gems,receipt.tickets,Party.HEROES[int(receipt.shard_hero)].name]
+			note += "\n+%d tinh thạch · +%d vé triệu hồi · +%d bụi · +%d mảnh %s · +%d vé quét" % [receipt.gems,receipt.tickets,receipt.get("dust",0),receipt.get("shards",0),Party.HEROES[int(receipt.shard_hero)].name,receipt.get("sweep_tokens",0)]
 		text(note, Vector2(70, 450), Vector2(1140, 62), 19, Color("94cfbd"))
 	else:
 		text("Chưa vượtải · Không mất tài nguyên.\nThiếu sát thương: nâng kiếm/kỹ năng, phối hợp Nyx+Lyra.\nGục sớm: nâng giáp, dùng Brann+Sol hoặc Rune+Vera.", Vector2(70, 292), Vector2(1140, 95), 25)

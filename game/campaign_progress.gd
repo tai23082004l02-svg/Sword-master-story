@@ -228,6 +228,7 @@ func finish_run(run_id: int, won: bool, elapsed: float, survivors: int) -> Dicti
 		var previous: Dictionary = candidate.records.get(key, {"wins": 0, "best_time": elapsed})
 		candidate.records[key] = {"wins": previous.wins + 1, "best_time": minf(previous.best_time, elapsed)}
 	var loot: Dictionary = {}
+	var dust := 0
 	RPG.visit(candidate.rpg)
 	candidate.rpg.stats.runs += 1
 	if not won:
@@ -240,13 +241,15 @@ func finish_run(run_id: int, won: bool, elapsed: float, survivors: int) -> Dicti
 		if first:
 			candidate.rpg.gems += 100
 			candidate.rpg.tickets += 1
-		candidate.rpg.dust += 2
+		dust = 2
+		candidate.rpg.dust += dust
 		candidate.rpg.shards[(id-1) % RPG.HERO_COUNT] += 2
 		loot = RPG.grant_item(candidate.rpg, RPG.drop_base(id,int(candidate.records[str(id)].wins)))
+		if loot.uid == 0: dust += 5
 	candidate.last_claimed = run_id
 	candidate.pending = {}
 	if not commit(candidate): return {"ok": false, "error": last_error}
-	return {"ok": true, "won": won, "stage": id, "first": first, "gold": reward.gold, "xp": reward.xp, "elapsed": elapsed, "survivors": survivors, "loot":loot, "mode":"campaign", "gems":100 if first else 0, "tickets":1 if first else 0, "dust":2 if won else 0, "shard_hero":(id-1)%RPG.HERO_COUNT, "shards":2 if won else 0}
+	return {"ok": true, "won": won, "stage": id, "first": first, "gold": reward.gold, "xp": reward.xp, "elapsed": elapsed, "survivors": survivors, "loot":loot, "mode":"campaign", "gems":100 if first else 0, "tickets":1 if first else 0, "dust":dust, "sweep_tokens":1 if won else 0, "shard_hero":(id-1)%RPG.HERO_COUNT, "shards":2 if won else 0}
 func abandon_run(run_id: int) -> bool:
 	if data.pending.is_empty() or data.pending.id != run_id: return true
 	var candidate := data.duplicate(true)

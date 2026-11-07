@@ -1,4 +1,4 @@
-# Kiếm Hành 0.8.1 — vòng chơi và tiến trình offline
+# Kiếm Hành 0.8.2 — vòng chơi và tiến trình offline
 
 Sảnh → Phiêu lưu → chuẩn bị đội → chiến đấu → nhận đồ → nâng đội → thử thách mới.
 Mọi tài nguyên kiếm qua chơi. Ảnh tham khảo dùng định hướng chức năng;
@@ -37,6 +37,7 @@ Túi phân trang sáu món, tối đa 500. Hiện chỉ số và người đang 
 tháo, cường hóa và phân giải. Phân giải cần xác nhận, chỉ áp dụng món chưa mặc,
 trả 5+3×rank bụi. Cường hóa +0→+10, mỗi bước cộng 15% chỉ số gốc của món;
 giá 40×(rank+1) vàng và 3×(rank+1) bụi. Khi kho đầy, đồ rơi đổi thành 5 bụi.
+Kết quả phiêu lưu hiện tổng bụi thực (2 thường hoặc 7 khi kho đầy), mảnh và vé quét.
 
 Giữ hai ô vũ khí/giáp. Thay đồ trả món trước về kho. Đồ cũ 0.6.2 còn ở
 Trang bị cũ, không mất sở hữu. Mặc món mới tháo món cũ cùng ô và ngược lại,

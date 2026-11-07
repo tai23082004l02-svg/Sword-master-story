@@ -9,6 +9,10 @@ mục tiêu/tuần/thống kê local. Xem RPG_SYSTEMS.md và giới hạn art/c�
 Thưởng hầm hiện đủ, giữ vòng tuần thử thách, bảo toàn UI khi lưu lỗi và khóa
 đánh tiếp tầng30. 23 test PASS. Xem RPG_REVIEW.md.
 
+## 0.8.2 — Rà soát tiếp
+Đồng bộ các tính năng mới, sửa receipt và hiển thị bụi/vé quét phiêu lưu;
+24 smoke PASS. Không đổi schema hoặc giá trị thưởng.
+
 ## Tiếp theo sau phản hồi chơi thật
 1. Thử toàn bộ luồng trên S23, chỉnh nút/chữ/cảm ứng và nhịp mở tính năng.
 2. Cân bằng bằng kết quả chơi; xem điểm bỏ cuộc và giá trị của từng cách xây đội.
